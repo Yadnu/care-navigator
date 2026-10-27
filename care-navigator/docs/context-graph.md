@@ -2,31 +2,37 @@
 
 Living map of the system. Read this and `decisions.md` before any task; update it at the end of every phase.
 
-Last updated: 2026-10-27, end of Phase 8 (all phases done).
+Last updated: 2026-10-27, Prompt1 Part A done (conversational triage); Part B not started.
 
 ## Request flow
 
 ```mermaid
 flowchart TD
-    REQ[Request: text, severity, zip, plan, time] --> VAL[validate<br/>models.py]
+    REQ[Request: first message + answers so far<br/>severity, zip, plan, time, skip] --> VAL[validate<br/>models.py]
     VAL -->|empty or too long| MSG[Clear message<br/>no outcome]
     VAL -->|unknown zip/plan| WARN[errors listed;<br/>care level still given] --> RED
-    VAL --> RED[redact.py]
-    RED --> RF1[redflags.py<br/>red_flags.yaml]
-    RED --> JEV1[jev_client.py<br/>is_emergency<br/>OfflineJev / HttpJev]
+    VAL --> RED[redact.py<br/>message + every answer]
+    RED --> RF1[Tier 1: redflags.py<br/>red_flags.yaml categories<br/>negation + per-word typos]
     LEX[lexicon.py] -.-> JEV1
     LEX -.-> PARSE
-    RF1 -->|hit| EMER([EMERGENCY: call 911 / 988])
-    JEV1 -->|hit| EMER
-    RF1 --> PARSE[parser.py<br/>OfflineParser / ClaudeParser]
-    JEV1 --> PARSE
-    PARSE --> RF2[redflags.py<br/>recheck parsed fields]
+    RF1 -->|hit in any turn| EMER([EMERGENCY: call 911 / 988])
+    RF1 --> ANS[answers -> slots<br/>questions.py + question_bank.json]
+    ANS -->|danger answer| EMER
+    ANS --> JEV1[jev_client.py is_emergency]
+    JEV1 -->|p >= 0.8 and conf >= 0.7| EMER
+    JEV1 --> PARSE[parser.py<br/>OfflineParser / ClaudeParser]
+    PARSE --> RF2[Tier 1 on parsed fields]
     RF2 -->|hit| EMER
-    RF2 --> VAGUE{too vague or<br/>low confidence?}
-    VAGUE -->|yes, first time| CLAR[clarifier.py]
-    CLAR --> FU([FOLLOW_UP question])
-    FU -.->|answer, max once| REQ
-    VAGUE -->|no, or still vague after follow-up: escalate| ENG[care_engine.py<br/>care_rules.yaml<br/>first match + gating]
+    RF2 --> T2{Tier 2 signal?<br/>arm/jaw/back, breath, headache,<br/>belly, dizzy, vomit, child fever,<br/>Jev 0.5+, unknown parser flag}
+    T2 -->|yes, slot unknown,<br/>under 3 questions| SC([SAFETY_CHECK question])
+    T2 -->|no, or injury context| VAGUE{too vague?}
+    VAGUE -->|yes, not asked yet| FU([FOLLOW_UP: main symptom])
+    VAGUE -->|no| NEEDS{rule needs a slot?}
+    NEEDS -->|yes, under 3 questions| FU2([FOLLOW_UP: that slot])
+    SC -.->|answer or quick reply| REQ
+    FU -.->|answer| REQ
+    FU2 -.->|answer| REQ
+    NEEDS -->|no, or out of questions / skip: escalate one level| ENG[care_engine.py<br/>care_rules.yaml v2.0<br/>first match + gating]
     ENG --> HRS{anything open now<br/>at this level?}
     HRS -->|no| AH[rule after_hours level,<br/>then step up; never self-care]
     AH --> RET
@@ -49,6 +55,7 @@ flowchart TD
     PIPE -.records every step.-> TRACE
     APP[app.py Streamlit<br/>+ trace viewer] --> PIPE
     CLI[cli.py demo] --> PIPE
+    QB[(question_bank.json)] --> ANS
     EVAL[scripts/run_eval.py] --> PIPE
     TRACE -.-> APP
 
@@ -76,12 +83,13 @@ flowchart TD
 | `tests/conftest.py` | test | pytest | every test | - | D-008, D-024 | done |
 | `navigator/models.py` | module | pydantic | all modules | `test_models.py` | D-001, D-003 | done |
 | `navigator/redact.py` | module | - | pipeline, trace | `test_redact.py` | D-009 | done |
-| `navigator/redflags.py` + `red_flags.yaml` | module + config | rapidfuzz, pyyaml, config, models | pipeline | `test_redflags.py` | D-002, D-014, D-015, D-016, D-017 | done |
+| `navigator/redflags.py` + `red_flags.yaml` | module + config | rapidfuzz (JaroWinkler), pyyaml, config, models | pipeline, questions | `test_redflags.py`, `test_conversation.py` | D-015, D-016, D-041 | done (v2.0, three tiers) |
+| `navigator/questions.py` | module | data/question_bank.json, redflags.TextView | pipeline, clarifier, run_eval | `test_conversation.py` | D-041 | done |
 | `navigator/lexicon.py` | module | - | jev_client, parser | via `test_jev_client.py`, `test_parser.py` | D-021 | done |
 | `navigator/jev_client.py` | module | config, lexicon, redflags.normalize, requests | pipeline, retriever, guard | `test_jev_client.py` | D-002, D-004, D-008, D-019, D-023 | done (all question types verified live) |
 | `navigator/parser.py` | module | models, config, lexicon, redflags, anthropic | pipeline | `test_parser.py` | D-004, D-008, D-009, D-018, D-020 | done |
-| `navigator/clarifier.py` | module | models, config, jev_client (guard), anthropic | pipeline | `test_clarifier.py` | D-003, D-004, D-028 | done |
-| `navigator/care_engine.py` + `care_rules.yaml` | module + config | models, data, pyyaml | pipeline | `test_care_engine.py` | D-001, D-003, D-025, D-026, D-034, D-036 | done (23 rules, v1.2) |
+| `navigator/clarifier.py` | module | models, config, questions, jev_client (guard), anthropic | pipeline | `test_clarifier.py` | D-004, D-028, D-041 | done (bank questions; Claude rephrases only) |
+| `navigator/care_engine.py` + `care_rules.yaml` | module + config | models, data, pyyaml | pipeline | `test_care_engine.py` | D-001, D-025, D-026, D-034, D-036, D-042 | done (25 rules, v2.0, slots + needs) |
 | `navigator/data.py` | module | data/*.json, models | care_engine, retrieval | `test_care_engine.py` | D-027 | done |
 | `navigator/retrieval/embeddings.py` | module | scikit-learn, requests, config | retriever | `test_retrieval.py` | D-008, D-030 | done (Voyage not run live) |
 | `navigator/retrieval/vector_store.py` | module | numpy | retriever | `test_retrieval.py` | D-006, D-029 | done |
@@ -101,32 +109,26 @@ flowchart TD
 | `data/plans.json` | data | generate.py | validate, costs | `test_data.py`, `test_generate.py` | D-010, D-011, D-013 | done |
 | `data/practitioners.json` | data | generate.py | retriever, care_engine | `test_data.py`, `test_generate.py` | D-010, D-011, D-012, D-013 | done |
 | `data/cost_ranges.json` | data | generate.py | costs | `test_data.py`, `test_generate.py` | D-010, D-011, D-013 | done |
-| `data/eval/*.jsonl` | data | eval_sets.py | tests, run_eval | `test_data.py`, `test_generate.py` | D-013 | done |
+| `data/eval/*.jsonl` | data | eval_sets.py | tests, run_eval | `test_data.py`, `test_generate.py`, `test_conversation.py` | D-013, D-041 | done (+ near_misses 21, conversations 12) |
+| `data/question_bank.json` (+ `question_bank_src.py`) | data | generate.py | questions, clarifier | `test_conversation.py`, `test_generate.py` | D-041 | done (15 slots) |
 | `pyproject.toml`, `requirements.txt`, `Makefile` | config | - | dev workflow | - | - | done |
 | `README.md` | doc | everything | reviewers | - | - | done |
 
 ## Current status
 
-- Done: Phases 0 to 8. All nodes above are done.
-- Tests: 903 passing offline with no API keys (`python -m pytest`).
-- Offline eval (`python scripts/run_eval.py --offline`): red flags 100% (40/40), routing 100% acceptable (40/40) with 0 below expected, vague -> follow-up 100% (15/15), adversarial 100% (10/10), retrieval recall@3 100% (20 queries), 0 filter violations.
-- Demo (`python cli.py`): 6/6 cases as expected.
-- Live verification (D-036): Claude, Jev (all question types) and Voyage called successfully; live routing 39/39 acceptable, 0 lower; six demo cases correct with guarded Claude explanations.
+- Done: Phases 0 to 8. Prompt1 Part A: three-tier red flags, question bank, multi-turn conversation (SAFETY_CHECK, up to 3 questions, Skip), near-miss and conversation eval sets, new metrics (D-041 to D-043).
+- Tests: 1,065 passing offline with no API keys.
+- Offline eval: red-flag recall 100% (40/40), false-emergency rate 0% (0/60), routing 100% (40/40) with 0 below expected, vague -> question 100% (15/15), adversarial 100% (10/10), near misses 100% (21/21), conversations 100% (12/12), 0.41 questions on average (73 runs), 0 over 3 questions, retrieval recall@3 100%, 0 violations.
+- Live check of the A1 input: urgent care via R-10, no emergency.
 - In progress: -
-- Not started: -
+- Not started: Prompt1 Part B (10 plans, 12 zips, new practitioners, coverage_gaps.json, cost changes).
 
 ## Open questions
 
 - The Voyage key hits its rate limit (HTTP 429) after one query in quick succession; requests fall back to offline search (D-037).
 - Live Jev rerank sends one score question per document (up to 10) in one request; cost per search is roughly 10x a single classification.
 
-- Negation ("no chest pain") still fires the red-flag screen (D-017). Acceptable over-triage for the prototype?
 
 - `make` is not installed on the dev machine (Windows); Makefile targets are plain one-liners that can be run directly.
-- `make eval` with keys in `.env` runs live (about 105 pipeline runs); the live eval hasn't been run end to end yet (live routing alone: 39/39).
+- `make eval` with keys in `.env` runs live (about 140 conversation runs, each re-running the pipeline per answer); the live eval hasn't been run end to end.
 - The Sonnet 5.5 evaluation judge (D-004) isn't implemented (D-038).
-
-## In progress: Prompt1.md Part A (conversational triage)
-
-- A1 done. Reproduced "My left hand have severe pain ever since I have played volleyball" -> EMERGENCY from trace `traces/8340ab6389a1.json` (live run). Step that fired: `red_flags_parsed`, output `parsed:severe pain`. Cause: `navigator/redflags.py:109-112` (`screen_report`) turns any parser-listed red flag that no rule matches into an emergency; Claude listed "severe pain". The keyword screen had no hits and Jev was 0.49.
-- Next: A2 to A5 (three-tier red flags, question bank, multi-turn pipeline, near-miss and conversation evals, D-003 superseded), then Part B. Checked: `rapidfuzz.distance.JaroWinkler.normalized_similarity` exists in rapidfuzz 3.14.6 ("pian"/"pain" 0.925, "can"/"cant" 0.94, so short words must stay exact).

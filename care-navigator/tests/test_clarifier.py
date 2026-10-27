@@ -100,10 +100,18 @@ def fake_client(*results):
 
 
 def test_claude_question_used_when_valid():
-    client = fake_client(text_response("  Where in your body do you feel unwell?  "))
+    # D-041: Claude may only rephrase the bank question, so the mock keeps its meaning words.
+    rephrased = "Sorry you feel off. What's the main thing bothering you, and where in your body do you feel it?"
+    client = fake_client(text_response(f"  {rephrased}  "))
     result = ClaudeClarifier(client=client).question(report(["main_symptom"]), "I just feel off")
-    assert result.question == "Where in your body do you feel unwell?"
+    assert result.question == rephrased
     assert result.used == config.CLAUDE_MODEL and result.fallback is False and result.tokens == 92
+
+
+def test_claude_rephrasing_that_changes_the_question_falls_back_to_the_bank():
+    client = fake_client(text_response("Where in your body do you feel unwell?"))  # drops "main thing bothering"
+    result = ClaudeClarifier(client=client).question(report(["main_symptom"]), "I just feel off")
+    assert result.question == TEMPLATES["main_symptom"] and result.fallback is True
 
 
 def test_claude_request_shape():

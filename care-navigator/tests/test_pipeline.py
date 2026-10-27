@@ -205,7 +205,14 @@ def test_jev_down_falls_back_offline(tmp_path):
 
 def test_jev_down_still_catches_indirect_emergency(tmp_path):
     result = Navigator(jev=DownJev(), trace_dir=tmp_path).run(req("feels like an elephant is sitting on my chest"))
-    assert result.outcome is Outcome.EMERGENCY and result.simplified is True
+    # D-041: Tier 1 rules now catch this before Jev is called, so no fallback is needed.
+    assert result.outcome is Outcome.EMERGENCY
+    assert result.trace[-1].name == "red_flags" and "cardiac" in result.trace[-1].output
+
+
+def test_jev_down_mid_conversation_falls_back_offline(tmp_path):
+    result = Navigator(jev=DownJev(), trace_dir=tmp_path).run(req("my wrist feels strange"))
+    assert result.outcome is not Outcome.EMERGENCY and result.simplified is True
 
 
 def test_claude_down_falls_back_offline(tmp_path):

@@ -39,7 +39,12 @@ def load_rules() -> dict:
     return yaml.safe_load(RULES_PATH.read_text(encoding="utf-8"))
 
 
-def _matches(when: dict, report: SymptomReport, category: str, urgency: int) -> bool:
+def _matches(when: dict, report: SymptomReport, category: str, urgency: int,
+             slots: Optional[dict[str, str]] = None) -> bool:
+    if "slots_any" in when:
+        slots = slots or {}
+        if not any(slots.get(slot) in values for slot, values in when["slots_any"].items()):
+            return False
     if "category" in when and category not in when["category"]:
         return False
     if urgency < when.get("min_urgency", 1) or urgency > when.get("max_urgency", 5):
@@ -70,11 +75,18 @@ class CareEngine:
         self.rules = rules or load_rules()
         self.practitioners = tuple(load_practitioners() if practitioners is None else practitioners)
 
-    def _rule(self, report: SymptomReport, category: str, urgency: int) -> dict:
+    def _rule(self, report: SymptomReport, category: str, urgency: int,
+              slots: Optional[dict[str, str]] = None) -> dict:
         for rule in self.rules["rules"]:
-            if _matches(rule.get("when") or {}, report, category, urgency):
+            if _matches(rule.get("when") or {}, report, category, urgency, slots):
                 return rule
         raise LookupError("care_rules.yaml has no catch-all rule")
+
+    def missing_needs(self, report: SymptomReport, category: str, urgency: int,
+                      slots: Optional[dict[str, str]] = None) -> list[str]:
+        """Slots the matching rule needs but doesn't have yet, in the order to ask them (D-041)."""
+        rule = self._rule(report, category, urgency, slots)
+        return [s for s in rule.get("needs", []) if s not in (slots or {})]
 
     def _available(self, level: CareLevel, when: datetime, plan: Optional[str], age_group: str) -> bool:
         if level is CareLevel.SELF_CARE:
@@ -90,12 +102,14 @@ class CareEngine:
         )
 
     def decide(self, report: SymptomReport, category: str, urgency: int, request_time: datetime,
-               plan: Optional[str] = None, age_group: str = "adult", after_followup: bool = False) -> CareDecision:
-        rule = self._rule(report, category, urgency)
+               plan: Optional[str] = None, age_group: str = "adult", after_followup: bool = False,
+               slots: Optional[dict[str, str]] = None, uncertain: bool = False) -> CareDecision:
+        """`uncertain`: questions are used up or skipped with something still unknown; one level more care."""
+        rule = self._rule(report, category, urgency, slots)
         level = CareLevel(rule["level"])
         notes = [rule["note"]] if rule.get("note") else []
 
-        escalated = should_escalate(report, after_followup)
+        escalated = uncertain or should_escalate(report, after_followup)
         if escalated:
             level = level.escalate()
 

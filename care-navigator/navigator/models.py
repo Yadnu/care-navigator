@@ -13,7 +13,8 @@ Probability = Annotated[float, Field(ge=0.0, le=1.0)]
 
 class Outcome(str, Enum):
     EMERGENCY = "EMERGENCY"
-    FOLLOW_UP = "FOLLOW_UP"
+    SAFETY_CHECK = "SAFETY_CHECK"      # a Tier 2 safety question (D-041)
+    FOLLOW_UP = "FOLLOW_UP"            # a missing-detail question
     RECOMMENDATION = "RECOMMENDATION"
 
 
@@ -48,6 +49,14 @@ class CareLevel(str, Enum):
         return self.rank >= other.rank
 
 
+class Turn(BaseModel):
+    """One question asked by the system and the person's answer."""
+
+    slot: str
+    question: str = ""
+    answer: str
+
+
 class Request(BaseModel):
     text: str
     severity: int = Field(ge=1, le=10)
@@ -55,7 +64,13 @@ class Request(BaseModel):
     plan: str
     request_time: datetime
     age_group: Literal["adult", "child"] = "adult"
-    followup_answer: Optional[str] = None
+    turns: list[Turn] = []                 # the conversation so far (D-041)
+    skip: bool = False                     # "Skip, just tell me where to go"
+    followup_answer: Optional[str] = None  # shorthand for one answer to the main-symptom question
+
+    def all_turns(self) -> list[Turn]:
+        extra = [Turn(slot="main_symptom", answer=self.followup_answer)] if self.followup_answer else []
+        return [*self.turns, *extra]
 
 
 class SymptomReport(BaseModel):

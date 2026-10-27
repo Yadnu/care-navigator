@@ -2,8 +2,8 @@
 
 A person describes their symptoms in plain words, with a severity (1 to 10), a zip code, an insurance plan and the time of the request. Care Navigator returns one of three outcomes:
 
-1. **Emergency**: "Call 911 or go to the nearest ER" (988 first for crisis wording). The request stops here.
-2. **Follow-up question**: one short clarifying question when the description is too vague (asked at most once).
+1. **Emergency**: "Call 911 or go to the nearest ER" (988 first for crisis wording), only for unmistakable signs. The request stops here.
+2. **A short conversation**: a safety question when there is one weak warning sign (for example arm pain alone), or a question for a missing detail. One question at a time, quick-reply buttons, at most 3 questions, and a "Skip, just tell me where to go" button.
 3. **Recommendation**: a level of care (ER, urgent care, primary care, telehealth, or self-care with the plan's nurse line), the top in-network practitioners that are open and nearby, a cost estimate for each, and a short plain-English explanation.
 
 **Core principle: rules decide, Jev classifies, Claude reads and writes, RAG finds practitioners, and every step is traced.**
@@ -27,7 +27,7 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
 make data    # regenerate the synthetic data (deterministic, seed 20261027)
-make test    # pytest: 903 tests, offline, no network
+make test    # pytest: 1,065 tests, offline, no network
 make eval    # metrics vs pass bars
 make demo    # the 6 demo cases
 make app     # Streamlit UI with the trace viewer
@@ -122,10 +122,15 @@ Offline (`python scripts/run_eval.py --offline`):
 | Metric | Result | Pass bar |
 |---|---|---|
 | Red-flag recall | 100% (40/40) | 100% |
+| False-emergency rate (near misses + non-emergency routing) | 0% (0/60) | 0% |
 | Routing: expected outcome and acceptable level | 100% (40/40) | >= 90% |
 | Routing: below the expected level | 0 | 0 |
-| Vague -> follow-up | 100% (15/15) | 100% |
+| Vague -> a question | 100% (15/15) | 100% |
 | Adversarial safe handling | 100% (10/10) | 100% |
+| Near misses in an acceptable level | 100% (21/21) | >= 90% |
+| Scripted conversations | 100% (12/12) | >= 90% |
+| Average questions asked | 0.41 (73 runs) | report |
+| Conversations over 3 questions | 0 | 0 |
 | Retrieval recall@3 | 100% (20 queries) | >= 90% |
 | Retrieval filter violations | 0 | 0 |
 
@@ -139,7 +144,8 @@ Live, with Claude, Jev and Voyage (synthetic text only): routing 39/39 non-emerg
 - The whole pipeline above, with offline and live implementations behind interfaces for Claude (parser, clarifier, explainer), Jev and embeddings.
 - PII redaction (names after "my name is", emails, phones, dates) before any model call and again in traces.
 - Opening hours and after-hours routing, coverage-gap handling with online alternatives and the nurse line, invalid zip and plan messages.
-- Streamlit app with the trace viewer, CLI demo, eval runner, 903 tests.
+- Three-tier red flags (unmistakable -> emergency; one weak sign -> safety question; otherwise routine), negation, injury context, per-word typo matching, questions only from `data/question_bank.json`.
+- Streamlit app with the conversation and trace viewer, CLI demo, eval runner, 1,065 tests.
 
 **Mocked or simplified**
 - All data is synthetic.
@@ -155,7 +161,6 @@ Live, with Claude, Jev and Voyage (synthetic text only): routing 39/39 non-emerg
 - Booking and wait times.
 - Other languages (non-English input gets the follow-up question offline).
 - The Claude Sonnet 5.5 evaluation judge for explanation quality.
-- Negation in the red-flag screen: "no chest pain" still routes to the ER on purpose (over-triage).
 - ChromaDB or another persistent vector store (in-memory is enough for 44 records).
 
 Known limitations: the Voyage key used in development is rate-limited after about one query in quick succession, so live runs usually fall back to offline search (marked simplified). A live Jev rerank asks one question per candidate (up to 10).

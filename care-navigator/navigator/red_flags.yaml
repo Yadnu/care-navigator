@@ -1,15 +1,25 @@
-# Red-flag phrases by category. Any hit routes to EMERGENCY (D-002).
-# Simplified, not clinically validated. Prototype only.
+# Red flags in three tiers (D-041). Simplified, not clinically validated. Prototype only.
 #
-# phrases:  matched exactly, then fuzzily for typos (see config.FUZZY_*), on normalized
-#           text (lowercase, apostrophes removed, punctuation -> spaces).
-# patterns: each entry is a list of regexes that must ALL match the normalized text.
-version: "1.0"
+# Tier 1 (categories): unmistakable signs. Any hit -> EMERGENCY immediately, no questions.
+# Tier 2 (tier2): a single weak signal. Ask the mapped safety question first; a danger answer
+#   -> EMERGENCY, otherwise routing continues.
+# Tier 3: neither. Normal clarification and routing.
+#
+# Matching runs on normalized text (lowercase, apostrophes removed, punctuation -> spaces).
+# phrases: matched word by word; a word may differ by a typo (config.FUZZY_*), short words exactly.
+# patterns: each entry is a list of regexes that must ALL match.
+# A match is ignored when a negation cue appears up to 3 words before it in the same clause
+# ("no chest pain"); commas, full stops and "but" end a clause.
+version: "2.0"
 label: "Simplified, not clinically validated"
 
 messages:
   "911": "Call 911 or go to the nearest ER."
   "988": "Call or text 988 (Suicide & Crisis Lifeline) now, or call 911 if you are in immediate danger."
+
+# Quoted: an unquoted `no` is the boolean false in YAML 1.1.
+negation_cues: ["no", "not", "without", "never", "denies", "deny", "none", "nor", "dont", "didnt", "doesnt", "isnt", "wasnt"]
+clause_breaks: ["but", "however", "though", "although"]
 
 categories:
   cardiac:
@@ -22,17 +32,19 @@ categories:
       - chest pressure
       - pressure in my chest
       - crushing chest
+      - squeezing chest
       - heart attack
       - nearly passed out
       - almost passed out
       - nearly fainted
+    patterns:
+      - ['\bchest\b', '\b(tight\w*|pressure|heavy|heaviness|squeez\w*|crush\w*|elephant|sitting on)\b']
   breathing:
     resources: ["911"]
     phrases:
       - cant breathe
       - cannot breathe
-      - shortness of breath
-      - short of breath
+      - not breathing
       - difficulty breathing
       - trouble breathing
       - struggling to breathe
@@ -41,6 +53,9 @@ categories:
       - lips turning blue
       - lips are blue
       - turning blue
+    patterns:
+      - ['\bbreath\w*', '\b(struggl\w*|even (sitting|resting|lying|at rest)|sitting still)\b']
+      - ['\b(short of breath|shortness of breath)\b', '\bchest (pain|tight\w*|pressure)\b']
   stroke:
     resources: ["911"]
     phrases:
@@ -53,6 +68,11 @@ categories:
       - numb on one side
       - worst headache of my life
       - worst headache ever
+    patterns:
+      - ['\bsudden\w*', '\b(cant see|lost (my )?vision|vision loss|blind\w*)\b']
+      - ['\bconfus\w*', '\b(cant lift|weak\w*|numb\w*|droop\w*|slurr\w*)\b']
+      - ['\bcant (lift|move) (my |his |her |their )?(right |left )?(arm|leg)\b']
+      - ['\bheadache\b', '\bworst\b.{0,30}\b(life|ever)\b']
   bleeding:
     resources: ["911"]
     phrases:
@@ -77,6 +97,8 @@ categories:
       - tongue swelling
       - tongue is swelling
       - anaphylaxis
+    patterns:
+      - ['\b(lips|tongue|throat)\b', '\bswell\w*']
   mental_health_crisis:
     resources: ["988", "911"]
     phrases:
@@ -94,8 +116,8 @@ categories:
       - cant keep water down
       - cant keep fluids down
       - cant keep anything down
-      - havent peed
-      - no urine
+    patterns:
+      - ['\b(havent peed|no urine|not peeing)\b', '\b(vomit\w*|dizz\w*)\b']
   infant_fever:
     resources: ["911"]
     patterns:
@@ -113,7 +135,7 @@ categories:
   head_injury:
     resources: ["911"]
     patterns:
-      - ['\b(hit|bumped|banged|hurt) (my|his|her|their)? ?head\b', '\b(vomit\w*|throwing up|sleepy|drowsy|confused|passed out)\b']
+      - ['\b(hit|bumped|banged|hurt) (my |his |her |their )?head\b', '\b(vomit\w*|throwing up|sleepy|drowsy|confused|passed out)\b']
   poisoning:
     resources: ["911"]
     phrases:
@@ -126,19 +148,81 @@ categories:
   pregnancy:
     resources: ["911"]
     patterns:
-      - ['\bpregnant\b', '\bbleeding\b']
+      - ['\bpregnant\b', '\bbleed\w*']
   trauma:
     resources: ["911"]
     phrases:
       - bone sticking out
       - bone is sticking out
       - clearly broken
+    patterns:
+      - ['\b(car crash|car accident|hit by a car|fell from)\b', '\b(neck|back|head|tingl\w*|numb\w*)\b']
   abdominal:
     resources: ["911"]
     phrases:
       - belly is hard
       - stomach is rigid
+    patterns:
+      - ['\b(severe|worst)\b', '\b(stomach|belly|abdomen)\b', '\b(hard|rigid|cant stand)\b']
+      - ['\blower right\b', '\b(fever|worse|worsening)\b']
   infection:
     resources: ["911"]
     patterns:
       - ['\bstiff neck\b', '\bfever\b']
+
+# Tier 2: one weak signal -> ask the safety question first (any pattern may match).
+# suppressed_by_injury: an injury or benign cause in the text ("lifted boxes", "after my flu shot")
+# points to the injury rules instead.
+tier2:
+  arm_jaw_back_pain:
+    safety_slot: associated_cardiac_symptoms
+    suppressed_by_injury: true
+    patterns:
+      - '\b(arm|jaw|back|shoulder)s? (pain|hurts?|aches?|aching|is sore|is hurting)\b'
+      - '\b(pain|ache|aching|soreness) in (my |his |her )?(left |right )?(arm|jaw|back|shoulder)\b'
+      - '\bsore (left |right )?(arm|jaw|back|shoulder)\b'
+  short_of_breath:
+    safety_slot: breathing_at_rest
+    suppressed_by_injury: false
+    patterns:
+      - '\b(short of breath|shortness of breath|out of breath|breathless|winded)\b'
+  headache:
+    safety_slot: headache_onset
+    suppressed_by_injury: false
+    patterns:
+      - '\b(headache|migraine|head hurts|head is pounding|head pain)\b'
+  abdominal_pain:
+    safety_slot: abdominal_location_and_trend
+    suppressed_by_injury: false
+    patterns:
+      - '\b(stomach|belly|abdominal|abdomen|tummy) (pain|ache|hurts)\b'
+      - '\bstomach ?ache\b'
+      - '\bpain in (my |his |her )?(stomach|belly|abdomen|tummy)\b'
+  dizziness:
+    safety_slot: associated_cardiac_symptoms
+    suppressed_by_injury: false
+    patterns:
+      - '\b(dizzy|dizziness|lightheaded|light headed|woozy)\b'
+  vomiting:
+    safety_slot: fluids_kept_down
+    suppressed_by_injury: false
+    patterns:
+      - '\b(vomit\w*|throwing up|threw up|puking|puked)\b'
+  child_fever:
+    safety_slot: child_age
+    suppressed_by_injury: false
+    needs_child: true
+    patterns:
+      - '\bfevers?\b'
+
+# Child context for child_fever (or the request's age group is "child").
+child_context:
+  - '\b(kid|kids|child|son|daughter|baby|toddler|infant|newborn)\b'
+  - '\b\d+ (year|month|week|day)s? old\b'
+
+# Injury or benign-cause context: points to injury rules unless a Tier 1 sign is present.
+injury_context:
+  - '\b(played|fell|fallen|tripped|twisted|sprained|lifted|lifting|carried|carrying|bumped)\b'
+  - '\bmoving (furniture|boxes|house)\b'
+  - '\b(volleyball|soccer|basketball|football|tennis|bench press|weightlifting|skating|skiing|hiking|hike|workout)\b'
+  - '\b(after|during|from) (my |a |the )?(run|running|jog|jogging|exercise|exercising|working out|gym|practice|game|match|yoga|flu shot|shot|vaccine|vaccination|injection|dentist)\b'

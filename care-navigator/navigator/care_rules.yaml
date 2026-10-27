@@ -7,12 +7,15 @@
 #   min_severity / max_severity     self-reported severity 1-10
 #   min_duration_hours  needs a stated duration; unknown duration never matches (D-025)
 #   symptom_any         any of these words in the parsed main symptom
+#   slots_any           {slot: [values]}: any listed slot answer (question bank) holds (D-041)
+# needs        slots this rule must know before it decides; the pipeline asks for a missing one
+#              (question budget permitting), otherwise the decision escalates one level (D-041)
 # level        care level when something at that level is open
 # after_hours  where to go when nothing at `level` is open now (never SELF_CARE);
 #              time of day is handled here and by the opening-hours check (D-026)
 # reason       plain-English "because ..." used by the explanation (no diagnosis, no level names)
 # note         shown with the decision
-version: "1.2"
+version: "2.0"
 label: "Simplified, not clinically validated"
 
 rules:
@@ -100,9 +103,17 @@ rules:
     after_hours: ER
     reason: "an injury like this may need an in-person exam or X-ray"
 
+  - id: R-24
+    description: Injury with swelling or a limb that can't be used (D-041)
+    when: {category: [musculoskeletal], slots_any: {swelling_or_deformity: ["yes"], can_use_or_bear_weight: ["no"]}}
+    level: URGENT_CARE
+    after_hours: ER
+    reason: "swelling or not being able to use it may need an in-person exam or X-ray"
+
   - id: R-11
     description: Minor strain or ache
     when: {category: [musculoskeletal]}
+    needs: [injury_mechanism, swelling_or_deformity, can_use_or_bear_weight]
     level: PRIMARY_CARE
     after_hours: TELEHEALTH
     reason: "a minor strain is best checked at a regular appointment"
@@ -173,6 +184,14 @@ rules:
     level: URGENT_CARE
     after_hours: TELEHEALTH
     reason: "ear, throat and fever symptoms usually need a same-day check"
+
+  - id: R-25
+    description: Breathlessness with activity only (at rest is a danger answer before this) (D-041)
+    when: {symptom_any: [short of breath, shortness of breath, out of breath, breathless]}
+    level: PRIMARY_CARE
+    after_hours: TELEHEALTH
+    reason: "breathlessness with activity is best checked by a regular clinician"
+    note: "If you become short of breath at rest, call 911."
 
   - id: R-19
     description: Cold and nose symptoms

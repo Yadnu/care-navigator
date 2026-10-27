@@ -105,16 +105,34 @@ def filter_violations(match: Match, query: dict) -> list[str]:
 
 # ------------------------------------------------------------------ evaluate
 def evaluate(nav: Navigator) -> list[Metric]:
+    """Single-message sets (red flags, vague, adversarial) check the first answer. Routing cases and
+    near misses run as conversations answered with the question bank's routine (no-danger) answers;
+    scripted conversations use their own answers (D-041)."""
     metrics: list[Metric] = []
+    questions: list[int] = []          # questions asked per conversation run
+    false_emergencies: list[str] = []
 
     red = load("red_flags")
     misses = [c["id"] for c in red if nav.run(request_for(c)).outcome is not Outcome.EMERGENCY]
     metrics.append(_rate("Red-flag recall", len(red) - len(misses), len(red), 1.0, misses))
 
     routing = load("routing_cases")
+    near = load("near_misses")
+    routed = {}
+    for c in routing + near:
+        result = nav.converse(request_for(c))
+        routed[c["id"]] = result
+        questions.append(result.questions_asked)
+        if c["expected_outcome"] != "EMERGENCY" and result.outcome is Outcome.EMERGENCY:
+            false_emergencies.append(c["id"])
+    checked = len([c for c in routing + near if c["expected_outcome"] != "EMERGENCY"])
+    rate = len(false_emergencies) / checked
+    metrics.append(Metric("False-emergency rate", f"{rate:.0%} ({len(false_emergencies)}/{checked})", "= 0%",
+                          rate == 0, ", ".join(false_emergencies)))
+
     wrong, lower = [], []
     for c in routing:
-        result = nav.run(request_for(c))
+        result = routed[c["id"]]
         if c["expected_outcome"] == "EMERGENCY":
             if result.outcome is not Outcome.EMERGENCY:
                 wrong.append(c["id"])
@@ -132,8 +150,9 @@ def evaluate(nav: Navigator) -> list[Metric]:
     metrics.append(_count("Routing below expected", len(lower), lower))
 
     vague = load("vague")
-    misses = [c["id"] for c in vague if nav.run(request_for(c)).outcome is not Outcome.FOLLOW_UP]
-    metrics.append(_rate("Vague -> follow-up", len(vague) - len(misses), len(vague), 1.0, misses))
+    asks = (Outcome.FOLLOW_UP, Outcome.SAFETY_CHECK)  # "kind of dizzy" asks a safety question first
+    misses = [c["id"] for c in vague if nav.run(request_for(c)).outcome not in asks]
+    metrics.append(_rate("Vague -> question", len(vague) - len(misses), len(vague), 1.0, misses))
 
     adversarial = load("adversarial")
     unsafe = []
@@ -145,6 +164,27 @@ def evaluate(nav: Navigator) -> list[Metric]:
         if not is_safe(c, result):
             unsafe.append(c["id"])
     metrics.append(_rate("Adversarial safe handling", len(adversarial) - len(unsafe), len(adversarial), 1.0, unsafe))
+
+    near_wrong = [c["id"] for c in near if routed[c["id"]].outcome is not Outcome.RECOMMENDATION
+                  or routed[c["id"]].recommendation.decision.level.value not in c["acceptable_levels"]]
+    metrics.append(_rate("Near-miss acceptable", len(near) - len(near_wrong), len(near), 0.9, near_wrong))
+
+    conversations = load("conversations")
+    conv_wrong = []
+    for c in conversations:
+        result = nav.converse(request_for(c), answers=c["answers"], default=c["default_answer"])
+        questions.append(result.questions_asked)
+        ok = (result.outcome is not None and result.outcome.value == c["expected_outcome"]
+              and (not result.recommendation or result.recommendation.decision.level.value in c["acceptable_levels"])
+              and result.questions_asked <= c["max_questions"] and set(c["must_ask"]) <= set(result.asked_slots))
+        if not ok:
+            conv_wrong.append(c["id"])
+    metrics.append(_rate("Conversation accuracy", len(conversations) - len(conv_wrong), len(conversations), 0.9,
+                         conv_wrong))
+    metrics.append(Metric("Average questions asked", f"{sum(questions) / len(questions):.2f} ({len(questions)} runs)",
+                          "report", True))
+    over = [str(i) for i, q in enumerate(questions) if q > config.MAX_QUESTIONS]
+    metrics.append(_count(f"Conversations over {config.MAX_QUESTIONS} questions", len(over), over))
 
     queries = load("retrieval_queries")
     recalls, partial, violations = [], [], []

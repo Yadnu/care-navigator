@@ -26,7 +26,7 @@ Template:
 
 ## D-002: Defense in depth for red flags
 - Date: 2026-10-27
-- Status: accepted
+- Status: superseded by D-041
 - Context: Emergency phrasing varies widely (typos, understatement, indirect wording). Any single detector will miss some.
 - Decision: Three independent checks: keyword/fuzzy rules on raw text, the Jev emergency classifier, and rules again on parsed fields. Any one firing routes to EMERGENCY.
 - Alternatives considered: Keyword rules only (rejected: misses indirect wording); classifier only (rejected: opaque, unavailable offline).
@@ -34,7 +34,7 @@ Template:
 
 ## D-003: Fail toward more care
 - Date: 2026-10-27
-- Status: accepted
+- Status: superseded by D-041
 - Context: Uncertainty, missing fields and provider failures are inevitable.
 - Decision: Uncertain or missing information escalates one care level. At most one follow-up question per request; after that, escalate instead of asking again.
 - Alternatives considered: Asking repeated questions until confident (rejected: poor experience, delays care); defaulting to the ER on any doubt (rejected: over-triage burdens ERs and users).
@@ -122,7 +122,7 @@ Template:
 
 ## D-014: Red-flag fuzzy matching threshold
 - Date: 2026-10-27
-- Status: accepted
+- Status: superseded by D-041
 - Context: Red flags must survive typos ("chest pian", "cant breath") without firing on near misses like "can keep water down" (the midnight TELEHEALTH case) or "I can breathe fine".
 - Decision: Normalize text (lowercase, apostrophes removed, punctuation to spaces). Try every phrase of a category as an exact word-boundary match first; only if none hits, slide a window of the phrase's token count over the text and take the best RapidFuzz `fuzz.ratio`. A window counts when ratio >= 88 (`config.FUZZY_THRESHOLD`) and every token shorter than 4 chars (`config.FUZZY_MIN_TOKEN_LEN`) matches exactly. Observed scores: "chest pian" 90, "cant breath" 96.
 - Alternatives considered: Plain `fuzz.partial_ratio` (rejected: when the text is shorter than the phrase it scores 100 for "chest" vs "chest pain", and "can keep water down" scores ~95 against "cant keep water down"); threshold 85 (rejected: "can"/"cant" style flips get through without the short-token rule); 92 (rejected: misses "chest pian").
@@ -146,7 +146,7 @@ Template:
 
 ## D-017: No negation handling in the keyword screen
 - Date: 2026-10-27
-- Status: accepted
+- Status: superseded by D-041
 - Context: "no chest pain" contains "chest pain". Negation detection is error-prone and a miss would route an emergency down.
 - Decision: The keyword screen ignores negation; "no chest pain" fires. This errs toward more care (D-003).
 - Alternatives considered: NegEx-style negation windows (rejected: risk of suppressing real flags such as "not sure but chest pain").
@@ -358,3 +358,39 @@ Template:
 - Decision: Fall back to the practitioner's specialties (for example "urgent care, family medicine"), which describes the place without implying a match.
 - Alternatives considered: Leaving it empty (rejected: the UI then shows a blank line).
 - Consequences: Covered by `test_matched_text_never_claims_an_unrelated_condition`.
+
+## D-041: Three-tier red flags and a short conversation (Prompt1 Part A)
+- Date: 2026-10-27
+- Status: accepted (supersedes D-002, D-003, D-014, D-017)
+- Context: "My left hand have severe pain ever since I have played volleyball" returned EMERGENCY live (`traces/8340ab6389a1.json`). The step that fired was `red_flags_parsed` with output `parsed:severe pain`: `screen_report` (`navigator/redflags.py`, old lines 109-112) turned any parser-listed red flag that no rule matched into an emergency. The keyword screen had no hits and Jev was 0.49. More generally, any weak keyword stopped the request instead of asking.
+- Decision:
+  - Tier 1 (`red_flags.yaml` v2.0, `categories`): unmistakable phrases and combinations only; any hit in the first message or any answer -> EMERGENCY with no questions. Chest pain/pressure/tightness, chest pain with shortness of breath, can't breathe or breathless even at rest, stroke signs, worst headache, uncontrolled bleeding, throat/tongue/lip swelling, unresponsive, seizure, suicidal intent (988 then 911), infant under 3 months with fever, plus the existing dehydration, poisoning, trauma, abdominal and infection combinations. The rules alone catch 40/40 red flags.
+  - Tier 2 (`tier2`): a single weak signal (arm, jaw, back or shoulder pain; short of breath; headache; belly pain; dizziness; vomiting; a child with fever; Jev emergency probability >= 0.5; a parser red flag no rule recognises) asks its mapped safety question from the question bank first (at most 2 safety questions). A danger answer -> EMERGENCY; otherwise routing continues.
+  - Jev alone triggers EMERGENCY only at probability >= 0.8 with confidence >= 0.7 (`config.JEV_EMERGENCY_THRESHOLD`, `JEV_HIGH_CONFIDENCE`).
+  - Injury or benign-cause context ("played", "fell", "lifted", "after my flu shot", sports) suppresses the arm/jaw/back, Jev and parser signals unless a Tier 1 sign is present.
+  - Negation: a match is ignored when "no", "not", "without", "don't", "didn't" (and similar) appear up to 3 words before it in the same clause; commas, full stops and "but" end a clause. "no chest pain" no longer fires (D-017 reversed); "no fever. chest pain" still does.
+  - Typos: phrases match word by word; two words count as the same when equal, or both have >= 4 letters, start with the same letter and have Jaro-Winkler similarity >= 0.90 (`rapidfuzz.distance.JaroWinkler`, checked in rapidfuzz 3.14.6). Plain ratio was rejected because a transposition in a 4-letter word scores 75 ("pian"/"pain"); Jaro-Winkler scores it 0.925. No partial matching on whole sentences.
+  - Questions come only from `data/question_bank.json` (15 slots; generated from `data/question_bank_src.py`). Offline uses the bank text; Claude may rephrase, but the result must pass the question validator and keep at least half of the bank question's content words, otherwise the bank text is used.
+  - Conversation: one question at a time, at most 3 per conversation (safety questions included). Each call re-runs the whole conversation (first message plus all answers, each redacted). Order: Tier 1 -> danger answers -> Jev -> parse -> Tier 1 on parsed fields -> Tier 2 safety question -> main symptom (once) -> the matching rule's `needs` -> decide. When questions run out or the person presses "Skip, just tell me where to go", whatever is still unknown escalates one level.
+  - Free text can fill a slot only with a non-danger value (saves a question); a danger value counts only as an answer to that question, so "short of breath" can't answer its own safety question.
+  - Jev's "too vague" score doesn't override text the lexicon finds specific (a named symptom, or a body part with a pain word). Live Jev scored the A1 text 0.75 vague.
+  - New outcome SAFETY_CHECK; `Request.turns` and `Request.skip`; `followup_answer` kept as shorthand for one main-symptom answer. `Navigator.converse()` runs a whole conversation for tests, the eval and scripted demos.
+  - New eval sets (generated, synthetic): `near_misses.jsonl` (21) and `conversations.jsonl` (12). New metrics: false-emergency rate on near misses and non-emergency routing cases, near-miss acceptable, conversation accuracy, average questions asked, conversations over 3 questions.
+- Alternatives considered: Keeping a keyword stop with a bigger exclusion list (rejected: misses the A1 cause, which was the parser catch-all); letting Jev decide Tier 2 (rejected: rules decide, D-001); asking a free-form Claude question (rejected: Prompt1 requires the bank).
+- Consequences: Offline eval: red-flag recall 100% (40/40), false emergencies 0% (0/60), routing 100% (40/40) with 0 below expected, near misses 100% (21/21), conversations 100% (12/12), 0.41 questions on average over 73 runs, 0 runs over 3 questions. Live, the A1 input now goes to urgent care (R-10) with no false emergency. A plain "mild headache" now gets one safety question before routing.
+
+## D-042: Care rules v2.0 (slots and needs)
+- Date: 2026-10-27
+- Status: accepted
+- Context: Injury routing needs answers (swelling, can you use it) that the first message often doesn't contain, and breathlessness with activity needs its own level.
+- Decision: Rules may use `slots_any` (any listed question-bank answer holds) and `needs` (slots the rule must know before deciding). New R-24 (musculoskeletal with swelling or can't use it -> urgent care, after hours ER), R-11 now `needs: [injury_mechanism, swelling_or_deformity, can_use_or_bear_weight]`, new R-25 (short of breath with activity -> primary care, before the respiratory rule). The lexicon maps injury words to musculoskeletal, and hands, arms, legs and the neck to musculoskeletal instead of skin/wound (offline, the A1 text had been routed by R-12, "cuts, bites and burns"). 25 rules.
+- Alternatives considered: Asking every musculoskeletal question every time (rejected: most routing cases already state them; extraction fills them).
+- Consequences: Routing cases that leave a needed slot open get one follow-up (answered with the routine answer in the eval).
+
+## D-043: Test changes for Prompt1 Part A
+- Date: 2026-10-27
+- Status: accepted
+- Context: Part A deliberately changes behaviour that earlier tests pinned.
+- Decision: Updated, not weakened: routing tests and injection tests run as conversations with routine answers (`Navigator.converse`); the vague test accepts FOLLOW_UP or SAFETY_CHECK ("kind of dizzy" is Tier 2); the trace-order test includes the new `answers` and `tier2` steps; `Outcome` has SAFETY_CHECK; offline clarifier results say `used="question_bank"`; the Claude clarifier mock now rephrases the bank question (and a new test checks that a changed question falls back); the Jev-down test asserts the Tier 1 rule caught "elephant on my chest" (Jev is no longer reached, so `simplified` is false) and a new test covers the Jev fallback mid-conversation; eval metric names and bars follow Prompt1 A4.
+- Alternatives considered: Keeping single-turn routing tests (rejected: Prompt1 makes routing conversational).
+- Consequences: 1,065 tests pass offline.

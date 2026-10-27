@@ -88,15 +88,22 @@ def voyage_enabled() -> bool:
 
 
 # ------------------------------------------------------------------ thresholds
-# Red-flag fuzzy matching (D-014): a token window must reach this RapidFuzz ratio,
-# and tokens shorter than FUZZY_MIN_TOKEN_LEN must match exactly ("can" != "cant").
-FUZZY_THRESHOLD = 88
+# Red-flag typo matching (D-041): a phrase word and a text word count as the same when they are
+# equal, or both have at least FUZZY_MIN_TOKEN_LEN letters, start with the same letter and have a
+# Jaro-Winkler similarity >= FUZZY_WORD_THRESHOLD ("pian" -> "pain"). Short words must match exactly.
+FUZZY_WORD_THRESHOLD = 0.90
 FUZZY_MIN_TOKEN_LEN = 4
 
-# Jev probabilities at or above these count as "yes" (D-019).
-JEV_EMERGENCY_THRESHOLD = 0.5
+# Jev (D-019, D-041). Alone, Jev triggers EMERGENCY only at >= 0.8 with confidence >= 0.7;
+# from 0.5 it is a Tier 2 signal that asks a safety question.
+JEV_EMERGENCY_THRESHOLD = 0.8
+JEV_HIGH_CONFIDENCE = 0.7
+JEV_SAFETY_THRESHOLD = 0.5
 JEV_VAGUE_THRESHOLD = 0.5
 GUARD_THRESHOLD = 0.5
+
+# Conversation (D-041): at most this many questions (safety + detail) per conversation.
+MAX_QUESTIONS = 3
 
 # ------------------------------------------------------------------ pipeline
 MAX_TEXT_CHARS = 2000            # longer descriptions are rejected with a clear message
@@ -110,7 +117,7 @@ RERANK_TOP_N = 10
 TOP_K = 3
 
 # ------------------------------------------------------------------ confidence gating
-# high -> act on the rule; medium -> escalate one level; low -> ask the follow-up (D-003).
+# high -> act on the rule; medium -> escalate one level; low -> ask the follow-up (D-025, D-041).
 CONFIDENCE_ACTIONS = {"high": "act", "medium": "escalate", "low": "ask"}
 
 

@@ -9,12 +9,17 @@ import re
 
 # Symptom terms by category. Any match makes the text "specific" (not vague).
 SYMPTOM_TERMS: dict[str, list[str]] = {
-    "respiratory": [r"cough\w*", r"runny nose", r"stuffy nose", r"congest\w*", r"cold symptoms", r"chest cold"],
+    "respiratory": [r"cough\w*", r"runny nose", r"stuffy nose", r"congest\w*", r"cold symptoms", r"chest cold",
+                    r"short of breath", r"shortness of breath", r"out of breath", r"breathless"],
     "ent": [r"sore throat", r"ear ?aches?", r"ear pain", r"sinus\w*", r"tonsil\w*", r"hoarse"],
     "gastrointestinal": [r"vomit\w*", r"threw up", r"throwing up", r"diarrh?ea", r"cramps?", r"nause\w*",
                          r"heartburn", r"acid reflux", r"constipat\w*", r"stomach (bug|ache|pain)",
                          r"keep (any )?(water|fluids|anything) down"],
-    "musculoskeletal": [r"sprain\w*", r"twisted", r"strain\w*", r"pulled (a )?muscle"],
+    "musculoskeletal": [r"sprain\w*", r"twisted", r"strain\w*", r"pulled (a )?muscle",
+                        # injury context (D-041): an injury points to the injury rules
+                        r"played", r"fell", r"tripped", r"lifted", r"lifting", r"carrying", r"carried",
+                        r"volleyball", r"soccer", r"basketball", r"tennis", r"bench press", r"skating",
+                        r"hike", r"hiking", r"moving furniture"],
     "skin": [r"rash\w*", r"hives", r"itch\w*", r"acne", r"eczema"],
     "eye": [r"pink eye", r"crusty", r"red eyes?"],
     "urinary": [r"burning when i pee", r"(pain|hurts) when i pee", r"urinat\w*", r"\buti\b"],
@@ -40,8 +45,12 @@ BODY_AREAS: dict[str, tuple[str, str]] = {
     "wrist": (r"wrists?", "musculoskeletal"),
     "back": (r"back", "musculoskeletal"),
     "shoulder": (r"shoulders?", "musculoskeletal"),
-    "hand": (r"hands?|fingers?|fingernail|palm", "wound"),
-    "skin": (r"skin|arms?|legs?", "skin"),
+    "hand": (r"hands?|fingers?|fingernail|palm", "musculoskeletal"),
+    "arm": (r"arms?", "musculoskeletal"),
+    "leg": (r"legs?", "musculoskeletal"),
+    "neck": (r"neck", "musculoskeletal"),
+    "jaw": (r"jaw", "dental"),
+    "skin": (r"skin", "skin"),
     "mouth": (r"mouth|cheek|gums?", "dental"),
     "urinary": (r"pee|peeing|bladder", "urinary"),
 }

@@ -11,10 +11,12 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - Phase 5 (RAG over practitioners): done.
 - Phase 6 (costs, explainer, guard, trace, pipeline): done; verified live (D-036).
 - Phase 7 (app, CLI, eval runner): done.
-- Phase 8 (README, final docs): done. All phases complete; remaining items are the open questions in `docs/context-graph.md`.
+- Phase 8 (README, final docs): done.
+- Prompt1 Part A (three-tier red flags, question bank, conversations): done. Part B (insurance data) next.
 
 ## Domain vocabulary
-- **Outcomes:** `EMERGENCY` (stop, "Call 911 or go to the nearest ER"; suicidal intent also gives 988), `FOLLOW_UP` (one clarifying question, max 25 words, max once), `RECOMMENDATION`.
+- **Outcomes:** `EMERGENCY` (stop; 988 first for crisis wording), `SAFETY_CHECK` (Tier 2 safety question), `FOLLOW_UP` (missing detail), `RECOMMENDATION`. At most 3 questions per conversation, one at a time, only from `data/question_bank.json`; Skip or running out escalates one level (D-041).
+- **Red-flag tiers:** Tier 1 unmistakable -> EMERGENCY; Tier 2 weak signal -> safety question; Tier 3 routine. Negation and injury context respected; Jev alone needs >= 0.8 with confidence >= 0.7.
 - **Care levels, low -> high:** `SELF_CARE < TELEHEALTH < PRIMARY_CARE < URGENT_CARE < ER`. Escalation = move one step right. Never move left to compensate for closures.
 - **Practitioner types:** `ER, URGENT_CARE, PRIMARY_CARE, TELEHEALTH, SPECIALIST`.
 - **Confidence gating:** high -> act; medium -> escalate one level, except when only duration/body area is missing (D-025); low -> ask the follow-up (`config.confidence_action`); still vague after it -> escalate.

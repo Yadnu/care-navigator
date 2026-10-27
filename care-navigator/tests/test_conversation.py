@@ -166,6 +166,19 @@ def test_tier1_sign_in_any_answer_is_an_emergency(nav):
     assert nav.run(req("my arm hurts", turns=turns)).outcome is Outcome.EMERGENCY
 
 
+def test_jev_vagueness_does_not_override_a_clearly_named_symptom():
+    from navigator.jev_client import OfflineJev
+
+    class SaysVague(OfflineJev):  # live Jev scored the A1 text 0.75 "too vague"
+        def is_too_vague(self, text):
+            return 0.75, 0.5
+
+    nav = Navigator(jev=SaysVague(), save_traces=False)
+    result = nav.run(req("My left hand have severe pain ever since I have played volleyball"))
+    assert result.slot != "main_symptom"                                        # hand + pain is specific
+    assert nav.run(req("I just feel off")).slot == "main_symptom"               # really vague still asks
+
+
 def test_jev_alone_needs_high_probability_and_confidence(tmp_path):
     from navigator.jev_client import OfflineJev
 

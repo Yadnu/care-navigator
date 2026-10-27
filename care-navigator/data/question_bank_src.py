@@ -80,7 +80,7 @@ QUESTION_BANK = [
     },
     {
         "slot": "associated_cardiac_symptoms", "kind": "safety", "categories": ["any"],
-        "question": "Along with this, do you have chest pain or pressure, shortness of breath, sweating or nausea?",
+        "question": "Along with this, is there any chest pain or pressure, shortness of breath, sweating or nausea?",
         "options": [
             {"value": "no", "label": "No", "match": NO},
             {"value": "yes", "label": "Yes", "match": YES + [r"\bchest\b", r"\bsweat\w*", r"\bclammy\b",

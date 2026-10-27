@@ -11,7 +11,7 @@ import streamlit as st
 from navigator import config
 from navigator.care_engine import LABELS
 from navigator.data import load_plans, load_zips
-from navigator.models import Outcome, Request
+from navigator.models import Outcome, Request, Turn
 from navigator.pipeline import Navigator, NavigatorResult
 
 TIME_PRESETS = {
@@ -62,10 +62,17 @@ def show_result(result: NavigatorResult) -> None:
     if result.outcome is Outcome.EMERGENCY:
         st.error(f"**{result.message}**")
         st.markdown(f"Emergency numbers: {', '.join(result.resources)}. This request stops here.")
-    elif result.outcome is Outcome.FOLLOW_UP:
+    elif result.outcome in (Outcome.SAFETY_CHECK, Outcome.FOLLOW_UP):
+        kind = "Safety check" if result.outcome is Outcome.SAFETY_CHECK else "One more detail"
+        st.caption(f"{kind}: question {result.questions_asked} of up to {config.MAX_QUESTIONS}")
         st.info(result.question)
-        st.text_input("Your answer (we only ask once)", key="followup_answer")
+        if result.quick_replies:
+            columns = st.columns(len(result.quick_replies))
+            for i, (col, reply) in enumerate(zip(columns, result.quick_replies)):
+                col.button(reply, key=f"reply_{i}")
+        st.text_input("Or type your answer", key="followup_answer")
         st.button("Send answer", key="submit_followup")
+        st.button("Skip, just tell me where to go", key="skip")
     else:
         rec = result.recommendation
         st.success(f"Recommended level of care: {label(rec.decision.level)}.")
@@ -126,22 +133,35 @@ def main() -> None:
         col2.date_input("Date", key="custom_date")
         col2.time_input("Time", key="custom_time")
 
+    state = st.session_state
     if st.button("Find care", key="submit", type="primary"):
-        st.session_state["last_request"] = dict(
-            text=st.session_state.get("symptoms", ""),
-            severity=st.session_state["severity"],
-            zip=(st.session_state.get("zip_other") or "").strip() if zip_choice == "Other" else zip_choice,
-            plan=st.session_state["plan"],
+        state["last_request"] = dict(
+            text=state.get("symptoms", ""),
+            severity=state["severity"],
+            zip=(state.get("zip_other") or "").strip() if zip_choice == "Other" else zip_choice,
+            plan=state["plan"],
             request_time=request_time(when_choice),
-            age_group=st.session_state["age_group"],
+            age_group=state["age_group"],
         )
-        st.session_state["result"] = nav.run(Request(**st.session_state["last_request"]))
-    elif st.session_state.get("submit_followup") and st.session_state.get("last_request"):
-        answer = st.session_state.get("followup_answer", "")
-        st.session_state["result"] = nav.run(Request(**st.session_state["last_request"], followup_answer=answer))
+        state["turns"] = []
+        state["result"] = nav.run(Request(**state["last_request"]))
+    elif state.get("last_request") and state.get("result") and state["result"].slot:
+        # An answer to the current question: a quick reply, typed text, or "skip" (D-041).
+        last = state["result"]
+        answer = next((reply for i, reply in enumerate(last.quick_replies) if state.get(f"reply_{i}")), None)
+        if answer is None and state.get("submit_followup"):
+            answer = (state.get("followup_answer") or "").strip()
+        if answer:
+            state["turns"] = [*state.get("turns", []), Turn(slot=last.slot, question=last.question, answer=answer)]
+            state["result"] = nav.run(Request(**state["last_request"], turns=state["turns"]))
+        elif state.get("skip"):
+            state["result"] = nav.run(Request(**state["last_request"], turns=state.get("turns", []), skip=True))
 
-    if st.session_state.get("result"):
-        show_result(st.session_state["result"])
+    for turn in state.get("turns", []):
+        st.markdown(md(f"**Q:** {turn.question}"))
+        st.markdown(md(f"You: {turn.answer}"))
+    if state.get("result"):
+        show_result(state["result"])
 
 
 main()

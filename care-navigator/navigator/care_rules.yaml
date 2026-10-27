@@ -1,0 +1,144 @@
+# Care-level rules. Simplified, not clinically validated. Prototype only.
+#
+# Rules are checked top to bottom; the first match wins (D-001).
+# when (all optional, all must hold):
+#   category            Jev symptom category, one of lexicon categories
+#   min_urgency / max_urgency       Jev urgency score 1-5
+#   min_severity / max_severity     self-reported severity 1-10
+#   min_duration_hours  needs a stated duration; unknown duration never matches (D-025)
+#   symptom_any         any of these words in the parsed main symptom
+# level        care level when something at that level is open
+# after_hours  where to go when nothing at `level` is open now (never SELF_CARE);
+#              time of day is handled here and by the opening-hours check
+# note         shown with the decision
+version: "1.0"
+label: "Simplified, not clinically validated"
+
+rules:
+  - id: R-01
+    description: Highest urgency score
+    when: {min_urgency: 5}
+    level: ER
+    after_hours: ER
+
+  - id: R-02
+    description: Very high self-reported severity without a red flag
+    when: {min_severity: 8}
+    level: URGENT_CARE
+    after_hours: ER
+    note: "If it gets worse or you feel faint, call 911."
+
+  - id: R-03
+    description: Ongoing condition, refills and check-ups
+    when: {category: [chronic]}
+    level: PRIMARY_CARE
+    after_hours: TELEHEALTH
+
+  - id: R-04
+    description: Stress, sleep or mood without crisis wording (crisis wording routes to 988 earlier)
+    when: {category: [mental_health]}
+    level: PRIMARY_CARE
+    after_hours: TELEHEALTH
+    note: "If you have thoughts of harming yourself, call or text 988 any time."
+
+  - id: R-05
+    description: Long-standing problem, two weeks or more
+    when: {min_duration_hours: 336}
+    level: PRIMARY_CARE
+    after_hours: TELEHEALTH
+
+  - id: R-06
+    description: Mild seasonal allergy symptoms
+    when: {category: [allergy], max_urgency: 2}
+    level: SELF_CARE
+    after_hours: TELEHEALTH
+    note: "Call your plan's nurse line if symptoms get worse or you are unsure."
+
+  - id: R-07
+    description: Mild headache
+    when: {category: [neuro], max_urgency: 2, max_severity: 4}
+    level: SELF_CARE
+    after_hours: TELEHEALTH
+    note: "Call your plan's nurse line if it gets worse; a sudden, severe headache needs 911."
+
+  - id: R-08
+    description: Stomach symptoms with vomiting or diarrhea
+    when: {category: [gastrointestinal], min_urgency: 3}
+    level: URGENT_CARE
+    after_hours: TELEHEALTH
+    note: "If you can't keep fluids down or feel dizzy when standing, go to the ER."
+
+  - id: R-09
+    description: Milder stomach symptoms
+    when: {category: [gastrointestinal]}
+    level: TELEHEALTH
+    after_hours: TELEHEALTH
+    note: "If you can't keep fluids down or feel dizzy when standing, go to the ER."
+
+  - id: R-10
+    description: Acute injury that may need an exam or X-ray
+    when: {category: [musculoskeletal], min_urgency: 3}
+    level: URGENT_CARE
+    after_hours: ER
+
+  - id: R-11
+    description: Minor strain or ache
+    when: {category: [musculoskeletal]}
+    level: PRIMARY_CARE
+    after_hours: TELEHEALTH
+
+  - id: R-12
+    description: Cuts, bites, burns and splinters
+    when: {category: [wound]}
+    level: URGENT_CARE
+    after_hours: TELEHEALTH
+    note: "If bleeding won't stop with pressure, go to the ER."
+
+  - id: R-13
+    description: Burning or pain when urinating
+    when: {category: [urinary]}
+    level: URGENT_CARE
+    after_hours: TELEHEALTH
+
+  - id: R-14
+    description: Tooth or gum pain
+    when: {category: [dental]}
+    level: URGENT_CARE
+    after_hours: TELEHEALTH
+    note: "If your face or neck swells quickly or you have trouble swallowing, go to the ER."
+
+  - id: R-15
+    description: Eye irritation
+    when: {category: [eye]}
+    level: TELEHEALTH
+    after_hours: TELEHEALTH
+
+  - id: R-16
+    description: Hives
+    when: {category: [skin], symptom_any: [hives]}
+    level: URGENT_CARE
+    after_hours: TELEHEALTH
+    note: "If your lips, tongue or throat swell or breathing changes, call 911."
+
+  - id: R-17
+    description: Rash or other skin problem
+    when: {category: [skin]}
+    level: TELEHEALTH
+    after_hours: TELEHEALTH
+
+  - id: R-18
+    description: Ear, throat or fever symptoms
+    when: {category: [ent, fever]}
+    level: URGENT_CARE
+    after_hours: TELEHEALTH
+
+  - id: R-19
+    description: Cold and nose symptoms
+    when: {category: [respiratory]}
+    level: TELEHEALTH
+    after_hours: TELEHEALTH
+
+  - id: R-20
+    description: Anything not matched above (fail toward more care)
+    level: URGENT_CARE
+    after_hours: TELEHEALTH

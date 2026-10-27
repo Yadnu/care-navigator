@@ -188,6 +188,7 @@ def test_closed_injury_goes_up_to_er_not_down():
     d = engine.decide(report(main_symptom="twisted ankle"), category="musculoskeletal", urgency=4,
                       request_time=TUE_EVE, plan="PLAN_GOLD_PPO")
     assert d.level is CareLevel.ER
+    assert d.notes[0] == "Urgent care is closed now (22:30), so the next open option is the ER."
 
 
 def test_after_hours_never_drops_to_self_care():

@@ -85,6 +85,7 @@ class CareDecision(BaseModel):
     rule_id: str
     escalated: bool
     rules_version: str
+    notes: list[str] = []  # rule notes and opening-hours adjustments, shown to the person
 
 
 class Practitioner(BaseModel):

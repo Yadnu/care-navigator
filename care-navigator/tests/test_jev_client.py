@@ -160,33 +160,50 @@ def test_guard_quiet_on_plain_explanation():
 
 
 # ------------------------------------------------------------ HttpJev (mocked HTTP only)
+# Shape from the TypeSafe Jev API reference: POST /v1/systemone (D-023).
+QUESTIONS = {
+    "emergency": {"type": "noul", "instructions": "Is this an emergency?"},
+    "category": {"type": "choice", "instructions": "Symptom category?",
+                 "criteria": {"ent": "ear, nose, throat", "skin": ""}},
+    "urgency": {"type": "score", "instructions": "How urgent?", "criteria": ["can wait", "today"]},
+}
+
+
 def test_build_request_shape():
-    body = build_jev_request("chest feels heavy", [
-        {"id": "emergency", "type": "yes_no", "text": "Is this an emergency?"},
-        {"id": "category", "type": "choice", "text": "Symptom category?", "options": ["ent", "skin"]},
-        {"id": "urgency", "type": "score", "text": "Urgency 1-5?", "min": 1, "max": 5},
-    ])
-    assert body["state"] == "chest feels heavy"
-    assert [q["id"] for q in body["questions"]] == ["emergency", "category", "urgency"]
-    assert body["questions"][1]["options"] == ["ent", "skin"]
+    body = build_jev_request("jev-latest", "chest feels heavy", QUESTIONS)
+    assert body == {"model": "jev-latest", "state": "chest feels heavy", "questions": QUESTIONS}
 
 
-def test_build_request_rejects_unknown_question_type():
+def test_build_request_accepts_json_state():
+    body = build_jev_request("jev-latest", {"query": "rash"}, {"q": {"type": "noul"}})
+    assert body["state"] == {"query": "rash"}
+
+
+@pytest.mark.parametrize("questions", [
+    {},                                                                  # at least one question
+    {"q": {"type": "yes_no"}},                                           # unknown type
+    {"q": {"type": "choice", "criteria": {}}},                           # choice needs 1..255 options
+    {"q": {"type": "choice", "criteria": {f"o{i}": "" for i in range(256)}}},
+    {"q": {"type": "score", "criteria": []}},                            # score needs 1..10 levels
+    {"q": {"type": "score", "criteria": [str(i) for i in range(11)]}},
+    {"q": {"type": "choice", "criteria": ["not", "a", "map"]}},
+    {"q": {"type": "score", "criteria": {"not": "a list"}}},
+])
+def test_build_request_rejects_invalid_questions(questions):
     with pytest.raises(ValueError):
-        build_jev_request("x", [{"id": "q", "type": "free_text", "text": "?"}])
+        build_jev_request("jev-latest", "x", questions)
 
 
-def test_parse_response():
-    answers = parse_jev_response({"answers": [
-        {"id": "emergency", "probabilities": {"yes": 0.8, "no": 0.2}, "confidence": 0.9},
-    ]})
-    assert answers["emergency"]["probabilities"]["yes"] == 0.8
-    assert answers["emergency"]["confidence"] == 0.9
+def test_parse_response_returns_answers_by_name():
+    answers = parse_jev_response({"model": "jev-1.14.0", "answers": {
+        "emergency": {"type": "noul", "noul": 0.8}}, "usage": {"input_tokens": 10, "output_tokens": 1}})
+    assert answers["emergency"]["noul"] == 0.8
 
 
-def test_parse_response_rejects_bad_shape():
+@pytest.mark.parametrize("payload", [{"unexpected": True}, {"answers": []}, None, "text"])
+def test_parse_response_rejects_bad_shape(payload):
     with pytest.raises(JevError):
-        parse_jev_response({"unexpected": True})
+        parse_jev_response(payload)
 
 
 def fake_session(payload=None, status=200, exc=None):
@@ -197,53 +214,122 @@ def fake_session(payload=None, status=200, exc=None):
         resp = MagicMock()
         resp.status_code = status
         resp.json.return_value = payload
+        resp.text = json.dumps(payload)
         session.post.return_value = resp
     return session
 
 
-def test_http_jev_is_emergency_posts_and_parses():
-    session = fake_session({"answers": [
-        {"id": "emergency", "probabilities": {"yes": 0.7, "no": 0.3}, "confidence": 0.8}]})
-    client = HttpJev(api_key="k", base_url="https://jev.test/v1/ask", session=session)
-    prob, conf = client.is_emergency("chest heavy")
-    assert (prob, conf) == (0.7, 0.8)
+def reply(**answers):
+    return {"model": "jev-1.14.0", "answers": answers, "usage": {"input_tokens": 12, "output_tokens": 1}}
+
+
+def http(session):
+    return HttpJev(api_key="k", base_url="https://jev.test/v1/systemone", model="jev-latest", session=session)
+
+
+def test_http_jev_is_emergency_posts_noul_and_parses():
+    session = fake_session(reply(emergency={"type": "noul", "noul": 0.9}))
+    prob, conf = http(session).is_emergency("chest heavy")
+    assert prob == 0.9
+    assert conf == pytest.approx(0.8)  # noul has no confidence; |2p - 1| (D-023)
     args, kwargs = session.post.call_args
-    assert args[0] == "https://jev.test/v1/ask"
+    assert args[0] == "https://jev.test/v1/systemone"
     assert kwargs["headers"]["Authorization"] == "Bearer k"
     assert kwargs["timeout"] == config.JEV_TIMEOUT_S
-    assert kwargs["json"]["questions"][0]["type"] == "yes_no"
+    body = kwargs["json"]
+    assert body["model"] == "jev-latest" and body["state"] == "chest heavy"
+    assert body["questions"]["emergency"]["type"] == "noul"
 
 
-def test_http_jev_classify_category():
+def test_http_jev_classify_category_sends_every_category_as_a_choice():
     probs = {c: 0.0 for c in CATEGORIES}
     probs["skin"] = 1.0
-    session = fake_session({"answers": [{"id": "category", "probabilities": probs, "confidence": 0.6}]})
-    label, got_probs, conf = HttpJev(api_key="k", base_url="https://jev.test", session=session).classify_category("rash")
+    session = fake_session(reply(category={"type": "choice", "choice": "skin", "confidence": 0.6,
+                                           "probabilities": probs}))
+    label, got_probs, conf = http(session).classify_category("rash")
     assert label == "skin" and got_probs["skin"] == 1.0 and conf == 0.6
+    criteria = session.post.call_args.kwargs["json"]["questions"]["category"]["criteria"]
+    assert set(criteria) == set(CATEGORIES)
 
 
-def test_http_jev_urgency_score_rounds_into_range():
-    session = fake_session({"answers": [{"id": "urgency", "score": 4.6, "confidence": 0.5}]})
-    assert HttpJev(api_key="k", base_url="https://jev.test", session=session).urgency_score("x") == (5, 0.5)
+def test_http_jev_classify_unknown_choice_becomes_general():
+    session = fake_session(reply(category={"type": "choice", "choice": "astrology", "confidence": 0.9,
+                                           "probabilities": {"astrology": 0.9}}))
+    label, probs, _ = http(session).classify_category("x")
+    assert label == "general" and set(probs) == set(CATEGORIES)
 
 
-def test_http_jev_error_status_raises():
-    session = fake_session({"error": "nope"}, status=503)
+@pytest.mark.parametrize("score, expected", [(0.0, 1), (1.4, 2), (2.6, 4), (4.0, 5)])
+def test_http_jev_urgency_maps_zero_based_score_to_1_to_5(score, expected):
+    session = fake_session(reply(urgency={"type": "score", "score": score, "confidence": 0.5,
+                                          "legend": {}, "probabilities": {}}))
+    assert http(session).urgency_score("x") == (expected, 0.5)
+    criteria = session.post.call_args.kwargs["json"]["questions"]["urgency"]["criteria"]
+    assert len(criteria) == 5
+
+
+def test_http_jev_is_too_vague():
+    session = fake_session(reply(vague={"type": "noul", "noul": 0.2}))
+    prob, conf = http(session).is_too_vague("cough for 2 days")
+    assert prob == 0.2 and conf == pytest.approx(0.6)
+
+
+def test_http_jev_rerank_one_score_question_per_doc():
+    session = fake_session(reply(
+        doc0={"type": "score", "score": 0.0, "confidence": 0.9, "legend": {}, "probabilities": {}},
+        doc1={"type": "score", "score": 2.0, "confidence": 0.9, "legend": {}, "probabilities": {}},
+    ))
+    scores = http(session).rerank("stomach bug", ["Sports injuries.", "Stomach bugs and dehydration."])
+    assert scores == [0.0, 1.0]
+    questions = session.post.call_args.kwargs["json"]["questions"]
+    assert set(questions) == {"doc0", "doc1"} and len(questions["doc0"]["criteria"]) == 3
+
+
+def test_http_jev_rerank_empty_docs_makes_no_call():
+    session = fake_session(reply())
+    assert http(session).rerank("x", []) == []
+    session.post.assert_not_called()
+
+
+def test_http_jev_guard():
+    session = fake_session(reply(guard={"type": "noul", "noul": 0.95}))
+    assert http(session).mentions_diagnosis_or_medication("Take this pill") == 0.95
+
+
+@pytest.mark.parametrize("status", [400, 401, 422, 500, 503])
+def test_http_jev_error_status_raises(status):
+    session = fake_session({"detail": "nope"}, status=status)
     with pytest.raises(JevError):
-        HttpJev(api_key="k", base_url="https://jev.test", session=session).is_emergency("x")
+        http(session).is_emergency("x")
+
+
+def test_http_jev_missing_answer_raises():
+    session = fake_session(reply(other={"type": "noul", "noul": 0.5}))
+    with pytest.raises(JevError):
+        http(session).is_emergency("x")
 
 
 def test_http_jev_timeout_raises_jev_error():
     session = fake_session(exc=requests.Timeout("slow"))
     with pytest.raises(JevError):
-        HttpJev(api_key="k", base_url="https://jev.test", session=session).is_too_vague("x")
+        http(session).is_too_vague("x")
 
 
-def test_get_jev_offline_without_key(monkeypatch):
-    monkeypatch.delenv("JEV_API_KEY", raising=False)
+def test_http_jev_invalid_json_raises_jev_error():
+    session = fake_session(reply())
+    session.post.return_value.json.side_effect = ValueError("not json")
+    with pytest.raises(JevError):
+        http(session).is_emergency("x")
+
+
+def test_get_jev_offline_without_key():
     assert isinstance(get_jev(), OfflineJev)
 
 
-def test_get_jev_http_with_key(monkeypatch):
+def test_get_jev_http_uses_config(monkeypatch):
     monkeypatch.setenv("JEV_API_KEY", "k")
-    assert isinstance(get_jev(), HttpJev)
+    monkeypatch.setenv("JEV_MODEL", "jev-1.13.0")
+    client = get_jev()
+    assert isinstance(client, HttpJev)
+    assert client.base_url == "https://api.typesafe.ai/v1/systemone"
+    assert client.model == "jev-1.13.0"

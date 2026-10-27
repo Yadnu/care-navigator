@@ -2,7 +2,7 @@
 
 Living map of the system. Read this and `decisions.md` before any task; update it at the end of every phase.
 
-Last updated: 2026-10-27, end of Phase 4.
+Last updated: 2026-10-27, end of Phase 5.
 
 ## Request flow
 
@@ -30,10 +30,12 @@ flowchart TD
     HRS -->|no| AH[rule after_hours level,<br/>then step up; never self-care]
     AH --> RET
     HRS -->|yes| RET
-    RET[retrieval/retriever.py]
+    RET[retrieval/retriever.py<br/>query from parsed report]
     DATA[data.py<br/>loaders + is_open] -.-> HRS
     DATA -.-> RET
-    RET --> FIL[hard filters] --> HYB[embeddings + vector_store<br/>+ bm25] --> RRF[fusion.py RRF k=60] --> RR[Jev rerank]
+    RET --> FIL[hard filters: type, plan, open now,<br/>new patients, age, distance] --> HYB[embeddings + vector_store<br/>+ bm25] --> RRF[fusion.py RRF k=60<br/>top 10] --> RR[Jev rerank<br/>tie-break: distance]
+    FIL -->|no candidates| GAP[empty list:<br/>no in-network option nearby]
+    GAP --> COST
     RR --> COST[costs.py]
     COST --> EXP[explainer.py<br/>Template / Claude]
     EXP --> GRD[guard.py]
@@ -74,11 +76,11 @@ flowchart TD
 | `navigator/clarifier.py` | module | models, config, jev_client (guard), anthropic | pipeline | `test_clarifier.py` | D-003, D-004, D-028 | done |
 | `navigator/care_engine.py` + `care_rules.yaml` | module + config | models, data, pyyaml | pipeline | `test_care_engine.py` | D-001, D-003, D-025, D-026 | done (20 rules, v1.0) |
 | `navigator/data.py` | module | data/*.json, models | care_engine, retrieval | `test_care_engine.py` | D-027 | done |
-| `navigator/retrieval/embeddings.py` | module | scikit-learn | vector_store | - | D-008 | not started |
-| `navigator/retrieval/vector_store.py` | module | embeddings, numpy | retriever | - | D-006 | not started |
-| `navigator/retrieval/bm25.py` | module | rank-bm25 | retriever | - | D-006 | not started |
-| `navigator/retrieval/fusion.py` | module | - | retriever | - | D-006 | not started |
-| `navigator/retrieval/retriever.py` | module | all retrieval, jev_client, data | pipeline | - | D-005, D-006 | not started |
+| `navigator/retrieval/embeddings.py` | module | scikit-learn, requests, config | retriever | `test_retrieval.py` | D-008, D-030 | done (Voyage not run live) |
+| `navigator/retrieval/vector_store.py` | module | numpy | retriever | `test_retrieval.py` | D-006, D-029 | done |
+| `navigator/retrieval/bm25.py` | module | rank-bm25 | retriever | `test_retrieval.py` | D-006, D-030 | done |
+| `navigator/retrieval/fusion.py` | module | config | retriever | `test_retrieval.py` | D-006 | done |
+| `navigator/retrieval/retriever.py` | module | all retrieval, jev_client, data, models | pipeline | `test_retrieval.py` | D-005, D-006, D-030 | done |
 | `navigator/costs.py` | module | plans.json, cost_ranges.json | pipeline, explainer | - | - | not started |
 | `navigator/explainer.py` | module | models, anthropic | pipeline | - | D-007 | not started |
 | `navigator/guard.py` | module | jev_client | pipeline | - | D-007 | not started |
@@ -97,17 +99,20 @@ flowchart TD
 
 ## Current status
 
-- Done: Phase 0 scaffold. Phase 1 synthetic data (D-013). Phase 2 schemas (`models.py`, incl. ordered `CareLevel.escalate`), PII redaction, keyword + fuzzy red-flag screen. Phase 3 config (env switches, model ids, thresholds, confidence gate), shared lexicon, Jev interface (OfflineJev + HttpJev), parser interface (OfflineParser + ClaudeParser with one retry and offline fallback). Phase 4 care rules (20, v1.0), care engine (first match, gating, opening hours + after-hours levels), data access module, clarifier (templates + Claude with validation).
+- Done: Phase 0 scaffold. Phase 1 synthetic data (D-013). Phase 2 schemas (`models.py`, incl. ordered `CareLevel.escalate`), PII redaction, keyword + fuzzy red-flag screen. Phase 3 config (env switches, model ids, thresholds, confidence gate), shared lexicon, Jev interface (OfflineJev + HttpJev), parser interface (OfflineParser + ClaudeParser with one retry and offline fallback). Phase 4 care rules (20, v1.0), care engine (first match, gating, opening hours + after-hours levels), data access module, clarifier (templates + Claude with validation). Phase 5 retrieval: hard filters, char-gram TF-IDF (or Voyage) + BM25, RRF k=60, Jev rerank, matched text.
 - Red-flag coverage: keyword screen 33/40; OfflineJev 12/12 of the `parsed_or_jev` cases; combined 40/40 (D-015, D-019).
 - Routing (engine with offline parser + OfflineJev): 38/39 non-emergency cases exactly on `expected_level`, 1 one level higher (RT-008), 0 lower. Midnight food poisoning -> TELEHEALTH with the ER-if-no-fluids note.
+- Retrieval: recall@3 = 1.0 on 20 queries (top-1 correct on all), 0 filter violations over a 1,600-search grid, coverage gap (RQ-019) returns an empty list.
 - In progress: -
-- Not started: Phases 5 to 8.
+- Not started: Phases 6 to 8.
 
 ## Open questions
 
 - HttpJev follows the TypeSafe Jev API reference (D-023). One live `noul` call succeeded; `choice` (category) and `score` (urgency, rerank) are verified only against mocked HTTP.
 - Phase 7 entry points must call `config.load_env_file()` (D-024).
 - ClaudeClarifier sends `output_config.effort: low`; not yet exercised live.
+- VoyageEmbedder hasn't been called live. Provider failures at query time (Voyage down) are not handled inside the retriever yet; Phase 6 pipeline must fall back to the offline embedder.
+- Live Jev rerank sends one score question per document (up to 10) in one request; cost per search is roughly 10x a single classification.
 
 - Negation ("no chest pain") still fires the red-flag screen (D-017). Acceptable over-triage for the prototype?
 

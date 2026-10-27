@@ -7,7 +7,8 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - Phase 1 (synthetic data): done. Data provided; only change is LF-pinned output (D-013).
 - Phase 2 (schemas, redaction, red flags): done.
 - Phase 3 (Jev and parser adapters): done.
-- Phase 4 (care engine and clarifier): done. Waiting for "continue" to start Phase 5.
+- Phase 4 (care engine and clarifier): done.
+- Phase 5 (RAG over practitioners): done. Waiting for "continue" to start Phase 6.
 
 ## Domain vocabulary
 - **Outcomes:** `EMERGENCY` (stop, "Call 911 or go to the nearest ER"; suicidal intent also gives 988), `FOLLOW_UP` (one clarifying question, max 25 words, max once), `RECOMMENDATION`.
@@ -18,6 +19,7 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - **Symptom categories** (`lexicon.py`; `care_rules.yaml` keys on these): respiratory, ent, gastrointestinal, musculoskeletal, skin, eye, urinary, wound, dental, mental_health, chronic, allergy, fever, neuro, general.
 - **Claude on Haiku 5.5:** no `temperature` (400s); forced tool + `strict: true` instead (D-018).
 - **Jev = TypeSafe Jev:** `POST https://api.typesafe.ai/v1/systemone`, model `jev-latest`, question types `noul` / `choice` / `score` (D-023).
+- **Retrieval:** filters (type, plan, open, new patients, age, <= 10 km unless virtual) -> TF-IDF/Voyage + BM25 -> RRF k=60 -> Jev rerank top 10 -> top 3; query from the parsed report only; empty list = coverage gap (D-030).
 - **Env:** keys in `care-navigator/.env` (gitignored, template `.env.example`); loaded only by entry points via `config.load_env_file()`, never in tests (D-024).
 
 ## Data facts (synthetic, town "Corvalle")

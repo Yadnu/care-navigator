@@ -244,3 +244,26 @@ Template:
 - Decision: `is_valid_question` requires exactly one "?" at the end, <= 25 words, no care-level words (ER, emergency, urgent care, telehealth, primary care, self-care, 911, 988, hospital, clinic, nurse line, doctor, ambulance), and the diagnosis/medication guard below threshold. `OfflineClarifier` uses templates keyed by the first missing field (main symptom, then duration, then body area). `ClaudeClarifier` (Haiku 5.5, `effort: low`, no sampling params) gets one attempt; invalid output, a refusal or an API error falls back to the template. Asking at most once is enforced by the pipeline (Phase 6) via `after_followup`.
 - Alternatives considered: Retrying Claude on invalid output (rejected: the template is always valid and cheaper).
 - Consequences: Claude's question can be rejected for harmless wording such as "doctor"; the template then applies.
+
+## D-029: In-memory vector store instead of ChromaDB
+- Date: 2026-10-27
+- Status: accepted
+- Context: Retrieval needs cosine search with metadata filtering over 44 practitioner records.
+- Decision: `InMemoryVectorStore` (numpy): `add(ids, vectors, metadatas)` and `search(vector, k, where=predicate)`. The retriever passes the hard-filter survivors as the `where` predicate, so semantic search only ever ranks allowed records.
+- Alternatives considered: ChromaDB (rejected for the prototype: install, persistence directory and setup for 44 rows, no benefit at this size). It is the production path once the directory is real and large.
+- Consequences: Everything is rebuilt in memory at start-up (well under a second with TF-IDF; one batch call with Voyage).
+
+## D-030: Hybrid retrieval details
+- Date: 2026-10-27
+- Status: accepted
+- Context: D-006 fixes the order (filters -> hybrid -> RRF k=60 -> rerank); the parts still needed concrete choices.
+- Decision:
+  - Hard filters: type = care level, plan accepted, open at request time, accepting new patients (primary care and specialists only, matching `data/README.md`), serves the age group, and within `max_km` (default 10 km, haversine from the zip centroid) unless virtual. An unknown zip drops all in-person options (distance can't be checked) and keeps virtual ones. SELF_CARE retrieves nothing.
+  - Indexed text per practitioner: facility name, specialties, conditions, bio and languages (languages so "Spanish-speaking" queries work).
+  - Semantic side: offline `LocalTfidfEmbedder` uses character 3-5-gram TF-IDF (robust to word forms such as "sprain/sprains" and typos). `VoyageEmbedder` (`VOYAGE_API_KEY`) calls `POST https://api.voyageai.com/v1/embeddings` with `input_type` document/query, model `VOYAGE_MODEL` (default `voyage-4`), batches of 128, vectors normalized; any failure raises `EmbeddingError`. Request shape checked against Voyage's API reference; tested with mocked HTTP only.
+  - Lexical side: `rank-bm25` over word tokens with stopwords removed and light suffix stripping.
+  - Fusion: RRF k = 60 over the two rankings; top 10 go to Jev rerank. Final order: rerank score, then distance (virtual = 0), then fused score. If rerank raises `JevError`, fused order is used and `reranked=False` is recorded.
+  - Query: built from the parsed `SymptomReport` (main symptom + body area), never the raw text, so injected instructions can't steer retrieval.
+  - Each match carries `matched_text`: the record segment (condition, specialty or bio sentence) sharing the most terms with the query.
+- Alternatives considered: Word-level TF-IDF (rejected: misses "sprain" vs "sprains" without a stemmer); ordering by distance before relevance (rejected: the plan says distance is the tie-break).
+- Consequences: recall@3 = 1.0 on the 20 non-empty retrieval queries (top-1 correct on all 20), zero filter violations across a 1,600-search grid, the coverage-gap query returns an empty list. Voyage hasn't been called live.

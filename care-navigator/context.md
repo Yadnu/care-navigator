@@ -3,7 +3,9 @@
 Quick-reference facts needed while coding. Architecture lives in `docs/context-graph.md`, decisions in `docs/decisions.md`, data details in `data/README.md`.
 
 ## Current phase
-- Phase 0 (scaffold): done. Waiting for "continue" to start Phase 1.
+- Phase 0 (scaffold): done.
+- Phase 1 (synthetic data): done. Data provided; only change is LF-pinned output (D-013).
+- Phase 2 (schemas, redaction, red flags): in progress.
 
 ## Domain vocabulary
 - **Outcomes:** `EMERGENCY` (stop, "Call 911 or go to the nearest ER"; suicidal intent also gives 988), `FOLLOW_UP` (one clarifying question, max 25 words, max once), `RECOMMENDATION`.

@@ -2,7 +2,7 @@
 
 Living map of the system. Read this and `decisions.md` before any task; update it at the end of every phase.
 
-Last updated: 2026-10-27, end of Phase 0.
+Last updated: 2026-10-27, end of Phase 1.
 
 ## Request flow
 
@@ -75,20 +75,19 @@ flowchart TD
 | `app.py` | module | pipeline, streamlit | user | - | - | not started |
 | `cli.py` | module | pipeline | `make demo` | - | - | not started |
 | `scripts/run_eval.py` | module | pipeline, data/eval | `make eval` | - | - | not started |
-| `data/generate.py` + `eval_sets.py` | data | - | data files | `test_data.py` | D-010 | provided |
-| `data/zips.json` | data | generate.py | validate, retriever | `test_data.py` | D-010 | provided |
-| `data/plans.json` | data | generate.py | validate, costs | `test_data.py` | D-010 | provided |
-| `data/practitioners.json` | data | generate.py | retriever, care_engine | `test_data.py` | D-010 | provided |
-| `data/cost_ranges.json` | data | generate.py | costs | `test_data.py` | D-010 | provided |
-| `data/eval/*.jsonl` | data | eval_sets.py | tests, run_eval | `test_data.py` | - | provided |
+| `data/generate.py` + `eval_sets.py` | data | - | data files | `test_data.py`, `test_generate.py` | D-010, D-013 | done |
+| `data/zips.json` | data | generate.py | validate, retriever | `test_data.py`, `test_generate.py` | D-010, D-011, D-013 | done |
+| `data/plans.json` | data | generate.py | validate, costs | `test_data.py`, `test_generate.py` | D-010, D-011, D-013 | done |
+| `data/practitioners.json` | data | generate.py | retriever, care_engine | `test_data.py`, `test_generate.py` | D-010, D-011, D-012, D-013 | done |
+| `data/cost_ranges.json` | data | generate.py | costs | `test_data.py`, `test_generate.py` | D-010, D-011, D-013 | done |
+| `data/eval/*.jsonl` | data | eval_sets.py | tests, run_eval | `test_data.py`, `test_generate.py` | D-013 | done |
 | `pyproject.toml`, `requirements.txt`, `Makefile` | config | - | dev workflow | - | - | done |
 
 ## Current status
 
-- Done: Phase 0 scaffold (package, config files, docs, smoke test).
-- Provided: synthetic data and `tests/test_data.py` (14 tests passing).
+- Done: Phase 0 scaffold. Phase 1 synthetic data (provided; 14 data tests + 2 determinism tests passing; generator now byte-identical across OSes, D-013).
 - In progress: -
-- Not started: Phases 1 to 8.
+- Not started: Phases 2 to 8.
 
 ## Open questions
 

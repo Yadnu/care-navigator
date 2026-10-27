@@ -1,0 +1,4 @@
+# Data files must be byte-identical on every OS (D-013).
+data/*.json text eol=lf
+data/eval/*.jsonl text eol=lf
+Makefile text eol=lf

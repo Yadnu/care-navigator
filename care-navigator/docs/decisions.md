@@ -95,3 +95,27 @@ Template:
 - Decision: All data is synthetic and labeled `"synthetic": true`, using clearly fake zip codes `00101` to `00105`.
 - Alternatives considered: Real public provider directories (rejected: out of scope, accuracy and licensing).
 - Consequences: Retrieval quality on real data is unproven.
+
+## D-011: Fake zip codes and a fictional town
+- Date: 2026-10-27
+- Status: accepted
+- Context: D-010 requires data that can't be mistaken for real places, but retrieval needs real-looking geometry for haversine distance filters.
+- Decision: Use the fictional town "Corvalle" with zips `00101` to `00105` (not issued as real zips) and centroids a few km apart in rural Kansas, where they map to no real clinic. Phones use `555-01xx`.
+- Alternatives considered: Real zips with fake clinics (rejected: could be mistaken for real locations); no coordinates (rejected: distance filter untestable).
+- Consequences: Distances are realistic; nothing resolves to a real address.
+
+## D-012: Deliberate coverage gap for testing
+- Date: 2026-10-27
+- Status: accepted
+- Context: The "no in-network option nearby" path must be demonstrable and tested, and real networks do have gaps.
+- Decision: `PLAN_BRONZE_LOCAL` has no in-network urgent care in zip `00105`. `tests/test_data.py` asserts the gap stays; retrieval must return an empty list cleanly and the pipeline must offer telehealth and the nurse line instead.
+- Alternatives considered: Simulating the gap only in a test fixture (rejected: the demo and eval need it in the real data).
+- Consequences: Any data change that "fixes" the gap fails the data tests.
+
+## D-013: Byte-identical data on every OS
+- Date: 2026-10-27
+- Status: accepted
+- Context: Rerunning `data/generate.py` on Windows produced CRLF files (`Path.write_text` translates `\n`), and `core.autocrlf` re-checked out the committed data as CRLF, so "reruns produce identical files" depended on the machine. Content was otherwise identical.
+- Decision: The generator writes with `newline="\n"`; `.gitattributes` pins `data/*.json`, `data/eval/*.jsonl` and the `Makefile` to LF. `tests/test_generate.py` regenerates into a temp dir and compares bytes, and asserts LF endings. This is the only change to the provided data folder.
+- Alternatives considered: Comparing parsed JSON instead of bytes (rejected: hides non-determinism such as key order); asking everyone to disable autocrlf (rejected: fragile).
+- Consequences: Data files are LF everywhere; the determinism guarantee is enforced by a test.

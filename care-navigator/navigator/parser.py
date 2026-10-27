@@ -179,8 +179,11 @@ class ClaudeParser(Parser):
         duration = self.fallback.parse(text, severity).report.duration_hours
         if duration is None:
             return report
-        return report.model_copy(update={"duration_hours": duration,
-                                         "missing": [m for m in report.missing if m != "duration"]})
+        missing = [m for m in report.missing if m != "duration"]
+        # If the duration was the model's only gap, it is no longer unsure.
+        confidence = "high" if report.confidence == "medium" and "duration" in report.missing and not missing \
+            else report.confidence
+        return report.model_copy(update={"duration_hours": duration, "missing": missing, "confidence": confidence})
 
     def parse(self, text: str, severity: int) -> ParseResult:
         tokens = 0

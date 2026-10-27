@@ -156,7 +156,14 @@ def test_claude_parser_fills_a_missing_duration_from_the_offline_parser():
     result = ClaudeParser(client=fake_client(response(no_duration))).parse("Acne getting worse for months", 1)
     assert result.report.duration_hours == 2160
     assert "duration" not in result.report.missing
+    assert result.report.confidence == "high"  # medium was only about the duration; else it would escalate
     assert result.fallback is False and result.used == config.CLAUDE_MODEL
+
+
+def test_filled_duration_keeps_medium_when_something_else_is_missing():
+    partial = {**GOOD_INPUT, "duration_hours": None, "missing": ["duration", "main_symptom"], "confidence": "medium"}
+    report = ClaudeParser(client=fake_client(response(partial))).parse("sore throat for 2 days", 4).report
+    assert report.duration_hours == 48 and report.confidence == "medium" and report.missing == ["main_symptom"]
 
 
 def test_claude_duration_wins_when_both_exist():

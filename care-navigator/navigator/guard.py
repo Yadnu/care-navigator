@@ -64,7 +64,8 @@ def check(text: str, decision: CareDecision, options: list[Option], jev: JevClie
             if level is decision.level or not pattern.search(sentence):
                 continue
             conditional_er = level is CareLevel.ER and re.search(r"\bif\b", sentence, re.IGNORECASE)
-            if not (conditional_er or ALLOWED_CONTEXT.search(sentence)):
+            shown_alternative = level is CareLevel.TELEHEALTH and bool(alternatives)
+            if not (conditional_er or shown_alternative or ALLOWED_CONTEXT.search(sentence)):
                 reasons.append(f"level mismatch: mentions {level.value}, decision is {decision.level.value}")
 
     # Record names are trusted text ("Downtown Internal Medicine"), so check the rest only.

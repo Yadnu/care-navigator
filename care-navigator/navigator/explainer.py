@@ -101,6 +101,8 @@ Write 3 to 5 sentences: why this level of care, the options (use only the names 
 - If "options" is empty, say no in-network option at that level is open nearby and name the "alternatives" (online visits).
 - You may name another level only to say it is closed, or as "if ..., go to the ER".
 - For when to get more care, use only the notes given (or say to get care sooner if things get worse); never list warning signs or symptoms of your own.
+- Write to the person directly. Never mention rules, a rule id, notes, JSON or how the decision was made internally.
+- "reason" is a general statement about this kind of problem, not a list of the person's symptoms; never say the person has any symptom it mentions.
 - Never name a diagnosis, a condition, a medication or a treatment.
 - Do not invent practitioners, addresses, phone numbers, plans or prices.
 - Copy the costs as given and call them estimates.
@@ -123,7 +125,6 @@ def explainer_payload(decision: CareDecision, options: list[Option], alternative
     return {
         "decision": {
             "level": decision.level.value,
-            "rule_id": decision.rule_id,
             "reason": _rule(decision).get("reason", ""),
             "escalated": decision.escalated,
             "notes": decision.notes,

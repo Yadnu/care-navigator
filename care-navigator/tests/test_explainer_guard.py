@@ -173,6 +173,27 @@ def test_claude_explainer_sees_only_decision_options_and_costs():
     assert "only the notes" in kwargs["system"].lower()  # no invented warning signs
 
 
+def test_guard_allows_naming_telehealth_only_when_alternatives_are_shown():
+    decision = CareDecision(level="URGENT_CARE", rule_id="R-18", escalated=False, rules_version="1.2")
+    _, telehealth = scenario(by_id("RT-040"))
+    name = telehealth[0].match.practitioner.facility_name
+    text = f"Urgent care is the right level. You can start with a telehealth visit at {name}. {DISCLAIMER}"
+    assert check(text, decision, [], jev, telehealth).ok
+    assert not check(f"Urgent care is the right level. A telehealth visit is fine. {DISCLAIMER}",
+                     decision, [], jev).ok
+
+
+def test_claude_prompt_keeps_internals_out_of_the_text():
+    from navigator.explainer import SYSTEM_PROMPT
+    assert "rule id" in SYSTEM_PROMPT.lower() and "notes" in SYSTEM_PROMPT.lower()
+    assert "general statement" in SYSTEM_PROMPT.lower()  # don't attribute the rule's wording to the person
+    decision, options = scenario(by_id("RT-001"))
+    client = fake_client(text_response("x"))
+    ClaudeExplainer(client=client).explain(decision, options)
+    payload = json.loads(client.messages.create.call_args.kwargs["messages"][-1]["content"])
+    assert "rule_id" not in payload["decision"]
+
+
 def test_alternatives_are_explained_and_allowed_by_the_guard():
     decision = CareDecision(level="URGENT_CARE", rule_id="R-18", escalated=False, rules_version="1.1")
     _, telehealth = scenario(by_id("RT-040"))  # evening: telehealth options

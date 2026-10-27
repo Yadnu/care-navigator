@@ -40,10 +40,10 @@ def _segments(p: Practitioner) -> list[str]:
 
 
 def matched_text(p: Practitioner, query: str) -> str:
-    """The record segment sharing the most terms with the query (first condition if none)."""
+    """The record segment sharing the most terms with the query; the specialties if nothing overlaps."""
     terms = set(analyze(query))
     best = max(_segments(p), key=lambda s: len(terms & set(analyze(s))))
-    return best if terms & set(analyze(best)) else p.conditions_treated[0]
+    return best if terms & set(analyze(best)) else ", ".join(p.specialties)
 
 
 def build_query(report: SymptomReport) -> str:

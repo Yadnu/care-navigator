@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import Optional
 
 ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
 
@@ -22,13 +23,17 @@ JEV_DEFAULT_MODEL = "jev-latest"
 JEV_TIMEOUT_S = 5.0
 
 
-def load_env_file(path: Path = ENV_FILE) -> list[str]:
+def load_env_file(path: Optional[Path] = None) -> list[str]:
     """Load KEY=value lines into os.environ (D-024).
 
     Called by entry points (cli, app, eval), never on import, so tests stay offline.
     Real environment variables win, blank values are skipped, and a missing file is fine.
+    CARE_NAVIGATOR_SKIP_DOTENV=1 (set by the test suite) skips the project's .env file.
     Returns the keys it set.
     """
+    path = ENV_FILE if path is None else path
+    if path == ENV_FILE and _has("CARE_NAVIGATOR_SKIP_DOTENV"):
+        return []
     if not path.is_file():
         return []
     loaded = []

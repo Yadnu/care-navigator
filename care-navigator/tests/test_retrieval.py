@@ -268,6 +268,14 @@ def test_search_uses_the_report():
     assert result.matches[0].practitioner.id == "UC-002"
 
 
+def test_matched_text_never_claims_an_unrelated_condition():
+    from navigator.retrieval.retriever import matched_text
+    p = next(p for p in load_practitioners() if p.id == "UC-002")  # GI-focused urgent care
+    assert matched_text(p, "vomiting") != "" and "vomiting" in matched_text(p, "vomiting").lower()
+    fallback = matched_text(p, "sore throat fever")
+    assert fallback == ", ".join(p.specialties)  # no overlap: say what the place does, not "food poisoning"
+
+
 def test_practitioner_text_includes_bio_specialties_conditions_and_languages():
     p = next(p for p in load_practitioners() if p.id == "UC-005")
     text = practitioner_text(p)

@@ -37,6 +37,7 @@ def test_format_shows_what_a_reviewer_needs(results):
     rep = cli.format_result(*by_key["representative"])
     assert "RECOMMENDATION" in rep and "Urgent care" in rep and "$75" in rep and "This is not medical advice." in rep
     assert "Downtown QuickCare" in rep
+    assert "Downtown QuickCare - Downtown QuickCare" not in rep  # name shown only when it differs
     assert "Call 911" in cli.format_result(*by_key["chest"])
     assert "?" in cli.format_result(*by_key["vague"])
     gap = cli.format_result(*by_key["gap"])

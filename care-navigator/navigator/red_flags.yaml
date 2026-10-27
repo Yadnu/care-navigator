@@ -1,0 +1,144 @@
+# Red-flag phrases by category. Any hit routes to EMERGENCY (D-002).
+# Simplified, not clinically validated. Prototype only.
+#
+# phrases:  matched exactly, then fuzzily for typos (see config.FUZZY_*), on normalized
+#           text (lowercase, apostrophes removed, punctuation -> spaces).
+# patterns: each entry is a list of regexes that must ALL match the normalized text.
+version: "1.0"
+label: "Simplified, not clinically validated"
+
+messages:
+  "911": "Call 911 or go to the nearest ER."
+  "988": "Call or text 988 (Suicide & Crisis Lifeline) now, or call 911 if you are in immediate danger."
+
+categories:
+  cardiac:
+    resources: ["911"]
+    phrases:
+      - chest pain
+      - pain in my chest
+      - chest tightness
+      - tight chest
+      - chest pressure
+      - pressure in my chest
+      - crushing chest
+      - heart attack
+      - nearly passed out
+      - almost passed out
+      - nearly fainted
+  breathing:
+    resources: ["911"]
+    phrases:
+      - cant breathe
+      - cannot breathe
+      - shortness of breath
+      - short of breath
+      - difficulty breathing
+      - trouble breathing
+      - struggling to breathe
+      - cant catch my breath
+      - gasping for air
+      - lips turning blue
+      - lips are blue
+      - turning blue
+  stroke:
+    resources: ["911"]
+    phrases:
+      - face is drooping
+      - face drooping
+      - drooping on one side
+      - slurred speech
+      - slurring my words
+      - sudden weakness
+      - numb on one side
+      - worst headache of my life
+      - worst headache ever
+  bleeding:
+    resources: ["911"]
+    phrases:
+      - bleeding that wont stop
+      - wont stop bleeding
+      - cant stop the bleeding
+      - vomiting blood
+      - throwing up blood
+      - coughing up blood
+      - black tarry stool
+      - tarry stool
+      - blood is spurting
+      - spurting blood
+      - bleeding heavily
+      - heavy bleeding
+  allergic_reaction:
+    resources: ["911"]
+    phrases:
+      - throat is swelling
+      - throat swelling
+      - throat is closing
+      - tongue swelling
+      - tongue is swelling
+      - anaphylaxis
+  mental_health_crisis:
+    resources: ["988", "911"]
+    phrases:
+      - end my life
+      - kill myself
+      - killing myself
+      - suicide
+      - suicidal
+      - want to die
+      - hurt myself
+  severe_dehydration:
+    resources: ["911"]
+    phrases:
+      - cant keep any water down
+      - cant keep water down
+      - cant keep fluids down
+      - cant keep anything down
+      - havent peed
+      - no urine
+  infant_fever:
+    resources: ["911"]
+    patterns:
+      - ['\b(newborn|\d+ (day|days|week|weeks) old|[0-2] (month|months) old|one month old|two months old)\b', '\bfever\b']
+  neuro:
+    resources: ["911"]
+    phrases:
+      - seizure
+      - convulsion
+      - passed out
+      - unconscious
+      - unresponsive
+      - not waking up
+      - isnt waking up
+  head_injury:
+    resources: ["911"]
+    patterns:
+      - ['\b(hit|bumped|banged|hurt) (my|his|her|their)? ?head\b', '\b(vomit\w*|throwing up|sleepy|drowsy|confused|passed out)\b']
+  poisoning:
+    resources: ["911"]
+    phrases:
+      - too many pills
+      - overdose
+      - button battery
+      - swallowed a battery
+      - swallowed bleach
+      - poisoned
+  pregnancy:
+    resources: ["911"]
+    patterns:
+      - ['\bpregnant\b', '\bbleeding\b']
+  trauma:
+    resources: ["911"]
+    phrases:
+      - bone sticking out
+      - bone is sticking out
+      - clearly broken
+  abdominal:
+    resources: ["911"]
+    phrases:
+      - belly is hard
+      - stomach is rigid
+  infection:
+    resources: ["911"]
+    patterns:
+      - ['\bstiff neck\b', '\bfever\b']

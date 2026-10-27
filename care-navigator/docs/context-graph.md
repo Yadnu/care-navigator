@@ -2,7 +2,7 @@
 
 Living map of the system. Read this and `decisions.md` before any task; update it at the end of every phase.
 
-Last updated: 2026-10-27, end of Phase 1.
+Last updated: 2026-10-27, end of Phase 2.
 
 ## Request flow
 
@@ -54,10 +54,10 @@ flowchart TD
 | Node | Type | Depends on | Used by | Tests | Related decisions | Status |
 |---|---|---|---|---|---|---|
 | `navigator/__init__.py` | module | - | everything | `test_smoke.py` | - | done |
-| `navigator/config.py` | config | env vars | all model adapters, gating | - | D-004, D-008 | not started |
-| `navigator/models.py` | module | pydantic | all modules | - | D-001 | not started |
-| `navigator/redact.py` | module | - | pipeline, trace | - | D-009 | not started |
-| `navigator/redflags.py` + `red_flags.yaml` | module + config | rapidfuzz | pipeline | - | D-002 | not started |
+| `navigator/config.py` | config | env vars | redflags (Phase 2); model adapters, gating (Phase 3) | via `test_redflags.py` | D-004, D-008, D-014 | in progress (fuzzy thresholds only) |
+| `navigator/models.py` | module | pydantic | all modules | `test_models.py` | D-001, D-003 | done |
+| `navigator/redact.py` | module | - | pipeline, trace | `test_redact.py` | D-009 | done |
+| `navigator/redflags.py` + `red_flags.yaml` | module + config | rapidfuzz, pyyaml, config, models | pipeline | `test_redflags.py` | D-002, D-014, D-015, D-016, D-017 | done |
 | `navigator/jev_client.py` | module | config | pipeline, retriever, guard | - | D-004, D-008 | not started |
 | `navigator/parser.py` | module | models, config, anthropic | pipeline | - | D-004, D-008, D-009 | not started |
 | `navigator/clarifier.py` | module | models | pipeline | - | D-003 | not started |
@@ -85,10 +85,13 @@ flowchart TD
 
 ## Current status
 
-- Done: Phase 0 scaffold. Phase 1 synthetic data (provided; 14 data tests + 2 determinism tests passing; generator now byte-identical across OSes, D-013).
-- In progress: -
-- Not started: Phases 2 to 8.
+- Done: Phase 0 scaffold. Phase 1 synthetic data (D-013). Phase 2 schemas (`models.py`, incl. ordered `CareLevel.escalate`), PII redaction, keyword + fuzzy red-flag screen (100% of keyword-detectable red flags, 0 false positives on non-emergency routing and vague cases).
+- In progress: `config.py` (only fuzzy thresholds so far).
+- Not started: Phases 3 to 8.
+- Red flags still needing Jev / parsed-field checks (Phase 3): RF-005, RF-009, RF-015, RF-017, RF-024, RF-034, RF-040 (D-015).
 
 ## Open questions
+
+- Negation ("no chest pain") still fires the red-flag screen (D-017). Acceptable over-triage for the prototype?
 
 - `make` is not installed on the dev machine (Windows); Makefile targets are plain one-liners that can be run directly.

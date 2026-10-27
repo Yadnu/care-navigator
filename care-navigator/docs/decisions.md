@@ -119,3 +119,35 @@ Template:
 - Decision: The generator writes with `newline="\n"`; `.gitattributes` pins `data/*.json`, `data/eval/*.jsonl` and the `Makefile` to LF. `tests/test_generate.py` regenerates into a temp dir and compares bytes, and asserts LF endings. This is the only change to the provided data folder.
 - Alternatives considered: Comparing parsed JSON instead of bytes (rejected: hides non-determinism such as key order); asking everyone to disable autocrlf (rejected: fragile).
 - Consequences: Data files are LF everywhere; the determinism guarantee is enforced by a test.
+
+## D-014: Red-flag fuzzy matching threshold
+- Date: 2026-10-27
+- Status: accepted
+- Context: Red flags must survive typos ("chest pian", "cant breath") without firing on near misses like "can keep water down" (the midnight TELEHEALTH case) or "I can breathe fine".
+- Decision: Normalize text (lowercase, apostrophes removed, punctuation to spaces). Try every phrase of a category as an exact word-boundary match first; only if none hits, slide a window of the phrase's token count over the text and take the best RapidFuzz `fuzz.ratio`. A window counts when ratio >= 88 (`config.FUZZY_THRESHOLD`) and every token shorter than 4 chars (`config.FUZZY_MIN_TOKEN_LEN`) matches exactly. Observed scores: "chest pian" 90, "cant breath" 96.
+- Alternatives considered: Plain `fuzz.partial_ratio` (rejected: when the text is shorter than the phrase it scores 100 for "chest" vs "chest pain", and "can keep water down" scores ~95 against "cant keep water down"); threshold 85 (rejected: "can"/"cant" style flips get through without the short-token rule); 92 (rejected: misses "chest pian").
+- Consequences: Typos inside short words (<4 chars) are not tolerated; Jev and the parser cover those. Tests pin both directions (typos caught, near misses quiet).
+
+## D-015: Red-flag categories, patterns and coverage split
+- Date: 2026-10-27
+- Status: accepted
+- Context: The eval set uses more categories than the plan lists (infant_fever, neuro, head_injury, poisoning, pregnancy, trauma, abdominal, infection), and some flags need two facts at once (age + fever, head hit + vomiting).
+- Decision: `red_flags.yaml` (v1.0, "simplified, not clinically validated") uses the eval set's category names (`allergic_reaction` for severe allergic reaction, `mental_health_crisis` for suicidal intent). Each category has `phrases` (exact + fuzzy) and/or `patterns` (lists of regexes that must all match). `mental_health_crisis` returns resources `["988", "911"]` with the 988 message first; all others return `["911"]`. Keyword screen catches 100% of the 28 `keyword`/`fuzzy_keyword` cases and 5 of the 12 `parsed_or_jev` cases. Left for Jev / parsed-field checks (Phase 3): RF-005 (elephant on chest), RF-009 (struggling to catch breath), RF-015 (sudden vision loss + headache), RF-017 (confused, can't lift arm), RF-024 (hard to swallow, lips swelling), RF-034 (lower right belly pain + fever), RF-040 (car crash, neck pain, tingling hands).
+- Alternatives considered: Adding phrases until all 40 pass (rejected: overfits the eval set and hides the defense-in-depth design).
+- Consequences: Phase 3 must cover the seven cases above with OfflineJev / parser rules; the end-to-end red-flag recall bar (100%) depends on it.
+
+## D-016: Test correction, fuzzy typo case
+- Date: 2026-10-27
+- Status: accepted
+- Context: `test_typos_are_caught_by_fuzzy_match` used "my face is drooping on one sde". It contains the exact phrase "face is drooping", so the screen (correctly) matched exactly and the "method is fuzzy" assertion failed. The test input was wrong, not the code.
+- Decision: Changed the input to "my fase is droopng on one side" so the typo sits inside the phrase. The assertion (fuzzy method) is unchanged.
+- Alternatives considered: Dropping the method assertion (rejected: weakens the test).
+- Consequences: None for behaviour.
+
+## D-017: No negation handling in the keyword screen
+- Date: 2026-10-27
+- Status: accepted
+- Context: "no chest pain" contains "chest pain". Negation detection is error-prone and a miss would route an emergency down.
+- Decision: The keyword screen ignores negation; "no chest pain" fires. This errs toward more care (D-003).
+- Alternatives considered: NegEx-style negation windows (rejected: risk of suppressing real flags such as "not sure but chest pain").
+- Consequences: Some over-triage to EMERGENCY. Logged as an open question in the context graph.

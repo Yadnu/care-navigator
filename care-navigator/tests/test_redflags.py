@@ -49,7 +49,7 @@ def test_no_false_positives_on_non_emergency_cases(case):
 
 
 @pytest.mark.parametrize("text", ["chest pian since an hour", "cant breath", "worst hedache of my life",
-                                  "vomitting blood", "my face is drooping on one sde"])
+                                  "vomitting blood", "my fase is droopng on one side"])
 def test_typos_are_caught_by_fuzzy_match(text):
     result = screen_text(text)
     assert result.is_emergency

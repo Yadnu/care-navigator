@@ -125,41 +125,84 @@ class OfflineJev(JevClient):
 
 
 # ------------------------------------------------------------------ HTTP client
-QUESTION_TYPES = {"yes_no", "choice", "score"}
+# TypeSafe Jev API, POST /v1/systemone (D-023): {model, state, questions{name: question}}.
+# Answers come back keyed by question name: noul -> {noul}, choice -> {choice, confidence,
+# probabilities}, score -> {score (zero-based expected level), confidence, legend, probabilities}.
+CATEGORY_CRITERIA = {
+    "respiratory": "cough, cold, runny or stuffy nose, congestion",
+    "ent": "ear, nose, throat or sinus problems",
+    "gastrointestinal": "vomiting, diarrhea, stomach cramps, heartburn",
+    "musculoskeletal": "sprains, strains, joint, back or muscle pain",
+    "skin": "rash, hives, itching, acne",
+    "eye": "red, itchy, crusty or sore eyes",
+    "urinary": "burning or pain when urinating",
+    "wound": "cuts, bites, burns, splinters, blisters",
+    "dental": "tooth or gum pain",
+    "mental_health": "stress, anxiety, trouble sleeping, low mood",
+    "chronic": "refills, blood pressure, check-ups for ongoing conditions",
+    "allergy": "sneezing, seasonal allergy symptoms",
+    "fever": "fever, flu-like symptoms, body aches, chills",
+    "neuro": "headache or migraine",
+    "general": "none of the above, or not about a symptom",
+}
+URGENCY_LEVELS = [
+    "can wait for a routine visit",
+    "should be seen within a few days",
+    "should be seen within a day",
+    "should be seen within a few hours",
+    "needs care right away",
+]
+RELEVANCE_LEVELS = ["not relevant", "somewhat relevant", "highly relevant"]
+MAX_CHOICES = 255
+MAX_SCORE_LEVELS = 10
 
 
-def build_jev_request(state: str | dict, questions: list[dict]) -> dict:
-    """Build the Jev request body.
+def _check_question(name: str, q: dict) -> None:
+    kind, criteria = q.get("type"), q.get("criteria")
+    if kind == "noul":
+        return
+    if kind == "choice":
+        if not isinstance(criteria, dict) or not 1 <= len(criteria) <= MAX_CHOICES:
+            raise ValueError(f"choice question {name!r} needs 1-{MAX_CHOICES} named options")
+        return
+    if kind == "score":
+        if not isinstance(criteria, list) or not 1 <= len(criteria) <= MAX_SCORE_LEVELS:
+            raise ValueError(f"score question {name!r} needs 1-{MAX_SCORE_LEVELS} ordered levels")
+        return
+    raise ValueError(f"unknown Jev question type for {name!r}: {kind!r}")
 
-    TODO: verify against Jev docs. Shape taken from public write-ups: a "state" (text or
-    JSON) plus questions of type yes/no, Choice or Score; answers carry probabilities
-    and a confidence. Field names here are our assumption.
-    """
-    for q in questions:
-        if q.get("type") not in QUESTION_TYPES:
-            raise ValueError(f"unknown Jev question type: {q.get('type')!r}")
-    return {"state": state, "questions": questions}
+
+def build_jev_request(model: str, state: str | dict | list, questions: dict[str, dict]) -> dict:
+    """Build the request body for POST /v1/systemone, validating question shapes locally."""
+    if not questions:
+        raise ValueError("Jev needs at least one question")
+    for name, q in questions.items():
+        _check_question(name, q)
+    return {"model": model, "state": state, "questions": questions}
 
 
 def parse_jev_response(payload: Any) -> dict[str, dict]:
-    """Map question id -> answer. TODO: verify against Jev docs."""
-    if not isinstance(payload, dict) or not isinstance(payload.get("answers"), list):
+    """Return the answers map (question name -> answer)."""
+    if not isinstance(payload, dict) or not isinstance(payload.get("answers"), dict):
         raise JevError("unexpected Jev response shape")
-    try:
-        return {a["id"]: a for a in payload["answers"]}
-    except (KeyError, TypeError) as e:
-        raise JevError("Jev answer without id") from e
+    return payload["answers"]
+
+
+def _noul_confidence(p: float) -> float:
+    """noul answers carry no confidence; distance from 0.5 stands in for it (D-023)."""
+    return abs(2 * p - 1)
 
 
 class HttpJev(JevClient):
-    def __init__(self, api_key: str, base_url: str = config.JEV_BASE_URL,
+    def __init__(self, api_key: str, base_url: str | None = None, model: str | None = None,
                  session: requests.Session | None = None):
         self.api_key = api_key
-        self.base_url = base_url
+        self.base_url = base_url or config.jev_base_url()
+        self.model = model or config.jev_model()
         self.session = session or requests.Session()
 
-    def _ask(self, state: str | dict, questions: list[dict]) -> dict[str, dict]:
-        body = build_jev_request(state, questions)
+    def _ask(self, state: str | dict, questions: dict[str, dict]) -> dict[str, dict]:
+        body = build_jev_request(self.model, state, questions)
         try:
             resp = self.session.post(self.base_url, json=body, timeout=config.JEV_TIMEOUT_S,
                                      headers={"Authorization": f"Bearer {self.api_key}"})
@@ -168,45 +211,60 @@ class HttpJev(JevClient):
         if resp.status_code != 200:
             raise JevError(f"Jev returned HTTP {resp.status_code}")
         try:
-            return parse_jev_response(resp.json())
+            answers = parse_jev_response(resp.json())
         except ValueError as e:
             raise JevError("Jev returned invalid JSON") from e
+        missing = set(questions) - set(answers)
+        if missing:
+            raise JevError(f"Jev answer missing for {sorted(missing)}")
+        return answers
 
-    def _yes_no(self, qid: str, question: str, text: str) -> tuple[float, float]:
-        a = self._ask(text, [{"id": qid, "type": "yes_no", "text": question}])[qid]
-        return float(a["probabilities"]["yes"]), float(a["confidence"])
+    def _noul(self, name: str, instructions: str, text: str) -> float:
+        answer = self._ask(text, {name: {"type": "noul", "instructions": instructions}})[name]
+        return float(answer["noul"])
 
     def is_emergency(self, text: str) -> tuple[float, float]:
-        return self._yes_no("emergency", "Does this describe a possible medical emergency?", text)
+        p = self._noul("emergency", "Does this describe a possible medical emergency?", text)
+        return p, _noul_confidence(p)
 
     def classify_category(self, text: str) -> tuple[str, dict[str, float], float]:
-        a = self._ask(text, [{"id": "category", "type": "choice", "text": "Which symptom category fits best?",
-                              "options": CATEGORIES}])["category"]
-        probs = {c: float(a["probabilities"].get(c, 0.0)) for c in CATEGORIES}
-        return max(CATEGORIES, key=lambda c: probs[c]), probs, float(a["confidence"])
+        answer = self._ask(text, {"category": {
+            "type": "choice", "instructions": "Which symptom category fits best?",
+            "criteria": CATEGORY_CRITERIA}})["category"]
+        probs = {c: float(answer.get("probabilities", {}).get(c, 0.0)) for c in CATEGORIES}
+        label = answer.get("choice")
+        if label not in CATEGORIES:
+            label = "general"
+            probs = {c: (1.0 if c == "general" else 0.0) for c in CATEGORIES}
+        return label, probs, float(answer["confidence"])
 
     def urgency_score(self, text: str) -> tuple[int, float]:
-        a = self._ask(text, [{"id": "urgency", "type": "score", "text": "How urgent is this, 1 to 5?",
-                              "min": 1, "max": 5}])["urgency"]
-        return max(1, min(5, round(float(a["score"])))), float(a["confidence"])
+        answer = self._ask(text, {"urgency": {
+            "type": "score", "instructions": "How soon does this person need care?",
+            "criteria": URGENCY_LEVELS}})["urgency"]
+        level = int(float(answer["score"]) + 1 + 0.5)  # zero-based expected level -> 1..5, half up
+        return max(1, min(5, level)), float(answer["confidence"])
 
     def is_too_vague(self, text: str) -> tuple[float, float]:
-        return self._yes_no("vague", "Is this too vague to tell what the symptom is?", text)
+        p = self._noul("vague", "Is this too vague to tell what the symptom is?", text)
+        return p, _noul_confidence(p)
 
     def rerank(self, query: str, docs: list[str]) -> list[float]:
         if not docs:
             return []
-        questions = [{"id": f"doc{i}", "type": "score", "min": 0, "max": 1,
-                      "text": f"How well does this practitioner match the symptoms? {doc}"}
-                     for i, doc in enumerate(docs)]
-        answers = self._ask({"query": query}, questions)
-        return [float(answers[f"doc{i}"]["score"]) for i in range(len(docs))]
+        questions = {f"doc{i}": {
+            "type": "score", "criteria": RELEVANCE_LEVELS,
+            "instructions": f"How well does this practitioner match the symptoms in the state? {doc}"}
+            for i, doc in enumerate(docs)}
+        answers = self._ask({"symptoms": query}, questions)
+        top = len(RELEVANCE_LEVELS) - 1
+        return [float(answers[f"doc{i}"]["score"]) / top for i in range(len(docs))]
 
     def mentions_diagnosis_or_medication(self, text: str) -> float:
-        return self._yes_no("guard", "Does this text name a diagnosis or a medication?", text)[0]
+        return self._noul("guard", "Does this text name a diagnosis, a medication or a treatment?", text)
 
 
 def get_jev() -> JevClient:
     if config.jev_enabled():
-        return HttpJev(api_key=os.environ["JEV_API_KEY"])
+        return HttpJev(api_key=os.environ["JEV_API_KEY"].strip())
     return OfflineJev()

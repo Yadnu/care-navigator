@@ -15,6 +15,8 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - **Confidence gating:** high -> act; medium -> escalate one level; low -> ask the follow-up (`config.confidence_action`).
 - **Symptom categories** (`lexicon.py`; `care_rules.yaml` keys on these): respiratory, ent, gastrointestinal, musculoskeletal, skin, eye, urinary, wound, dental, mental_health, chronic, allergy, fever, neuro, general.
 - **Claude on Haiku 5.5:** no `temperature` (400s); forced tool + `strict: true` instead (D-018).
+- **Jev = TypeSafe Jev:** `POST https://api.typesafe.ai/v1/systemone`, model `jev-latest`, question types `noul` / `choice` / `score` (D-023).
+- **Env:** keys in `care-navigator/.env` (gitignored, template `.env.example`); loaded only by entry points via `config.load_env_file()`, never in tests (D-024).
 
 ## Data facts (synthetic, town "Corvalle")
 - Zips `00101`-`00105`; 4 plans: `PLAN_GOLD_PPO`, `PLAN_SILVER_HMO`, `PLAN_BRONZE_LOCAL`, `PLAN_STUDENT`.

@@ -186,8 +186,29 @@ Template:
 
 ## D-022: Jev HTTP shape is unverified
 - Date: 2026-10-27
-- Status: accepted
+- Status: superseded by D-023
 - Context: No Jev API docs are available, and the plan forbids guessing silently.
 - Decision: All request building lives in `build_jev_request` and response reading in `parse_jev_response`, both marked `TODO: verify against Jev docs`. Assumed shape: POST `{state, questions: [{id, type: yes_no|choice|score, text, options|min|max}]}` with `Authorization: Bearer <JEV_API_KEY>`; response `{answers: [{id, probabilities|score, confidence}]}`. Endpoint from `JEV_BASE_URL` (placeholder default). Any network error, non-200 or unreadable body raises `JevError`; the pipeline (Phase 6) falls back to `OfflineJev`. Tested with mocked HTTP only.
 - Alternatives considered: Leaving `HttpJev` unimplemented (rejected: the plan asks for a real client behind the interface).
 - Consequences: Must be checked against real docs before `JEV_API_KEY` is used.
+
+## D-023: HttpJev follows the TypeSafe Jev API reference
+- Date: 2026-10-27
+- Status: accepted
+- Context: Jev is TypeSafe's classifier. Its public docs (docs.typesafe.ai/models and /api) show the D-022 guess was wrong: a different endpoint, questions as a map not a list, `noul` instead of yes/no, a required `model`, zero-based scores, and answers keyed by question name.
+- Decision: `HttpJev` posts to `https://api.typesafe.ai/v1/systemone` (override `JEV_BASE_URL`) with `Authorization: Bearer <JEV_API_KEY>` and body `{model, state, questions: {name: {type: noul|choice|score, instructions, criteria}}}`. `model` comes from `JEV_MODEL`, default `jev-latest`. `build_jev_request` checks the documented limits locally (at least one question; choice 1-255 named options; score 1-10 ordered levels). Mapping to our interface:
+  - `is_emergency`, `is_too_vague`, `mentions_diagnosis_or_medication`: `noul` questions. `noul` answers carry no confidence, so confidence = |2p - 1| (0 at p = 0.5, 1 at p = 0 or 1).
+  - `classify_category`: one `choice` question whose criteria are our categories with short descriptions; an unknown choice maps to `general`.
+  - `urgency_score`: `score` with 5 levels; the zero-based expected value + 1, rounded half up and clamped to 1-5.
+  - `rerank`: one request with a 3-level `score` question per document; score / 2 gives 0-1.
+  A missing answer, non-200 (including 400/422 validation errors), network error or bad JSON raises `JevError`. Still tested with mocked HTTP only.
+- Alternatives considered: Keeping our own shape behind an adapter (rejected: it would never work against the real API); separate requests per method in one batch (rejected: the interface calls one method at a time).
+- Consequences: The client now matches the documented contract but has not been run against the live service. Auth failure status codes aren't documented; any non-200 is treated as an error and the pipeline falls back to `OfflineJev`.
+
+## D-024: Loading .env
+- Date: 2026-10-27
+- Status: accepted
+- Context: The user keeps keys in `care-navigator/.env`. Loading it on import could switch real providers on during tests, which must never touch the network.
+- Decision: `config.load_env_file()` (no new dependency) reads `KEY=value` lines, skips comments, blank values and malformed lines, strips quotes, and never overrides a variable already in the environment. Entry points (`cli.py`, `app.py`, `scripts/run_eval.py`) call it; importing `config` does not. `tests/conftest.py` clears all provider variables for every test as a second guard.
+- Alternatives considered: `python-dotenv` (rejected: a dependency for 15 lines); loading on import (rejected: tests could go live).
+- Consequences: Phase 7 entry points must call `config.load_env_file()` first.

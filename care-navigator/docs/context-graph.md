@@ -56,12 +56,14 @@ flowchart TD
 | Node | Type | Depends on | Used by | Tests | Related decisions | Status |
 |---|---|---|---|---|---|---|
 | `navigator/__init__.py` | module | - | everything | `test_smoke.py` | - | done |
-| `navigator/config.py` | config | env vars | redflags, jev_client, parser, care_engine (gating) | `test_config.py` | D-003, D-004, D-008, D-014, D-019 | done |
+| `navigator/config.py` | config | env vars, `.env` (via `load_env_file`, entry points only) | redflags, jev_client, parser, care_engine (gating) | `test_config.py` | D-003, D-004, D-008, D-014, D-019, D-023, D-024 | done |
+| `.env.example` / `.env` | config | - | `config.load_env_file` | `test_config.py` | D-024 | done (`.env` gitignored) |
+| `tests/conftest.py` | test | pytest | every test | - | D-008, D-024 | done |
 | `navigator/models.py` | module | pydantic | all modules | `test_models.py` | D-001, D-003 | done |
 | `navigator/redact.py` | module | - | pipeline, trace | `test_redact.py` | D-009 | done |
 | `navigator/redflags.py` + `red_flags.yaml` | module + config | rapidfuzz, pyyaml, config, models | pipeline | `test_redflags.py` | D-002, D-014, D-015, D-016, D-017 | done |
 | `navigator/lexicon.py` | module | - | jev_client, parser | via `test_jev_client.py`, `test_parser.py` | D-021 | done |
-| `navigator/jev_client.py` | module | config, lexicon, redflags.normalize, requests | pipeline, retriever, guard | `test_jev_client.py` | D-002, D-004, D-008, D-019, D-022 | done (HTTP shape unverified) |
+| `navigator/jev_client.py` | module | config, lexicon, redflags.normalize, requests | pipeline, retriever, guard | `test_jev_client.py` | D-002, D-004, D-008, D-019, D-023 | done (HttpJev matches TypeSafe docs; not yet run live) |
 | `navigator/parser.py` | module | models, config, lexicon, redflags, anthropic | pipeline | `test_parser.py` | D-004, D-008, D-009, D-018, D-020 | done |
 | `navigator/clarifier.py` | module | models | pipeline | - | D-003 | not started |
 | `navigator/care_engine.py` + `care_rules.yaml` | module + config | models, practitioners.json | pipeline | - | D-001, D-003 | not started |
@@ -95,7 +97,8 @@ flowchart TD
 
 ## Open questions
 
-- Jev HTTP request/response shape and endpoint are assumptions (D-022); verify against Jev docs before enabling `JEV_API_KEY`.
+- HttpJev now follows the TypeSafe Jev API reference (D-023) but hasn't been run against the live service; do one manual smoke call before relying on it.
+- Phase 7 entry points must call `config.load_env_file()` (D-024).
 - Many routing cases state no duration, so OfflineParser marks them `medium` confidence, which the gate escalates one level. Phase 4 must check this doesn't push cases above `acceptable_levels` (for example, treat a missing duration as "escalate" only when the matched rule depends on duration).
 
 - Negation ("no chest pain") still fires the red-flag screen (D-017). Acceptable over-triage for the prototype?

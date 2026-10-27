@@ -128,6 +128,7 @@ def test_invalid_zip_still_gives_the_care_level(nav):
     assert result.outcome is Outcome.RECOMMENDATION and rec.decision.level is CareLevel.URGENT_CARE
     assert "99999" in result.errors[0]
     assert rec.options == [] and rec.alternatives and all(o.match.practitioner.virtual for o in rec.alternatives)
+    assert not any("km" in n for n in rec.notes)  # no distance claim for an unknown zip
 
 
 def test_invalid_plan_still_gives_the_care_level(nav):
@@ -141,7 +142,7 @@ def test_invalid_plan_still_gives_the_care_level(nav):
 def test_representative_case(nav):
     result = nav.run(req("Sore throat and fever for two days"))
     rec = result.recommendation
-    assert rec.decision.level is CareLevel.URGENT_CARE and len(rec.options) == 3
+    assert rec.decision.level is CareLevel.URGENT_CARE and 1 <= len(rec.options) <= 3  # D-032
     assert all(o.cost.copay_usd == 75 and o.cost.typical_range_usd == (150, 300) for o in rec.options)
     assert 3 <= len(split_sentences(rec.explanation)) <= 5 and rec.explanation.endswith(DISCLAIMER)
     assert result.simplified is False
@@ -230,7 +231,7 @@ class DocsFail(LocalTfidfEmbedder):
 @pytest.mark.parametrize("embedder", [QueryFails(), DocsFail()], ids=["query", "index"])
 def test_embedding_failure_falls_back_to_offline_search(tmp_path, embedder):
     result = Navigator(embedder=embedder, trace_dir=tmp_path).run(req("Sore throat and fever for two days"))
-    assert len(result.recommendation.options) == 3 and result.simplified is True
+    assert result.recommendation.options and result.simplified is True
 
 
 # ------------------------------------------------------------------ guard in the pipeline

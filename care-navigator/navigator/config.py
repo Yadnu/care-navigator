@@ -93,8 +93,13 @@ JEV_EMERGENCY_THRESHOLD = 0.5
 JEV_VAGUE_THRESHOLD = 0.5
 GUARD_THRESHOLD = 0.5
 
+# ------------------------------------------------------------------ pipeline
+MAX_TEXT_CHARS = 2000            # longer descriptions are rejected with a clear message
+TRACE_DIR = Path(__file__).resolve().parents[1] / "traces"
+HIGH_DEDUCTIBLE_USD = 3000       # mention the deductible at or above this
+
 # ------------------------------------------------------------------ retrieval (D-006)
-MAX_DISTANCE_KM = 10.0
+MAX_DISTANCE_KM = 3.0   # "nearby" = the person's own neighbourhood; zips are 4-10 km apart (D-031)
 RRF_K = 60
 RERANK_TOP_N = 10
 TOP_K = 3

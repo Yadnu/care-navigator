@@ -11,7 +11,10 @@ from pydantic import ValidationError
 from navigator.models import (
     CareDecision,
     CareLevel,
+    CostEstimate,
     JevAnswers,
+    Match,
+    Option,
     Outcome,
     Practitioner,
     Recommendation,
@@ -110,11 +113,14 @@ def test_practitioner_must_be_synthetic():
         Practitioner(**{**record, "synthetic": False})
 
 
-def test_recommendation_holds_decision_and_practitioners():
+def test_recommendation_holds_decision_and_options():
     record = json.loads((DATA / "practitioners.json").read_text(encoding="utf-8"))[0]
     decision = CareDecision(level="ER", rule_id="R-01", escalated=False, rules_version="1.0")
-    rec = Recommendation(decision=decision, practitioners=[Practitioner(**record)])
-    assert rec.explanation == "" and rec.notes == []
+    match = Match(practitioner=Practitioner(**record), distance_km=1.2, score=0.5, matched_text="chest pain")
+    cost = CostEstimate(care_type="ER", copay_usd=250, typical_range_usd=(1200, 3500))
+    rec = Recommendation(decision=decision, options=[Option(match=match, cost=cost)])
+    assert rec.explanation == "" and rec.notes == [] and rec.alternatives == [] and rec.nurse_line is None
+    assert rec.options[0].cost.label == "Estimate"
 
 
 def test_trace_step_optional_metrics():

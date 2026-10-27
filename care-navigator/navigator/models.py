@@ -120,11 +120,39 @@ class Match(BaseModel):
     matched_text: str             # the record text that best matches the query
 
 
+class CostEstimate(BaseModel):
+    """Plan copay plus typical total cost, always labeled as an estimate."""
+
+    care_type: str
+    copay_usd: Optional[int] = None            # None for self-care or an unknown plan
+    typical_range_usd: tuple[int, int]
+    deductible_usd: Optional[int] = None
+    deductible_note: Optional[str] = None      # only when the deductible is high
+    label: str = "Estimate"
+
+    def summary(self) -> str:
+        low, high = self.typical_range_usd
+        parts = [f"{self.label}: "]
+        if self.copay_usd is not None:
+            parts.append(f"${self.copay_usd:,} copay; ")
+        parts.append(f"typical total ${low:,}-${high:,} before insurance.")
+        if self.deductible_note:
+            parts.append(f" {self.deductible_note}")
+        return "".join(parts)
+
+
+class Option(BaseModel):
+    match: Match
+    cost: CostEstimate
+
+
 class Recommendation(BaseModel):
     decision: CareDecision
-    practitioners: list[Practitioner] = []
+    options: list[Option] = []          # top in-network practitioners at the recommended level
+    alternatives: list[Option] = []     # telehealth when nothing at the level is available nearby
     explanation: str = ""
     notes: list[str] = []
+    nurse_line: Optional[str] = None    # from the plan record
 
 
 class TraceStep(BaseModel):

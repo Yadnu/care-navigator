@@ -9,9 +9,10 @@
 #   symptom_any         any of these words in the parsed main symptom
 # level        care level when something at that level is open
 # after_hours  where to go when nothing at `level` is open now (never SELF_CARE);
-#              time of day is handled here and by the opening-hours check
+#              time of day is handled here and by the opening-hours check (D-026)
+# reason       plain-English "because ..." used by the explanation (no diagnosis, no level names)
 # note         shown with the decision
-version: "1.0"
+version: "1.1"
 label: "Simplified, not clinically validated"
 
 rules:
@@ -20,12 +21,14 @@ rules:
     when: {min_urgency: 5}
     level: ER
     after_hours: ER
+    reason: "the symptoms you described sound like they need care right away"
 
   - id: R-02
     description: Very high self-reported severity without a red flag
     when: {min_severity: 8}
     level: URGENT_CARE
     after_hours: ER
+    reason: "you rated how bad it feels as very high"
     note: "If it gets worse or you feel faint, call 911."
 
   - id: R-03
@@ -33,25 +36,29 @@ rules:
     when: {category: [chronic]}
     level: PRIMARY_CARE
     after_hours: TELEHEALTH
+    reason: "ongoing conditions and refills are best handled by a regular clinician"
 
   - id: R-04
     description: Stress, sleep or mood without crisis wording (crisis wording routes to 988 earlier)
     when: {category: [mental_health]}
     level: PRIMARY_CARE
     after_hours: TELEHEALTH
-    note: "If you have thoughts of harming yourself, call or text 988 any time."
+    reason: "stress and sleep problems are best followed up by a regular clinician"
+    note: "If thoughts of harming yourself come up, call or text 988 any time."
 
   - id: R-05
     description: Long-standing problem, two weeks or more
     when: {min_duration_hours: 336}
     level: PRIMARY_CARE
     after_hours: TELEHEALTH
+    reason: "a problem lasting two weeks or more is best checked by a regular clinician"
 
   - id: R-06
     description: Mild seasonal allergy symptoms
     when: {category: [allergy], max_urgency: 2}
     level: SELF_CARE
     after_hours: TELEHEALTH
+    reason: "mild seasonal allergy symptoms can usually be managed at home"
     note: "Call your plan's nurse line if symptoms get worse or you are unsure."
 
   - id: R-07
@@ -59,6 +66,7 @@ rules:
     when: {category: [neuro], max_urgency: 2, max_severity: 4}
     level: SELF_CARE
     after_hours: TELEHEALTH
+    reason: "a mild headache can usually be managed at home"
     note: "Call your plan's nurse line if it gets worse; a sudden, severe headache needs 911."
 
   - id: R-08
@@ -66,6 +74,7 @@ rules:
     when: {category: [gastrointestinal], min_urgency: 3}
     level: URGENT_CARE
     after_hours: TELEHEALTH
+    reason: "vomiting or diarrhea usually needs a same-day check"
     note: "If you can't keep fluids down or feel dizzy when standing, go to the ER."
 
   - id: R-09
@@ -73,6 +82,7 @@ rules:
     when: {category: [gastrointestinal]}
     level: TELEHEALTH
     after_hours: TELEHEALTH
+    reason: "milder stomach symptoms can usually be assessed by video"
     note: "If you can't keep fluids down or feel dizzy when standing, go to the ER."
 
   - id: R-10
@@ -80,18 +90,21 @@ rules:
     when: {category: [musculoskeletal], min_urgency: 3}
     level: URGENT_CARE
     after_hours: ER
+    reason: "an injury like this may need an in-person exam or X-ray"
 
   - id: R-11
     description: Minor strain or ache
     when: {category: [musculoskeletal]}
     level: PRIMARY_CARE
     after_hours: TELEHEALTH
+    reason: "a minor strain is best checked at a regular appointment"
 
   - id: R-12
     description: Cuts, bites, burns and splinters
     when: {category: [wound]}
     level: URGENT_CARE
     after_hours: TELEHEALTH
+    reason: "cuts, bites and burns are best checked in person the same day"
     note: "If bleeding won't stop with pressure, go to the ER."
 
   - id: R-13
@@ -99,25 +112,29 @@ rules:
     when: {category: [urinary]}
     level: URGENT_CARE
     after_hours: TELEHEALTH
+    reason: "urinary symptoms usually need a same-day check"
 
   - id: R-14
     description: Tooth or gum pain
     when: {category: [dental]}
     level: URGENT_CARE
     after_hours: TELEHEALTH
-    note: "If your face or neck swells quickly or you have trouble swallowing, go to the ER."
+    reason: "tooth or gum pain is best seen the same day"
+    note: "If your face or neck swells quickly or swallowing gets hard, go to the ER."
 
   - id: R-15
     description: Eye irritation
     when: {category: [eye]}
     level: TELEHEALTH
     after_hours: TELEHEALTH
+    reason: "eye irritation can usually be assessed by video"
 
   - id: R-16
     description: Hives
     when: {category: [skin], symptom_any: [hives]}
     level: URGENT_CARE
     after_hours: TELEHEALTH
+    reason: "hives are best checked the same day"
     note: "If your lips, tongue or throat swell or breathing changes, call 911."
 
   - id: R-17
@@ -125,20 +142,24 @@ rules:
     when: {category: [skin]}
     level: TELEHEALTH
     after_hours: TELEHEALTH
+    reason: "most rashes can be assessed by video"
 
   - id: R-18
     description: Ear, throat or fever symptoms
     when: {category: [ent, fever]}
     level: URGENT_CARE
     after_hours: TELEHEALTH
+    reason: "ear, throat and fever symptoms usually need a same-day check"
 
   - id: R-19
     description: Cold and nose symptoms
     when: {category: [respiratory]}
     level: TELEHEALTH
     after_hours: TELEHEALTH
+    reason: "cold and nose symptoms can usually be assessed by video"
 
   - id: R-20
     description: Anything not matched above (fail toward more care)
     level: URGENT_CARE
     after_hours: TELEHEALTH
+    reason: "when symptoms don't fit a clear pattern, we point you to more care rather than less"

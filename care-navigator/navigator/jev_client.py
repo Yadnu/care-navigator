@@ -261,7 +261,14 @@ class HttpJev(JevClient):
         return [float(answers[f"doc{i}"]["score"]) / top for i in range(len(docs))]
 
     def mentions_diagnosis_or_medication(self, text: str) -> float:
-        return self._noul("guard", "Does this text name a diagnosis, a medication or a treatment?", text)
+        # Two narrow questions; asking about "treatment" flagged ordinary care advice (D-036).
+        answers = self._ask(text, {
+            "diagnosis": {"type": "noul", "instructions":
+                          "Does this text tell the reader they have a specific named disease, infection or diagnosis?"},
+            "medication": {"type": "noul", "instructions":
+                           "Does this text name or recommend a medication, drug, dose or supplement?"},
+        })
+        return max(float(answers["diagnosis"]["noul"]), float(answers["medication"]["noul"]))
 
 
 def get_jev() -> JevClient:

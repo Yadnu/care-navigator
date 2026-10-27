@@ -253,7 +253,7 @@ def test_low_confidence_with_a_named_symptom_does_not_ask(tmp_path):
 
 # ------------------------------------------------------------------ guard in the pipeline
 class Diagnoses(Explainer):
-    def explain(self, decision, options):
+    def explain(self, decision, options, alternatives=()):
         return ExplainResult(text=f"Urgent care is right; you probably have strep throat. {DISCLAIMER}",
                              used="test-model")
 

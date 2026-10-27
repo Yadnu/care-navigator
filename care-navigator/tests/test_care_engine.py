@@ -129,8 +129,8 @@ def test_high_confidence_is_not_escalated():
 
 
 def test_medium_confidence_from_model_uncertainty_escalates_one_level():
-    d = engine.decide(report(confidence="medium"), category="respiratory", urgency=2,
-                      request_time=TUE_DAY, plan="PLAN_GOLD_PPO")
+    d = engine.decide(report(confidence="medium", main_symptom="runny nose", body_area="nose"),
+                      category="respiratory", urgency=2, request_time=TUE_DAY, plan="PLAN_GOLD_PPO")
     assert d.escalated is True
     assert d.level is CareLevel.PRIMARY_CARE  # TELEHEALTH + 1
 

@@ -172,6 +172,16 @@ class ClaudeParser(Parser):
         except (ValidationError, TypeError):
             return None
 
+    def _fill_duration(self, report: SymptomReport, text: str, severity: int) -> SymptomReport:
+        """The model sometimes leaves "for months" as null; deterministic parsing fills it (D-036)."""
+        if report.duration_hours is not None:
+            return report
+        duration = self.fallback.parse(text, severity).report.duration_hours
+        if duration is None:
+            return report
+        return report.model_copy(update={"duration_hours": duration,
+                                         "missing": [m for m in report.missing if m != "duration"]})
+
     def parse(self, text: str, severity: int) -> ParseResult:
         tokens = 0
         for _ in range(MAX_ATTEMPTS):
@@ -184,7 +194,8 @@ class ClaudeParser(Parser):
                 tokens += usage.input_tokens + usage.output_tokens
             report = self._report(response, severity)
             if report is not None:
-                return ParseResult(report=report, used=self.model, tokens=tokens)
+                return ParseResult(report=self._fill_duration(report, text, severity), used=self.model,
+                                   tokens=tokens)
         offline = self.fallback.parse(text, severity)
         return offline.model_copy(update={"fallback": True, "tokens": tokens or None})
 

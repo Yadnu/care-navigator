@@ -35,7 +35,8 @@ class ExplainResult(BaseModel):
 
 class Explainer(ABC):
     @abstractmethod
-    def explain(self, decision: CareDecision, options: list[Option]) -> ExplainResult: ...
+    def explain(self, decision: CareDecision, options: list[Option],
+                alternatives: list[Option] = ()) -> ExplainResult: ...
 
 
 def _rule(decision: CareDecision) -> dict:
@@ -61,7 +62,8 @@ def _join(items: list[str]) -> str:
 
 
 class TemplateExplainer(Explainer):
-    def explain(self, decision: CareDecision, options: list[Option]) -> ExplainResult:
+    def explain(self, decision: CareDecision, options: list[Option],
+                alternatives: list[Option] = ()) -> ExplainResult:
         level = LABELS[decision.level]
         reason = _rule(decision).get("reason", "of the details you gave")
         why = f"{level[0].upper() + level[1:]} is the recommended level of care because {reason}"
@@ -81,6 +83,9 @@ class TemplateExplainer(Explainer):
             sentences.append(f"In-network options open now: {_join([_place(o) for o in options])}; {price}.")
         elif decision.level is CareLevel.SELF_CARE:
             sentences.append("No visit is needed right now, and your plan's nurse line can help if you are unsure.")
+        elif alternatives:
+            sentences.append(f"No in-network {level} is open nearby right now; online options: "
+                             f"{_join([_place(o) for o in alternatives])}.")
         else:
             sentences.append(f"No in-network {level} is open nearby right now, so check the other options listed.")
 
@@ -93,14 +98,28 @@ SYSTEM_PROMPT = """You write a short, plain-English explanation for a care navig
 You get a JSON object with the care decision (already made by rules) and the retrieved options.
 Write 3 to 5 sentences: why this level of care, the options (use only the names given), and when to get more care.
 - State the decision's level of care exactly as given; never recommend a different level.
+- If "options" is empty, say no in-network option at that level is open nearby and name the "alternatives" (online visits).
 - You may name another level only to say it is closed, or as "if ..., go to the ER".
+- For when to get more care, use only the notes given (or say to get care sooner if things get worse); never list warning signs or symptoms of your own.
 - Never name a diagnosis, a condition, a medication or a treatment.
 - Do not invent practitioners, addresses, phone numbers, plans or prices.
 - Copy the costs as given and call them estimates.
 - End with exactly: This is not medical advice."""
 
 
-def explainer_payload(decision: CareDecision, options: list[Option]) -> dict:
+def _option_payload(o: Option) -> dict:
+    return {
+        "facility_name": o.match.practitioner.facility_name,
+        "name": o.match.practitioner.name,
+        "type": o.match.practitioner.type,
+        "virtual": o.match.practitioner.virtual,
+        "distance_km": o.match.distance_km,
+        "copay_usd": o.cost.copay_usd,
+        "typical_total_usd": list(o.cost.typical_range_usd),
+    }
+
+
+def explainer_payload(decision: CareDecision, options: list[Option], alternatives: list[Option] = ()) -> dict:
     return {
         "decision": {
             "level": decision.level.value,
@@ -109,18 +128,8 @@ def explainer_payload(decision: CareDecision, options: list[Option]) -> dict:
             "escalated": decision.escalated,
             "notes": decision.notes,
         },
-        "options": [
-            {
-                "facility_name": o.match.practitioner.facility_name,
-                "name": o.match.practitioner.name,
-                "type": o.match.practitioner.type,
-                "virtual": o.match.practitioner.virtual,
-                "distance_km": o.match.distance_km,
-                "copay_usd": o.cost.copay_usd,
-                "typical_total_usd": list(o.cost.typical_range_usd),
-            }
-            for o in options
-        ],
+        "options": [_option_payload(o) for o in options],
+        "alternatives": [_option_payload(o) for o in alternatives],
     }
 
 
@@ -131,7 +140,8 @@ class ClaudeExplainer(Explainer):
         self.model = model
         self.fallback = fallback or TemplateExplainer()
 
-    def explain(self, decision: CareDecision, options: list[Option]) -> ExplainResult:
+    def explain(self, decision: CareDecision, options: list[Option],
+                alternatives: list[Option] = ()) -> ExplainResult:
         tokens = None
         try:
             response = self.client.messages.create(
@@ -139,7 +149,8 @@ class ClaudeExplainer(Explainer):
                 max_tokens=config.CLAUDE_MAX_TOKENS,
                 output_config={"effort": "low"},
                 system=SYSTEM_PROMPT,
-                messages=[{"role": "user", "content": json.dumps(explainer_payload(decision, options))}],
+                messages=[{"role": "user",
+                           "content": json.dumps(explainer_payload(decision, options, alternatives))}],
             )
             usage = getattr(response, "usage", None)
             tokens = usage.input_tokens + usage.output_tokens if usage else None
@@ -148,7 +159,7 @@ class ClaudeExplainer(Explainer):
                 return ExplainResult(text=text, used=self.model, tokens=tokens)
         except anthropic.APIError:
             pass
-        offline = self.fallback.explain(decision, options)
+        offline = self.fallback.explain(decision, options, alternatives)
         return offline.model_copy(update={"fallback": True, "tokens": tokens})
 
 

@@ -12,7 +12,7 @@
 #              time of day is handled here and by the opening-hours check (D-026)
 # reason       plain-English "because ..." used by the explanation (no diagnosis, no level names)
 # note         shown with the decision
-version: "1.1"
+version: "1.2"
 label: "Simplified, not clinically validated"
 
 rules:
@@ -77,6 +77,14 @@ rules:
     reason: "vomiting or diarrhea usually needs a same-day check"
     note: "If you can't keep fluids down or feel dizzy when standing, go to the ER."
 
+  - id: R-21
+    description: Vomiting named in the symptoms, whatever the urgency score (D-036)
+    when: {symptom_any: [vomit]}
+    level: URGENT_CARE
+    after_hours: TELEHEALTH
+    reason: "vomiting usually needs a same-day check"
+    note: "If you can't keep fluids down or feel dizzy when standing, go to the ER."
+
   - id: R-09
     description: Milder stomach symptoms
     when: {category: [gastrointestinal]}
@@ -98,6 +106,14 @@ rules:
     level: PRIMARY_CARE
     after_hours: TELEHEALTH
     reason: "a minor strain is best checked at a regular appointment"
+
+  - id: R-22
+    description: Tick or insect bite, whatever the category (D-036)
+    when: {symptom_any: [tick bite, insect bite, bug bite, mosquito bite]}
+    level: TELEHEALTH
+    after_hours: TELEHEALTH
+    reason: "a tick or insect bite can usually be reviewed by video"
+    note: "If a spreading rash, fever or swelling appears, get seen in person."
 
   - id: R-12
     description: Cuts, bites, burns and splinters
@@ -147,6 +163,13 @@ rules:
   - id: R-18
     description: Ear, throat or fever symptoms
     when: {category: [ent, fever]}
+    level: URGENT_CARE
+    after_hours: TELEHEALTH
+    reason: "ear, throat and fever symptoms usually need a same-day check"
+
+  - id: R-23
+    description: Sore throat, ear pain or fever named in the symptoms, whatever the category (D-036)
+    when: {symptom_any: [sore throat, ear pain, earache, fever]}
     level: URGENT_CARE
     after_hours: TELEHEALTH
     reason: "ear, throat and fever symptoms usually need a same-day check"

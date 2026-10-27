@@ -35,9 +35,11 @@ class GuardResult(BaseModel):
     used: str = "OfflineJev"
 
 
-def check(text: str, decision: CareDecision, options: list[Option], jev: JevClient) -> GuardResult:
+def check(text: str, decision: CareDecision, options: list[Option], jev: JevClient,
+          alternatives: list[Option] = ()) -> GuardResult:
     reasons: list[str] = []
-    retrieved = {name for o in options for name in (o.match.practitioner.name, o.match.practitioner.facility_name)}
+    retrieved = {name for o in [*options, *alternatives]
+                 for name in (o.match.practitioner.name, o.match.practitioner.facility_name)}
     directory = {name for p in load_practitioners() for name in (p.name, p.facility_name)}
 
     if not text.strip().endswith(DISCLAIMER):
@@ -52,9 +54,9 @@ def check(text: str, decision: CareDecision, options: list[Option], jev: JevClie
             reasons.append(f"practitioner not retrieved: {doctor}")
 
     # Levels: the decision's level must be named; others only when closed or as "if ... ER / 911".
-    scrubbed = text
+    scrubbed = text  # a neutral placeholder keeps sentences readable for the classifier
     for name in sorted(retrieved, key=len, reverse=True):
-        scrubbed = scrubbed.replace(name, "")
+        scrubbed = scrubbed.replace(name, "the clinic")
     if not LEVEL_PATTERNS[decision.level].search(scrubbed):
         reasons.append(f"level not stated: {decision.level.value}")
     for sentence in split_sentences(scrubbed):

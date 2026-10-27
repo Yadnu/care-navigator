@@ -115,18 +115,24 @@ class Navigator:
         run.tracer.add(step, input=text, output=str(value), used=used, latency_ms=(perf_counter() - start) * 1000)
         return value
 
-    def _search(self, run: _Run, query: str, level: str) -> RetrievalResult:
+    def _search(self, run: _Run, query: str, level: str) -> tuple[RetrievalResult, str]:
+        """Search with the main index; on an embedding failure use the offline one. Returns (result, used)."""
         r = run.request
         args = dict(care_type=level, plan=r.plan, zip_code=r.zip, when=r.request_time, age_group=r.age_group)
+        used = f"{self.retriever.embedder.name} + bm25 + rrf"
+        if self.index_simplified:
+            used += " (fallback: index embedding failed)"
         try:
             result = self.retriever.search_text(query, **args)
-        except EmbeddingError:
+        except EmbeddingError as e:
             if self._offline_retriever is None:
                 self._offline_retriever = Retriever(jev=self.jev)
             result, run.simplified = self._offline_retriever.search_text(query, **args), True
+            used = f"{self._offline_retriever.embedder.name} + bm25 + rrf (fallback: {e})"
         if result.candidates and not result.reranked:
             run.simplified = True
-        return result
+            used += " (rerank fallback: fused order)"
+        return result, used
 
     def _options(self, result: RetrievalResult, plan: str) -> list[Option]:
         return [Option(match=m, cost=estimate(m.practitioner.type, plan)) for m in result.matches]
@@ -210,9 +216,11 @@ class Navigator:
         if parsed_flags.is_emergency:
             return self._emergency(run, parsed_flags.message, parsed_flags.resources)
 
-        # 5. too vague? ask once (D-003)
+        # 5. too vague? ask once (D-003). Low parser confidence alone doesn't ask when a symptom was
+        # named: Jev's vagueness check decides (D-036).
         vague = self._jev(run, "jev_vague", "is_too_vague", clean)[0] >= config.JEV_VAGUE_THRESHOLD
-        if (vague or config.confidence_action(report.confidence) == "ask") and not answer:
+        no_symptom = config.confidence_action(report.confidence) == "ask" and not report.main_symptom
+        if (vague or no_symptom) and not answer:
             with tracer.step("clarify", input=clean, used="clarifier") as s:
                 asked = self.clarifier.question(report, clean)
                 s.output, s.used, s.tokens = asked.question, asked.used, asked.tokens
@@ -234,15 +242,15 @@ class Navigator:
         # 7. retrieve practitioners (D-005, D-006); telehealth alternatives when nothing is nearby
         query = build_query(report)
         notes = list(decision.notes)
-        with tracer.step("retrieve", input=query, used=f"{self.retriever.embedder.name} + bm25 + rrf") as s:
-            found = self._search(run, query, decision.level.value)
+        with tracer.step("retrieve", input=query, used="retriever") as s:
+            found, s.used = self._search(run, query, decision.level.value)
             alternatives = RetrievalResult(matches=[], candidates=0, reranked=False)
             level = decision.level
             if not found.matches and level in (CareLevel.URGENT_CARE, CareLevel.PRIMARY_CARE):
                 if request.zip in self.zips:  # an unknown zip is already explained in errors
                     notes.append(f"No in-network {LABELS[level]} is open within {config.MAX_DISTANCE_KM:g} km of "
                                  f"zip {request.zip} right now; online options and your plan's nurse line are below.")
-                alternatives = self._search(run, query, CareLevel.TELEHEALTH.value)
+                alternatives, _ = self._search(run, query, CareLevel.TELEHEALTH.value)
             elif not found.matches and level is CareLevel.ER:
                 notes.append("Go to the nearest ER or call 911.")
             elif not found.matches and level is CareLevel.TELEHEALTH:
@@ -260,15 +268,15 @@ class Navigator:
         # 9. explain, then guard (D-007)
         with tracer.step("explain", input=f"decision={decision.level.value} options={len(options)}",
                          used="explainer") as s:
-            explained = self.explainer.explain(decision, options)
+            explained = self.explainer.explain(decision, options, alt_options)
             s.output, s.used, s.tokens = explained.text, explained.used, explained.tokens
             run.simplified |= explained.fallback
         with tracer.step("guard", input=explained.text, used="guard") as s:
-            verdict = check(explained.text, decision, options, self.jev)
+            verdict = check(explained.text, decision, options, self.jev, alt_options)
             s.used = f"guard + {verdict.used}"
             explanation = explained.text
             if not verdict.ok:
-                explanation = self.template.explain(decision, options).text
+                explanation = self.template.explain(decision, options, alt_options).text
                 s.output = "blocked: " + "; ".join(verdict.reasons) + " -> template"
             else:
                 s.output = "ok"

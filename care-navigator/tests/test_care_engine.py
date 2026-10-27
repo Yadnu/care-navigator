@@ -62,7 +62,10 @@ def test_is_open(hours, when, expected):
 
 def test_practitioners_load_as_models():
     pracs = load_practitioners()
-    assert len(pracs) == 44 and all(isinstance(p, Practitioner) for p in pracs)
+    assert all(isinstance(p, Practitioner) for p in pracs)
+    ids = {p.id for p in pracs}
+    original = {f"ER-{i:03d}" for i in range(1, 5)} | {f"UC-{i:03d}" for i in range(1, 11)} |         {f"PC-{i:03d}" for i in range(1, 16)} | {f"TH-{i:03d}" for i in range(1, 6)} | {f"SP-{i:03d}" for i in range(1, 11)}
+    assert len(original) == 44 and original <= ids  # D-044: the 44 original records are kept
 
 
 # ------------------------------------------------------------------ rules file

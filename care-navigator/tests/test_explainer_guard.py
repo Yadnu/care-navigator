@@ -217,3 +217,10 @@ def test_get_explainer(monkeypatch):
     assert isinstance(get_explainer(), TemplateExplainer)
     monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
     assert isinstance(get_explainer(), ClaudeExplainer)
+
+
+def test_template_uses_cash_wording_for_self_pay():
+    case = {**by_id("RT-002"), "plan": "SELF_PAY"}
+    decision, options = scenario(case)
+    text = template.explain(decision, options).text
+    assert "cash price" in text and "copay" not in text and check(text, decision, options, jev).ok

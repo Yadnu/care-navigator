@@ -18,7 +18,7 @@ DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
 # ------------------------------------------------------------------ schemas
 class Zip(BaseModel):
-    zip: str = Field(pattern=r"^001\d\d$")
+    zip: str = Field(pattern=r"^00[1-3]\d\d$")  # D-044: Corvalle 001xx, Brightwater 002xx, Pinecrest 003xx
     neighborhood: str
     city: str
     lat: float
@@ -113,6 +113,8 @@ ZIPS = load("zips.json")
 PLANS = load("plans.json")
 PRACS = load("practitioners.json")
 ZIP_BY = {z["zip"]: z for z in ZIPS}
+ORIGINAL_ZIPS = ["00101", "00102", "00103", "00104", "00105"]
+ORIGINAL_PLANS = ["PLAN_GOLD_PPO", "PLAN_SILVER_HMO", "PLAN_BRONZE_LOCAL", "PLAN_STUDENT"]
 PLAN_IDS = {p["id"] for p in PLANS}
 
 
@@ -167,8 +169,10 @@ def test_24h_telehealth_for_every_plan():
 
 
 def test_coverage_in_every_zip_except_deliberate_gap():
-    for z in ZIP_BY:
-        for plan in PLAN_IDS:
+    # D-044: the original in-zip guarantee for the original 5 Corvalle zips and 4 plans; the
+    # 12-zip, 10-plan rules are the 15 km coverage-gap tests in test_data_insurance.py.
+    for z in ORIGINAL_ZIPS:
+        for plan in ORIGINAL_PLANS:
             for ctype in ("URGENT_CARE", "PRIMARY_CARE"):
                 ok = any(p["type"] == ctype and p["zip"] == z and plan in p["accepted_plans"] for p in PRACS)
                 if (z, plan, ctype) == ("00105", "PLAN_BRONZE_LOCAL", "URGENT_CARE"):

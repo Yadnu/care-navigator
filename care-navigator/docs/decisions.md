@@ -307,3 +307,26 @@ Template:
 - Decision: `costs.estimate(care_type, plan)` returns the plan's copay for that type and the typical total from `cost_ranges.json`, labeled "Estimate"; the deductible is mentioned at or above $3,000 (`config.HIGH_DEDUCTIBLE_USD`: Silver and Bronze). Unknown plan -> typical range only; self-care -> no copay. `Tracer` records each step (name, input, output, model or rule, latency, tokens) and re-applies `redact()` to every input and output as a safety net on top of redacting before any model call; the raw text is never logged. One JSON file per request in `traces/` (gitignored), with a summary (outcome, level, rule, simplified, errors, request fields without text). Token counts are recorded for Claude steps; dollar cost is left empty because only totals, not input/output splits, are kept.
 - Alternatives considered: Logging raw text with access controls (rejected: D-009).
 - Consequences: The trace viewer (Phase 7) reads these files or the in-memory `result.trace`.
+
+## D-036: Fixes from live verification
+- Date: 2026-10-27
+- Status: accepted
+- Context: First live run with Claude, Jev and Voyage (synthetic text only). Offline, every bar passed; live: routing 35/39 with 3 cases below the expected level, almost every Claude explanation blocked by the guard, and some explanations inventing warning signs or attributing the rule's wording to the person.
+- Decision:
+  - Rules v1.2 add symptom-word rules so routing doesn't hinge on one classifier output: R-21 (any vomiting -> urgent care), R-22 (tick/insect bite -> telehealth), R-23 (sore throat / ear pain / fever -> urgent care, before the respiratory rule). Live Jev called "cough and sore throat" respiratory, scored "vomited twice" urgency 2 and called a tick bite a wound.
+  - `ClaudeParser` fills a null duration from the offline regex parser (Claude left "for months" empty, so the long-standing rule never fired). If the duration was the model's only gap, confidence goes from medium to high; otherwise "medium, nothing missing" would escalate (seen live: ear pain -> ER).
+  - The pipeline asks the follow-up when Jev says too vague or no main symptom was found, not on low parser confidence alone (Claude rated "refill check" low).
+  - `HttpJev.mentions_diagnosis_or_medication` asks two narrow `noul` questions (named diagnosis? named medication?) and takes the max. The old single question included "treatment", so ordinary care advice scored 0.3-0.6. The guard replaces record names with "the clinic" instead of deleting them, and allows naming telehealth when telehealth alternatives are shown.
+  - The explainer receives the telehealth `alternatives`; its prompt says to use only the given notes for escalation, never mention rules, rule ids or notes, and treat `reason` as a general statement. `rule_id` is no longer sent to Claude.
+  - The trace's retrieve step names the index that answered and why it fell back.
+  - Test corrections: `test_medium_confidence_from_model_uncertainty_escalates_one_level` used "sore throat" with category respiratory; the new R-23 correctly routes that pair to urgent care, so the test now uses "runny nose" (assertion unchanged). The Claude payload test now expects `alternatives`; the HttpJev guard test expects the two questions.
+- Alternatives considered: Raising the guard threshold (rejected: hides the cause); trusting Jev's category alone (rejected: one model output shouldn't move the level down).
+- Consequences: Live routing 39/39 in acceptable levels, none lower; offline still 40/40. All six live demo explanations pass the guard and end with the disclaimer.
+
+## D-037: Voyage rate limit
+- Date: 2026-10-27
+- Status: accepted
+- Context: Live, the Voyage key returned HTTP 429 after the first query in quick succession (the account's requests-per-minute limit).
+- Decision: Keep the existing fallback: on `EmbeddingError` the pipeline searches the offline TF-IDF index, marks the answer `simplified`, and the trace names the fallback. No retry loop.
+- Alternatives considered: Retrying with backoff (rejected: adds seconds per request for a demo); caching query embeddings (deferred: queries rarely repeat).
+- Consequences: With this key, most live requests use offline semantic search; raising the Voyage account limit would make Voyage answer every request.

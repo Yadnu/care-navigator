@@ -74,10 +74,10 @@ flowchart TD
 | `navigator/redact.py` | module | - | pipeline, trace | `test_redact.py` | D-009 | done |
 | `navigator/redflags.py` + `red_flags.yaml` | module + config | rapidfuzz, pyyaml, config, models | pipeline | `test_redflags.py` | D-002, D-014, D-015, D-016, D-017 | done |
 | `navigator/lexicon.py` | module | - | jev_client, parser | via `test_jev_client.py`, `test_parser.py` | D-021 | done |
-| `navigator/jev_client.py` | module | config, lexicon, redflags.normalize, requests | pipeline, retriever, guard | `test_jev_client.py` | D-002, D-004, D-008, D-019, D-023 | done (HttpJev matches TypeSafe docs; live `noul` call verified) |
+| `navigator/jev_client.py` | module | config, lexicon, redflags.normalize, requests | pipeline, retriever, guard | `test_jev_client.py` | D-002, D-004, D-008, D-019, D-023 | done (all question types verified live) |
 | `navigator/parser.py` | module | models, config, lexicon, redflags, anthropic | pipeline | `test_parser.py` | D-004, D-008, D-009, D-018, D-020 | done |
 | `navigator/clarifier.py` | module | models, config, jev_client (guard), anthropic | pipeline | `test_clarifier.py` | D-003, D-004, D-028 | done |
-| `navigator/care_engine.py` + `care_rules.yaml` | module + config | models, data, pyyaml | pipeline | `test_care_engine.py` | D-001, D-003, D-025, D-026, D-034 | done (20 rules, v1.1) |
+| `navigator/care_engine.py` + `care_rules.yaml` | module + config | models, data, pyyaml | pipeline | `test_care_engine.py` | D-001, D-003, D-025, D-026, D-034, D-036 | done (23 rules, v1.2) |
 | `navigator/data.py` | module | data/*.json, models | care_engine, retrieval | `test_care_engine.py` | D-027 | done |
 | `navigator/retrieval/embeddings.py` | module | scikit-learn, requests, config | retriever | `test_retrieval.py` | D-008, D-030 | done (Voyage not run live) |
 | `navigator/retrieval/vector_store.py` | module | numpy | retriever | `test_retrieval.py` | D-006, D-029 | done |
@@ -107,15 +107,14 @@ flowchart TD
 - Routing (engine with offline parser + OfflineJev): 38/39 non-emergency cases exactly on `expected_level`, 1 one level higher (RT-008), 0 lower. Midnight food poisoning -> TELEHEALTH with the ER-if-no-fluids note.
 - Retrieval: recall@3 = 1.0 on 20 queries (top-1 correct on all), 0 filter violations over a 1,600-search grid, coverage gap (RQ-019) returns an empty list.
 - Pipeline end to end: 40/40 red flags -> EMERGENCY (988 first for crisis wording), 40/40 routing cases on the expected outcome and an acceptable level, 15/15 vague -> one valid follow-up, 10/10 adversarial handled; injected instructions never change the outcome or level; Jev, Claude and Voyage failures all fall back with `simplified=True`.
+- Live verification (2026-10-27, D-036): Claude parser/clarifier/explainer, Jev (noul, choice, score, rerank) and Voyage all called successfully. Live routing 39/39 acceptable, 0 lower; six demo cases correct with guarded Claude explanations.
 - In progress: -
 - Not started: Phases 7 to 8.
 
 ## Open questions
 
-- HttpJev follows the TypeSafe Jev API reference (D-023). One live `noul` call succeeded; `choice` (category) and `score` (urgency, rerank) are verified only against mocked HTTP.
 - Phase 7 entry points must call `config.load_env_file()` (D-024).
-- ClaudeClarifier sends `output_config.effort: low`; not yet exercised live.
-- VoyageEmbedder and the Claude parser, clarifier and explainer haven't been called live; all fall back offline on failure (tested with mocks).
+- The Voyage key hits its rate limit (HTTP 429) after one query in quick succession; requests fall back to offline search (D-037).
 - Live Jev rerank sends one score question per document (up to 10) in one request; cost per search is roughly 10x a single classification.
 
 - Negation ("no chest pain") still fires the red-flag screen (D-017). Acceptable over-triage for the prototype?

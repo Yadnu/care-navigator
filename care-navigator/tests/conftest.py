@@ -14,3 +14,5 @@ def offline_env(monkeypatch):
         # (e.g. config.load_env_file) writes to os.environ directly.
         monkeypatch.setenv(key, "")
         monkeypatch.delenv(key)
+    # Entry points (app, cli, eval) must not read the real .env during tests (D-024).
+    monkeypatch.setenv("CARE_NAVIGATOR_SKIP_DOTENV", "1")

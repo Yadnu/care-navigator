@@ -99,6 +99,16 @@ def test_load_env_file_missing_file_is_fine(tmp_path):
     assert config.load_env_file(tmp_path / "nope.env") == []
 
 
+def test_skip_switch_blocks_the_default_env_file(tmp_path, monkeypatch):
+    env = tmp_path / ".env"
+    env.write_text("ANTHROPIC_API_KEY=sk-test\n", encoding="utf-8")
+    monkeypatch.setattr(config, "ENV_FILE", env)
+    assert config.load_env_file() == []          # conftest sets CARE_NAVIGATOR_SKIP_DOTENV=1
+    assert not config.claude_enabled()
+    monkeypatch.delenv("CARE_NAVIGATOR_SKIP_DOTENV")
+    assert config.load_env_file() == ["ANTHROPIC_API_KEY"]
+
+
 def test_importing_config_does_not_load_dotenv():
     import importlib
     import os

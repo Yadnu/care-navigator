@@ -1,0 +1,177 @@
+# Care Navigator
+
+A person describes their symptoms in plain words, with a severity (1 to 10), a zip code, an insurance plan and the time of the request. Care Navigator returns one of three outcomes:
+
+1. **Emergency**: "Call 911 or go to the nearest ER" (988 first for crisis wording). The request stops here.
+2. **Follow-up question**: one short clarifying question when the description is too vague (asked at most once).
+3. **Recommendation**: a level of care (ER, urgent care, primary care, telehealth, or self-care with the plan's nurse line), the top in-network practitioners that are open and nearby, a cost estimate for each, and a short plain-English explanation.
+
+**Core principle: rules decide, Jev classifies, Claude reads and writes, RAG finds practitioners, and every step is traced.**
+
+- Safety and coverage decisions are made by deterministic, versioned, tested rules. Models never choose the care level.
+- When anything is uncertain or a provider fails, the system routes toward more care, never less, and falls back to an offline implementation.
+- It never diagnoses and never mentions medications. All data is synthetic.
+
+> Prototype for a take-home exercise. Synthetic data only; routing rules are simplified and not clinically validated. Not medical advice.
+
+---
+
+## Setup and run
+
+Python 3.11+ (developed on 3.14). Runs with **zero API keys**.
+
+```bash
+cd care-navigator
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+make data    # regenerate the synthetic data (deterministic, seed 20261027)
+make test    # pytest: 903 tests, offline, no network
+make eval    # metrics vs pass bars
+make demo    # the 6 demo cases
+make app     # Streamlit UI with the trace viewer
+```
+
+No `make` (for example on Windows)? Each target is one command:
+
+| Target | Command |
+|---|---|
+| `make data` | `python data/generate.py` |
+| `make test` | `python -m pytest` |
+| `make eval` | `python scripts/run_eval.py` (add `--offline` to ignore `.env`) |
+| `make demo` | `python cli.py` (add `--offline`, `--no-traces`) |
+| `make app` | `python -m streamlit run app.py` |
+
+`cli.py` and `run_eval.py` exit non-zero if a demo case or a pass bar fails.
+
+### Dependencies
+
+`pydantic`, `pyyaml`, `rapidfuzz`, `rank-bm25`, `scikit-learn`, `numpy`, `streamlit`, `anthropic`, `requests`, `pytest` (see `requirements.txt`).
+
+### Optional environment variables
+
+Copy `.env.example` to `.env` and fill in only what you want to switch on. Blank keys stay offline. Real environment variables override `.env`; the test suite never reads it.
+
+| Variable | Enables | Default when blank |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | Claude Haiku 5.5 (`claude-haiku-5-5`) for extraction, the follow-up question and the explanation | regex parser, question templates, template explanation |
+| `JEV_API_KEY` | TypeSafe Jev classifier: emergency check, symptom category, urgency, "too vague?", rerank, output guard | `OfflineJev` keyword heuristics |
+| `JEV_BASE_URL`, `JEV_MODEL` | Jev endpoint and model | `https://api.typesafe.ai/v1/systemone`, `jev-latest` |
+| `VOYAGE_API_KEY` | Voyage embeddings for practitioner search | character n-gram TF-IDF |
+| `VOYAGE_MODEL` | Voyage model | `voyage-4` |
+
+The app banner and the CLI header show which providers are live. If a live provider fails or times out, the answer comes from the offline version and is marked **simplified**.
+
+---
+
+## How it works
+
+```
+validate -> redact PII -> red flags (rules on raw text, then Jev) -> parse (Claude or regex)
+  -> red flags again on parsed fields -> too vague? ask once
+  -> Jev category + urgency -> care rules pick the level -> is anything open now? (else after-hours level)
+  -> retrieve: hard filters -> embeddings + BM25 -> RRF (k=60) -> Jev rerank -> top 3
+  -> cost estimates -> explanation (Claude or template) -> output guard -> trace (JSON per request)
+```
+
+| Piece | Where | Notes |
+|---|---|---|
+| Red flags | `navigator/red_flags.yaml`, `redflags.py` | 15 categories; exact phrases, then RapidFuzz typo matching (ratio >= 88, short words must match exactly); runs on raw text and again on parsed fields; Jev is a third, independent check |
+| Care rules | `navigator/care_rules.yaml` (v1.2, 23 rules) | first match wins; each rule has a level, an after-hours level (never self-care), a plain-English reason and an optional note |
+| Gating | `care_engine.py` | medium confidence escalates one level unless only the duration or body area is missing; still vague after the one follow-up escalates |
+| Retrieval | `navigator/retrieval/` | filters: care type, plan, open now, accepting new patients, age group, within 3 km (unless virtual); in-memory vector store; query built from the parsed report, never raw text |
+| Explanation and guard | `explainer.py`, `guard.py` | the explainer sees only the decision and retrieved records; the guard blocks a different level, unlisted practitioners, diagnosis or medication wording, or a missing disclaimer, and falls back to the template |
+| Trace | `trace.py`, `traces/*.json` | every step: input (redacted), output, model or rule, latency, tokens |
+
+Living docs: `docs/context-graph.md` (system map and status) and `docs/decisions.md` (40 decisions, D-001 to D-040).
+
+---
+
+## Sample data
+
+Everything is fictional and labeled `"synthetic": true`: the town of Corvalle, zip codes `00101` to `00105`, carriers, practitioners, `555-01xx` phone numbers and addresses. Coordinates sit in rural Kansas so they map to no real clinic. See `data/README.md`.
+
+| File | Contents |
+|---|---|
+| `zips.json` | 5 zip codes with centroids 4 to 10 km apart |
+| `plans.json` | 4 plans (Gold PPO, Silver HMO, Bronze narrow EPO, Student) with copays per care type, deductible and nurse line |
+| `practitioners.json` | 44 records: 4 ER (24/7), 10 urgent care (close by 21:00), 15 primary care (daytime), 5 telehealth, 10 specialists |
+| `cost_ranges.json` | typical total cost range per care type (estimates) |
+| `eval/*.jsonl` | 40 red flags, 40 routing cases, 15 vague, 10 adversarial, 21 retrieval queries |
+
+Built in on purpose: at midnight only ERs and telehealth are open, and the Bronze plan has no in-network urgent care in `00105`.
+
+## Demo cases (`make demo`)
+
+Run on Tue 3 Nov 2026 14:00 unless noted; zip `00101`, Silver HMO unless noted.
+
+| # | Input | Expected output |
+|---|---|---|
+| 1 | "Sore throat and fever for two days", severity 4 | **Urgent care**: Downtown QuickCare and Riverwalk Urgent Care (0.69 km), $75 copay, typical total $150-$300, $3,000 deductible note |
+| 2 | "Vomiting and stomach cramps since dinner, can keep water down", severity 5, **00:15** | **Telehealth**: urgent care is closed, NightOwl Virtual Care ($15 copay), "If you can't keep fluids down or feel dizzy when standing, go to the ER." |
+| 3 | "Mild chest tightness, probably nothing", severity 2 | **Emergency**: "Call 911 or go to the nearest ER." |
+| 4 | "I just feel off" | **Follow-up**: one question about the main symptom and where it is felt |
+| 5 | "Cough and sore throat", Bronze plan, zip `00105` | **Urgent care**, "No in-network urgent care is open within 3 km of zip 00105", online alternatives and the nurse line 1-800-555-0103 |
+| 6 | "Sore throat and fever for two days", zip `99999` | "Zip code 99999 isn't in the service area...", **urgent care** still given, online alternatives |
+
+## Results
+
+Offline (`python scripts/run_eval.py --offline`):
+
+| Metric | Result | Pass bar |
+|---|---|---|
+| Red-flag recall | 100% (40/40) | 100% |
+| Routing: expected outcome and acceptable level | 100% (40/40) | >= 90% |
+| Routing: below the expected level | 0 | 0 |
+| Vague -> follow-up | 100% (15/15) | 100% |
+| Adversarial safe handling | 100% (10/10) | 100% |
+| Retrieval recall@3 | 100% (20 queries) | >= 90% |
+| Retrieval filter violations | 0 | 0 |
+
+Live, with Claude, Jev and Voyage (synthetic text only): routing 39/39 non-emergency cases in acceptable levels with none lower (Claude parsing + Jev category and urgency + rules), and the six demo cases correct with Claude explanations passing the guard. The full live `make eval` has not been run end to end.
+
+---
+
+## Implemented, mocked, deferred
+
+**Implemented**
+- The whole pipeline above, with offline and live implementations behind interfaces for Claude (parser, clarifier, explainer), Jev and embeddings.
+- PII redaction (names after "my name is", emails, phones, dates) before any model call and again in traces.
+- Opening hours and after-hours routing, coverage-gap handling with online alternatives and the nurse line, invalid zip and plan messages.
+- Streamlit app with the trace viewer, CLI demo, eval runner, 903 tests.
+
+**Mocked or simplified**
+- All data is synthetic.
+- Offline models: `OfflineJev` (keyword heuristics), regex parser, TF-IDF embeddings, template explainer.
+- Care rules are simplified and not clinically validated.
+- Relative durations are approximations ("since dinner" = 5 hours).
+- The Jev HTTP client follows TypeSafe's published API reference and was verified with live calls; it is tested with mocked HTTP only.
+- Costs are copay plus a typical range, labeled as estimates.
+
+**Deferred**
+- Real provider directories and live opening hours.
+- Out-of-pocket estimates (deductible progress, coinsurance).
+- Booking and wait times.
+- Other languages (non-English input gets the follow-up question offline).
+- The Claude Sonnet 5.5 evaluation judge for explanation quality.
+- Negation in the red-flag screen: "no chest pain" still routes to the ER on purpose (over-triage).
+- ChromaDB or another persistent vector store (in-memory is enough for 44 records).
+
+Known limitations: the Voyage key used in development is rate-limited after about one query in quick succession, so live runs usually fall back to offline search (marked simplified). A live Jev rerank asks one question per candidate (up to 10).
+
+---
+
+## How AI was used, and how the output was checked
+
+The project was built with Claude Code (Claude Opus 5.5) from a written plan, phase by phase, stopping after each phase for review.
+
+- **Test-driven development.** Every module started with failing tests (committed as `test: ...`), then code (`feat: ...`). Tests were never deleted or weakened; the few test corrections are recorded with reasons (D-016, D-032, D-036).
+- **Eval runner.** `scripts/run_eval.py` checks every eval set against the pass bars. Retrieval filters are re-checked by an independent implementation, including a 1,600-search grid with zero violations.
+- **Reading the output.** Demo output and traces were read by eye after each phase. This caught a guard rule that blocked facility names containing "Medicine", a misleading "matched: food poisoning", a coverage gap hidden by a 10 km radius (D-031), and wording bugs.
+- **Live verification.** One round with real Claude, Jev and Voyage found problems the offline tests could not. Rules leaned on a single classifier output (routing dropped to 35/39 with 3 cases too low), Claude left some durations empty, the guard question was too broad, and Claude invented warning signs. All were fixed test-first (D-036); live routing went to 39/39.
+- **API shapes.** Model ids and SDK usage were checked against Anthropic's reference (Haiku 5.5 rejects `temperature`, D-018); the Jev and Voyage request shapes were checked against their published API docs (D-023, D-030).
+
+## Time spent
+
+_TODO: fill in._

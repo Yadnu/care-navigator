@@ -2,7 +2,7 @@
 
 Living map of the system. Read this and `decisions.md` before any task; update it at the end of every phase.
 
-Last updated: 2026-10-27, end of Phase 7.
+Last updated: 2026-10-27, end of Phase 8 (all phases done).
 
 ## Request flow
 
@@ -103,18 +103,17 @@ flowchart TD
 | `data/cost_ranges.json` | data | generate.py | costs | `test_data.py`, `test_generate.py` | D-010, D-011, D-013 | done |
 | `data/eval/*.jsonl` | data | eval_sets.py | tests, run_eval | `test_data.py`, `test_generate.py` | D-013 | done |
 | `pyproject.toml`, `requirements.txt`, `Makefile` | config | - | dev workflow | - | - | done |
+| `README.md` | doc | everything | reviewers | - | - | done |
 
 ## Current status
 
-- Done: Phase 0 scaffold. Phase 1 synthetic data (D-013). Phase 2 schemas (`models.py`, incl. ordered `CareLevel.escalate`), PII redaction, keyword + fuzzy red-flag screen. Phase 3 config (env switches, model ids, thresholds, confidence gate), shared lexicon, Jev interface (OfflineJev + HttpJev), parser interface (OfflineParser + ClaudeParser with one retry and offline fallback). Phase 4 care rules (20, v1.0), care engine (first match, gating, opening hours + after-hours levels), data access module, clarifier (templates + Claude with validation). Phase 5 retrieval: hard filters, char-gram TF-IDF (or Voyage) + BM25, RRF k=60, Jev rerank, matched text. Phase 6 costs, template + Claude explainer, output guard, per-request traces, and the pipeline with offline fallbacks for every provider.
-- Red-flag coverage: keyword screen 33/40; OfflineJev 12/12 of the `parsed_or_jev` cases; combined 40/40 (D-015, D-019).
-- Routing (engine with offline parser + OfflineJev): 38/39 non-emergency cases exactly on `expected_level`, 1 one level higher (RT-008), 0 lower. Midnight food poisoning -> TELEHEALTH with the ER-if-no-fluids note.
-- Retrieval: recall@3 = 1.0 on 20 queries (top-1 correct on all), 0 filter violations over a 1,600-search grid, coverage gap (RQ-019) returns an empty list.
-- Pipeline end to end: 40/40 red flags -> EMERGENCY (988 first for crisis wording), 40/40 routing cases on the expected outcome and an acceptable level, 15/15 vague -> one valid follow-up, 10/10 adversarial handled; injected instructions never change the outcome or level; Jev, Claude and Voyage failures all fall back with `simplified=True`.
-- Live verification (2026-10-27, D-036): Claude parser/clarifier/explainer, Jev (noul, choice, score, rerank) and Voyage all called successfully. Live routing 39/39 acceptable, 0 lower; six demo cases correct with guarded Claude explanations.
-- Phase 7: Streamlit app with trace viewer, CLI demo (6/6 as expected), eval runner. Offline eval: every pass bar met (red flags 100%, routing 100% acceptable / 0 lower, vague 100%, adversarial 100%, recall@3 100%, 0 violations).
+- Done: Phases 0 to 8. All nodes above are done.
+- Tests: 903 passing offline with no API keys (`python -m pytest`).
+- Offline eval (`python scripts/run_eval.py --offline`): red flags 100% (40/40), routing 100% acceptable (40/40) with 0 below expected, vague -> follow-up 100% (15/15), adversarial 100% (10/10), retrieval recall@3 100% (20 queries), 0 filter violations.
+- Demo (`python cli.py`): 6/6 cases as expected.
+- Live verification (D-036): Claude, Jev (all question types) and Voyage called successfully; live routing 39/39 acceptable, 0 lower; six demo cases correct with guarded Claude explanations.
 - In progress: -
-- Not started: Phase 8 (README, final docs).
+- Not started: -
 
 ## Open questions
 

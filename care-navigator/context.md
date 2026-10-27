@@ -10,7 +10,8 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - Phase 4 (care engine and clarifier): done.
 - Phase 5 (RAG over practitioners): done.
 - Phase 6 (costs, explainer, guard, trace, pipeline): done; verified live (D-036).
-- Phase 7 (app, CLI, eval runner): done. Waiting for "continue" to start Phase 8.
+- Phase 7 (app, CLI, eval runner): done.
+- Phase 8 (README, final docs): done. All phases complete; remaining items are the open questions in `docs/context-graph.md`.
 
 ## Domain vocabulary
 - **Outcomes:** `EMERGENCY` (stop, "Call 911 or go to the nearest ER"; suicidal intent also gives 988), `FOLLOW_UP` (one clarifying question, max 25 words, max once), `RECOMMENDATION`.

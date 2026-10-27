@@ -27,7 +27,7 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
 make data    # regenerate the synthetic data (deterministic, seed 20261027)
-make test    # pytest: 1,065 tests, offline, no network
+make test    # pytest: 1,143 tests, offline, no network
 make eval    # metrics vs pass bars
 make demo    # the 6 demo cases
 make app     # Streamlit UI with the trace viewer
@@ -84,23 +84,24 @@ validate -> redact PII -> red flags (rules on raw text, then Jev) -> parse (Clau
 | Explanation and guard | `explainer.py`, `guard.py` | the explainer sees only the decision and retrieved records; the guard blocks a different level, unlisted practitioners, diagnosis or medication wording, or a missing disclaimer, and falls back to the template |
 | Trace | `trace.py`, `traces/*.json` | every step: input (redacted), output, model or rule, latency, tokens |
 
-Living docs: `docs/context-graph.md` (system map and status) and `docs/decisions.md` (40 decisions, D-001 to D-040).
+Living docs: `docs/context-graph.md` (system map and status) and `docs/decisions.md` (46 decisions, D-001 to D-046).
 
 ---
 
 ## Sample data
 
-Everything is fictional and labeled `"synthetic": true`: the town of Corvalle, zip codes `00101` to `00105`, carriers, practitioners, `555-01xx` phone numbers and addresses. Coordinates sit in rural Kansas so they map to no real clinic. See `data/README.md`.
+Everything is fictional and labeled `"synthetic": true`: three towns (Corvalle, Brightwater, Pinecrest), zip codes `00101` to `00303`, carriers, plans, practitioners, phone numbers and addresses. Coordinates sit in rural Kansas so they map to no real clinic. See `data/README.md`.
 
 | File | Contents |
 |---|---|
-| `zips.json` | 5 zip codes with centroids 4 to 10 km apart |
-| `plans.json` | 4 plans (Gold PPO, Silver HMO, Bronze narrow EPO, Student) with copays per care type, deductible and nurse line |
-| `practitioners.json` | 44 records: 4 ER (24/7), 10 urgent care (close by 21:00), 15 primary care (daytime), 5 telehealth, 10 specialists |
+| `zips.json` | 12 zip codes in 3 towns: Corvalle (urban, 00101-00105), Brightwater (suburban, 00201-00204, about 20 km away), Pinecrest (rural, 00301-00303, about 35 km away) |
+| `plans.json` | 10 plans: Gold, Silver, Bronze, Student, Platinum, HSA Bronze, a Medicaid-style plan, a senior (65+) plan, a marketplace EPO and self-pay; premium, deductible, out-of-pocket max and cost sharing for 9 services each |
+| `practitioners.json` | 73 records: 6 ER (24/7), 16 urgent care (close by 21:00), 30 primary care (daytime), 7 telehealth, 14 specialists |
+| `coverage_gaps.json` | for each zip and plan, in-network urgent care, primary care and a specialist within 15 km (34 gaps, all rural or Medicaid-style specialists) |
 | `cost_ranges.json` | typical total cost range per care type (estimates) |
-| `eval/*.jsonl` | 40 red flags, 40 routing cases, 15 vague, 10 adversarial, 21 retrieval queries |
+| `eval/*.jsonl` | 40 red flags, 44 routing cases, 15 vague, 10 adversarial, 32 retrieval queries, 21 near misses, 12 conversations |
 
-Built in on purpose: at midnight only ERs and telehealth are open, and the Bronze plan has no in-network urgent care in `00105`.
+Built in on purpose: at midnight only ERs and telehealth are open; the Bronze plan has no in-network urgent care in `00105`; rural Pinecrest has no specialists and one urgent care with short hours. See `data/README.md` for the plan comparison table and the gap summary.
 
 ## Demo cases (`make demo`)
 
@@ -122,16 +123,16 @@ Offline (`python scripts/run_eval.py --offline`):
 | Metric | Result | Pass bar |
 |---|---|---|
 | Red-flag recall | 100% (40/40) | 100% |
-| False-emergency rate (near misses + non-emergency routing) | 0% (0/60) | 0% |
-| Routing: expected outcome and acceptable level | 100% (40/40) | >= 90% |
+| False-emergency rate (near misses + non-emergency routing) | 0% (0/64) | 0% |
+| Routing: expected outcome and acceptable level | 100% (44/44) | >= 90% |
 | Routing: below the expected level | 0 | 0 |
 | Vague -> a question | 100% (15/15) | 100% |
 | Adversarial safe handling | 100% (10/10) | 100% |
 | Near misses in an acceptable level | 100% (21/21) | >= 90% |
 | Scripted conversations | 100% (12/12) | >= 90% |
-| Average questions asked | 0.41 (73 runs) | report |
+| Average questions asked | 0.39 (77 runs) | report |
 | Conversations over 3 questions | 0 | 0 |
-| Retrieval recall@3 | 100% (20 queries) | >= 90% |
+| Retrieval recall@3 | 100% (30 queries) | >= 90% |
 | Retrieval filter violations | 0 | 0 |
 
 Live, with Claude, Jev and Voyage (synthetic text only): routing 39/39 non-emergency cases in acceptable levels with none lower (Claude parsing + Jev category and urgency + rules), and the six demo cases correct with Claude explanations passing the guard. The full live `make eval` has not been run end to end.
@@ -145,7 +146,8 @@ Live, with Claude, Jev and Voyage (synthetic text only): routing 39/39 non-emerg
 - PII redaction (names after "my name is", emails, phones, dates) before any model call and again in traces.
 - Opening hours and after-hours routing, coverage-gap handling with online alternatives and the nurse line, invalid zip and plan messages.
 - Three-tier red flags (unmistakable -> emergency; one weak sign -> safety question; otherwise routine), negation, injury context, per-word typo matching, questions only from `data/question_bank.json`.
-- Streamlit app with the conversation and trace viewer, CLI demo, eval runner, 1,065 tests.
+- Ten plans with per-service cost sharing; the cost line says when the deductible applies, when the ER copay is waived on admission, and shows cash prices for self-pay.
+- Streamlit app with the conversation and trace viewer, CLI demo, eval runner, 1,143 tests.
 
 **Mocked or simplified**
 - All data is synthetic.

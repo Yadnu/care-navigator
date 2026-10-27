@@ -77,10 +77,15 @@ class TemplateExplainer(Explainer):
         if options:
             cost = options[0].cost
             low, high = cost.typical_range_usd
-            price = (f"the estimated copay is ${cost.copay_usd:,}, with a typical total of ${low:,}-${high:,} "
-                     f"before insurance" if cost.copay_usd is not None
-                     else f"a typical total is ${low:,}-${high:,} before insurance (estimate)")
-            sentences.append(f"In-network options open now: {_join([_place(o) for o in options])}; {price}.")
+            if cost.cash_price_usd is not None:  # self-pay (D-044)
+                price = f"the estimated cash price is ${cost.cash_price_usd:,} without insurance"
+            elif cost.copay_usd is not None:
+                price = (f"the estimated copay is ${cost.copay_usd:,}, with a typical total of ${low:,}-${high:,} "
+                         f"before insurance")
+            else:
+                price = f"a typical total is ${low:,}-${high:,} before insurance (estimate)"
+            where = "Options open now" if cost.cash_price_usd is not None else "In-network options open now"
+            sentences.append(f"{where}: {_join([_place(o) for o in options])}; {price}.")
         elif decision.level is CareLevel.SELF_CARE:
             sentences.append("No visit is needed right now, and your plan's nurse line can help if you are unsure.")
         elif alternatives:

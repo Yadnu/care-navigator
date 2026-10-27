@@ -139,18 +139,29 @@ class CostEstimate(BaseModel):
     """Plan copay plus typical total cost, always labeled as an estimate."""
 
     care_type: str
-    copay_usd: Optional[int] = None            # None for self-care or an unknown plan
+    copay_usd: Optional[int] = None            # None for self-care, self-pay or an unknown plan
+    cash_price_usd: Optional[int] = None       # self-pay only (D-044)
     typical_range_usd: tuple[int, int]
     deductible_usd: Optional[int] = None
     deductible_note: Optional[str] = None      # only when the deductible is high
+    deductible_applies: bool = False           # this service counts against the deductible first
+    coinsurance_pct: Optional[int] = None      # when coinsurance applies to this service
+    waived_if_admitted: bool = False           # ER copay waived if admitted
     label: str = "Estimate"
 
     def summary(self) -> str:
         low, high = self.typical_range_usd
         parts = [f"{self.label}: "]
-        if self.copay_usd is not None:
+        if self.cash_price_usd is not None:
+            parts.append(f"${self.cash_price_usd:,} cash price (no insurance); ")
+        elif self.copay_usd is not None:
             parts.append(f"${self.copay_usd:,} copay; ")
         parts.append(f"typical total ${low:,}-${high:,} before insurance.")
+        if self.deductible_applies:
+            extra = f", then {self.coinsurance_pct}% coinsurance" if self.coinsurance_pct else ""
+            parts.append(f" The deductible applies to this service first{extra}.")
+        if self.waived_if_admitted:
+            parts.append(" The ER copay is waived if you are admitted.")
         if self.deductible_note:
             parts.append(f" {self.deductible_note}")
         return "".join(parts)

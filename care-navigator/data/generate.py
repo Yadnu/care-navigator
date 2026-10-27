@@ -1,8 +1,8 @@
 """Deterministic synthetic data generator for Care Navigator.
 
 Every record is fictional and labeled "synthetic": true.
-Town "Corvalle", zip codes 00101-00105 and all names, phones and
-addresses are invented. Coordinates sit in rural Kansas so they map to
+Towns "Corvalle", "Brightwater" and "Pinecrest", zip codes 00101-00303 and all names,
+phones and addresses are invented. Coordinates sit in rural Kansas so they map to
 no real clinic. Run: python data/generate.py
 """
 from __future__ import annotations
@@ -10,6 +10,9 @@ from __future__ import annotations
 import json
 import random
 from pathlib import Path
+
+from expansion import (EXISTING_MEDICAID, PLANS, ZIPS, apply_network_rules, build_new,
+                       coverage_gaps)
 
 SEED = 20261027
 DATA_DIR = Path(__file__).parent
@@ -35,44 +38,7 @@ PC_SAT = hours("08:00-17:00", "09:00-12:00")
 SPEC = hours("09:00-16:30")
 TH_DAY = {d: "07:00-22:00" for d in DAYS}
 
-ZIPS = [
-    {"zip": "00101", "neighborhood": "Downtown", "city": "Corvalle", "lat": 39.5000, "lng": -98.3500},
-    {"zip": "00102", "neighborhood": "Northside", "city": "Corvalle", "lat": 39.5400, "lng": -98.3450},
-    {"zip": "00103", "neighborhood": "Eastgate", "city": "Corvalle", "lat": 39.5050, "lng": -98.3000},
-    {"zip": "00104", "neighborhood": "Southpoint", "city": "Corvalle", "lat": 39.4600, "lng": -98.3550},
-    {"zip": "00105", "neighborhood": "Westfield", "city": "Corvalle", "lat": 39.4980, "lng": -98.4100},
-]
-
-PLANS = [
-    {
-        "id": G, "name": "Evergreen Health Gold PPO", "carrier": "Evergreen Health (fictional)",
-        "tier": "gold", "network_type": "PPO", "annual_deductible_usd": 1000,
-        "coinsurance_pct": 10, "referral_required_for_specialist": False,
-        "copays_usd": {"TELEHEALTH": 0, "PRIMARY_CARE": 25, "SPECIALIST": 50, "URGENT_CARE": 50, "ER": 250},
-        "nurse_line": "1-800-555-0101", "nurse_line_hours": "24/7",
-    },
-    {
-        "id": S, "name": "Summit Care Silver HMO", "carrier": "Summit Care (fictional)",
-        "tier": "silver", "network_type": "HMO", "annual_deductible_usd": 3000,
-        "coinsurance_pct": 20, "referral_required_for_specialist": True,
-        "copays_usd": {"TELEHEALTH": 15, "PRIMARY_CARE": 35, "SPECIALIST": 70, "URGENT_CARE": 75, "ER": 400},
-        "nurse_line": "1-800-555-0102", "nurse_line_hours": "24/7",
-    },
-    {
-        "id": B, "name": "Harbor Bronze Local", "carrier": "Harbor Mutual (fictional)",
-        "tier": "bronze", "network_type": "EPO (narrow network)", "annual_deductible_usd": 7000,
-        "coinsurance_pct": 40, "referral_required_for_specialist": False,
-        "copays_usd": {"TELEHEALTH": 30, "PRIMARY_CARE": 60, "SPECIALIST": 100, "URGENT_CARE": 120, "ER": 750},
-        "nurse_line": "1-800-555-0103", "nurse_line_hours": "08:00-20:00",
-    },
-    {
-        "id": T, "name": "Campus Student Health Plan", "carrier": "Corvalle University (fictional)",
-        "tier": "student", "network_type": "PPO", "annual_deductible_usd": 500,
-        "coinsurance_pct": 20, "referral_required_for_specialist": False,
-        "copays_usd": {"TELEHEALTH": 0, "PRIMARY_CARE": 20, "SPECIALIST": 40, "URGENT_CARE": 40, "ER": 200},
-        "nurse_line": "1-800-555-0104", "nurse_line_hours": "24/7",
-    },
-]
+# Zips (with area_type) and the 10 plans live in expansion.py (Prompt1 Part B, D-044).
 
 # Typical total billed cost before insurance, by care type. Synthetic estimates.
 COST_RANGES = {
@@ -267,7 +233,9 @@ def build_practitioners(rng: random.Random) -> list[dict]:
             rec["lng"] = round(z["lng"] + rng.uniform(-0.008, 0.008), 5)
             rec["address"] = f"{rng.randint(100, 2400)} {rng.choice(['Elm', 'Cedar', 'Main', 'Harbor', 'Mill', 'Oak', 'Ridge', 'Lake'])} {rng.choice(['St', 'Ave', 'Rd', 'Blvd'])}, {z['city']} {zip_code}"
         out.append(rec)
-    return out
+    for rec in out:  # B3 network rules on the original 44 records
+        rec["accepted_plans"] = apply_network_rules(rec, rec["id"] in EXISTING_MEDICAID)
+    return out + build_new(rng, len(out))
 
 
 def write_json(path: Path, obj) -> None:
@@ -288,7 +256,9 @@ def main() -> None:
     write_json(DATA_DIR / "zips.json", [{**z, "synthetic": True} for z in ZIPS])
     write_json(DATA_DIR / "plans.json", [{**p, "synthetic": True} for p in PLANS])
     write_json(DATA_DIR / "cost_ranges.json", COST_RANGES)
-    write_json(DATA_DIR / "practitioners.json", build_practitioners(rng))
+    practitioners = build_practitioners(rng)
+    write_json(DATA_DIR / "practitioners.json", practitioners)
+    write_json(DATA_DIR / "coverage_gaps.json", coverage_gaps(practitioners))
     for name, rows in EVAL_SETS.items():
         write_jsonl(EVAL_DIR / f"{name}.jsonl", [{**r, "synthetic": True} for r in rows])
     print("Wrote synthetic data to", DATA_DIR)

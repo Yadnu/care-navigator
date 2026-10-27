@@ -12,7 +12,8 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - Phase 6 (costs, explainer, guard, trace, pipeline): done; verified live (D-036).
 - Phase 7 (app, CLI, eval runner): done.
 - Phase 8 (README, final docs): done.
-- Prompt1 Part A (three-tier red flags, question bank, conversations): done. Part B (insurance data) next.
+- Prompt1 Part A (three-tier red flags, question bank, conversations): done.
+- Prompt1 Part B (10 plans, 12 zips, 73 practitioners, coverage gaps, cost display): done.
 
 ## Domain vocabulary
 - **Outcomes:** `EMERGENCY` (stop; 988 first for crisis wording), `SAFETY_CHECK` (Tier 2 safety question), `FOLLOW_UP` (missing detail), `RECOMMENDATION`. At most 3 questions per conversation, one at a time, only from `data/question_bank.json`; Skip or running out escalates one level (D-041).
@@ -27,13 +28,12 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - **Retrieval:** filters (type, plan, open, new patients, age, <= 3 km unless virtual, D-031) -> TF-IDF/Voyage + BM25 -> RRF k=60 -> Jev rerank top 10 -> top 3; query from the parsed report only; empty list = coverage gap (D-030).
 - **Env:** keys in `care-navigator/.env` (gitignored, template `.env.example`); loaded only by entry points via `config.load_env_file()`, never in tests (D-024).
 
-## Data facts (synthetic, town "Corvalle")
-- Zips `00101`-`00105`; 4 plans: `PLAN_GOLD_PPO`, `PLAN_SILVER_HMO`, `PLAN_BRONZE_LOCAL`, `PLAN_STUDENT`.
-- 44 practitioners: 4 ER, 10 urgent care, 15 primary care, 5 telehealth, 10 specialists. Telehealth is virtual (no zip/lat/lng).
-- ERs are 24/7 and accept every plan. Nothing but ER and telehealth is open at midnight.
-- Deliberate gap: `PLAN_BRONZE_LOCAL` has no in-network urgent care in `00105`.
-- Not accepting new patients: PC-003, PC-009. Pediatric-only: ER-004, UC-004, PC-005, PC-011, TH-004.
-- Plans carry copays per care type, deductible, nurse line and its hours.
+## Data facts (synthetic; see data/README.md)
+- Towns: Corvalle (urban, 00101-00105), Brightwater (suburban, 00201-00204, about 20 km), Pinecrest (rural, 00301-00303, about 35 km).
+- 10 plans: Gold PPO, Silver HMO, Bronze Local, Student, Platinum PPO, HSA Bronze HMO, Community Medicaid-style, Senior Advantage (65+), Marketplace EPO, SELF_PAY (cash; telehealth $59). Per-service cost sharing for 9 services (D-044).
+- 73 practitioners. ERs and NightOwl (TH-001) accept every plan. At midnight only ERs and telehealth are open.
+- Gaps (15 km, `coverage_gaps.json`): Pinecrest specialists (all plans) and urgent care (Student, Medicaid-style); Brightwater specialists (Medicaid-style). Bronze has no urgent care inside 00105.
+- Not accepting new patients: PC-003, PC-009, PC-023, PC-029. Pediatric-only: ER-004, UC-004, UC-013, PC-005, PC-011, PC-018, TH-004.
 
 ## Reference times
 | Label | Value |

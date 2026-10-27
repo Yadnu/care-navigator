@@ -102,6 +102,10 @@ class Navigator:
         self.save_traces = save_traces
         self.plans = {p["id"]: p for p in load_plans()}
         self.zips = {z["zip"] for z in load_zips()}
+        towns: dict[str, list[str]] = {}
+        for z in load_zips():
+            towns.setdefault(z["city"], []).append(z["zip"])
+        self.service_area = "; ".join(f"{city} {min(zs)} to {max(zs)}" for city, zs in towns.items())
         self.index_simplified = False
         try:
             self.retriever = Retriever(embedder=embedder, jev=self.jev)
@@ -224,7 +228,7 @@ class Navigator:
                 fatal = f"Please keep your description under {config.MAX_TEXT_CHARS:,} characters."
             plan_ok = request.plan in self.plans
             if request.zip not in self.zips:
-                run.errors.append(f"Zip code {request.zip} isn't in the service area (00101 to 00105), so only "
+                run.errors.append(f"Zip code {request.zip} isn't in the service area ({self.service_area}), so only "
                                   "online options can be shown. The care level still applies.")
             if not plan_ok:
                 run.errors.append(f"Plan {request.plan} isn't recognised, so in-network options and copays "

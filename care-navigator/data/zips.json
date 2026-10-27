@@ -3,6 +3,7 @@
     "zip": "00101",
     "neighborhood": "Downtown",
     "city": "Corvalle",
+    "area_type": "urban",
     "lat": 39.5,
     "lng": -98.35,
     "synthetic": true
@@ -11,6 +12,7 @@
     "zip": "00102",
     "neighborhood": "Northside",
     "city": "Corvalle",
+    "area_type": "urban",
     "lat": 39.54,
     "lng": -98.345,
     "synthetic": true
@@ -19,6 +21,7 @@
     "zip": "00103",
     "neighborhood": "Eastgate",
     "city": "Corvalle",
+    "area_type": "urban",
     "lat": 39.505,
     "lng": -98.3,
     "synthetic": true
@@ -27,6 +30,7 @@
     "zip": "00104",
     "neighborhood": "Southpoint",
     "city": "Corvalle",
+    "area_type": "urban",
     "lat": 39.46,
     "lng": -98.355,
     "synthetic": true
@@ -35,8 +39,72 @@
     "zip": "00105",
     "neighborhood": "Westfield",
     "city": "Corvalle",
+    "area_type": "urban",
     "lat": 39.498,
     "lng": -98.41,
+    "synthetic": true
+  },
+  {
+    "zip": "00201",
+    "neighborhood": "Brightwater Center",
+    "city": "Brightwater",
+    "area_type": "suburban",
+    "lat": 39.68,
+    "lng": -98.35,
+    "synthetic": true
+  },
+  {
+    "zip": "00202",
+    "neighborhood": "Lakeview",
+    "city": "Brightwater",
+    "area_type": "suburban",
+    "lat": 39.715,
+    "lng": -98.335,
+    "synthetic": true
+  },
+  {
+    "zip": "00203",
+    "neighborhood": "Orchard Hill",
+    "city": "Brightwater",
+    "area_type": "suburban",
+    "lat": 39.69,
+    "lng": -98.3,
+    "synthetic": true
+  },
+  {
+    "zip": "00204",
+    "neighborhood": "Millbrook",
+    "city": "Brightwater",
+    "area_type": "suburban",
+    "lat": 39.655,
+    "lng": -98.385,
+    "synthetic": true
+  },
+  {
+    "zip": "00301",
+    "neighborhood": "Pinecrest Town",
+    "city": "Pinecrest",
+    "area_type": "rural",
+    "lat": 39.185,
+    "lng": -98.35,
+    "synthetic": true
+  },
+  {
+    "zip": "00302",
+    "neighborhood": "Cedar Hollow",
+    "city": "Pinecrest",
+    "area_type": "rural",
+    "lat": 39.15,
+    "lng": -98.42,
+    "synthetic": true
+  },
+  {
+    "zip": "00303",
+    "neighborhood": "Ridge Creek",
+    "city": "Pinecrest",
+    "area_type": "rural",
+    "lat": 39.205,
+    "lng": -98.47,
     "synthetic": true
   }
 ]

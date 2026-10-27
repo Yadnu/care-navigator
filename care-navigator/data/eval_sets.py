@@ -108,6 +108,11 @@ _rt = [
     ("Toothache, cheek a little swollen", 4, "adult", "00103", "PLAN_GOLD_PPO", TUE_DAY, "RECOMMENDATION", "URGENT_CARE", ["URGENT_CARE", "TELEHEALTH"], "Dentist ideal; outside network scope"),
     ("Tick bite yesterday, no rash, feel fine", 2, "adult", "00105", "PLAN_GOLD_PPO", TUE_DAY, "RECOMMENDATION", "TELEHEALTH", ["TELEHEALTH", "PRIMARY_CARE"], "Advice visit"),
     ("Fever 100.5 and sore throat, tonight", 4, "adult", "00103", "PLAN_STUDENT", TUE_EVE, "RECOMMENDATION", "TELEHEALTH", ["TELEHEALTH", "URGENT_CARE"], "Evening; Campus Connect and NightOwl open"),
+    # Prompt1 B5
+    ("Vomiting and stomach cramps since dinner, can keep water down, on a tight budget", 5, "adult", "00101", "SELF_PAY", MIDNIGHT, "RECOMMENDATION", "TELEHEALTH", ["TELEHEALTH", "ER"], "Self-pay at midnight: NightOwl at $59 cash"),
+    ("Twisted my ankle on the farm, it's swollen", 5, "adult", "00303", "PLAN_BRONZE_LOCAL", TUE_DAY, "RECOMMENDATION", "URGENT_CARE", ["URGENT_CARE", "TELEHEALTH", "PRIMARY_CARE"], "Rural ankle sprain: nearest urgent care is in the next town"),
+    ("I'm 72 and have had a cough for two weeks", 3, "adult", "00101", "PLAN_SENIOR_ADVANTAGE", TUE_DAY, "RECOMMENDATION", "PRIMARY_CARE", ["PRIMARY_CARE", "URGENT_CARE"], "Senior plan, lingering cough"),
+    ("My 5 year old has ear pain and a fever since this morning", 4, "child", "00201", "PLAN_COMMUNITY_MEDICAID", TUE_DAY, "RECOMMENDATION", "URGENT_CARE", ["URGENT_CARE"], "Medicaid-style plan, Brightwater child"),
 ]
 ROUTING_CASES = [
     {"id": f"RT-{i:03d}", "text": t, "severity": s, "age_group": a, "zip": z, "plan": p,
@@ -170,6 +175,18 @@ _rq = [
     ("cough sore throat", "URGENT_CARE", "PLAN_BRONZE_LOCAL", "00105", TUE_DAY, "adult", 3, [], "Coverage gap: no in-network urgent care within 3 km for Bronze in 00105"),
     ("cold symptoms", "PRIMARY_CARE", "PLAN_GOLD_PPO", "00104", SAT_AM, "adult", 3, ["PC-010"], "Only Saturday primary care"),
     ("flu fever body aches", "TELEHEALTH", "PLAN_GOLD_PPO", "00103", TUE_DAY, "adult", 10, ["TH-002", "TH-001"], "Gold member's own telehealth first"),
+    # Prompt1 B5: Brightwater (suburban) and Pinecrest (rural)
+    ("ankle sprain sports injury x-ray", "URGENT_CARE", "PLAN_GOLD_PPO", "00201", TUE_DAY, "adult", 10, ["UC-011"], "Brightwater injury care"),
+    ("food poisoning vomiting dehydration", "URGENT_CARE", "PLAN_SILVER_HMO", "00202", TUE_DAY, "adult", 10, ["UC-012"], "Brightwater stomach clinic"),
+    ("child ear infection fever", "URGENT_CARE", "PLAN_COMMUNITY_MEDICAID", "00203", TUE_DAY, "child", 10, ["UC-013"], "Kids urgent care in the Medicaid-style network"),
+    ("hives poison ivy rash", "URGENT_CARE", "PLAN_BRONZE_LOCAL", "00204", TUE_DAY, "adult", 10, ["UC-014"], "Brightwater skin walk-in"),
+    ("memory concerns older adult falls", "PRIMARY_CARE", "PLAN_SENIOR_ADVANTAGE", "00202", TUE_DAY, "adult", 10, ["PC-020"], "Senior plan, senior care"),
+    ("knee pain running injuries", "PRIMARY_CARE", "PLAN_PLATINUM_PPO", "00202", TUE_DAY, "adult", 10, ["PC-021"], "Platinum follows the Gold network"),
+    ("eczema psoriasis mole check", "SPECIALIST", "PLAN_HSA_BRONZE_HMO", "00201", TUE_DAY, "adult", 10, ["SP-011"], "HSA follows the Silver network"),
+    ("farm injury cut sprain", "URGENT_CARE", "PLAN_BRONZE_LOCAL", "00303", TUE_DAY, "adult", 15, ["UC-016"], "Pinecrest's only urgent care, next town over"),
+    ("sore throat cough", "URGENT_CARE", "PLAN_STUDENT", "00301", TUE_DAY, "adult", 15, [], "Rural gap: Pinecrest urgent care is not in the student network"),
+    ("checkups vaccines", "PRIMARY_CARE", "PLAN_COMMUNITY_MEDICAID", "00303", TUE_DAY, "adult", 15, ["PC-028"], "Rural: one in-network clinic accepting new patients"),
+    ("medication questions older adult", "TELEHEALTH", "PLAN_SENIOR_ADVANTAGE", "00201", MIDNIGHT, "adult", 10, ["TH-006"], "Senior telehealth at midnight"),
 ]
 RETRIEVAL_QUERIES = [
     {"id": f"RQ-{i:03d}", "query": q, "care_type": c, "plan": p, "zip": z, "request_time": rt,

@@ -394,3 +394,33 @@ Template:
 - Decision: Updated, not weakened: routing tests and injection tests run as conversations with routine answers (`Navigator.converse`); the vague test accepts FOLLOW_UP or SAFETY_CHECK ("kind of dizzy" is Tier 2); the trace-order test includes the new `answers` and `tier2` steps; `Outcome` has SAFETY_CHECK; offline clarifier results say `used="question_bank"`; the Claude clarifier mock now rephrases the bank question (and a new test checks that a changed question falls back); the Jev-down test asserts the Tier 1 rule caught "elephant on my chest" (Jev is no longer reached, so `simplified` is false) and a new test covers the Jev fallback mid-conversation; eval metric names and bars follow Prompt1 A4.
 - Alternatives considered: Keeping single-turn routing tests (rejected: Prompt1 makes routing conversational).
 - Consequences: 1,065 tests pass offline.
+
+## D-044: Richer insurance data, more plans and zips (Prompt1 Part B)
+- Date: 2026-10-27
+- Status: accepted
+- Context: Four plans with five copays and one town could not show deductibles, HSA plans, Medicaid- or Medicare-style networks, self-pay prices or rural coverage gaps.
+- Decision: `data/expansion.py` (imported by `generate.py`) defines 10 plans, 12 zips in 3 fictional towns and 29 new practitioners. The original 44 records come first, so their random draws, coordinates and addresses are unchanged (checked: only `accepted_plans` grew).
+  - Plans: every plan has the B1 fields, including per-service cost sharing for 9 services (`deductible_applies`, `coinsurance_applies`, note), deductible and out-of-pocket max for individual and family, out-of-network rules, prior auth, HSA flag and telehealth partners. The original 4 keep their ids and costs and the legacy fields `tier`, `network_type`, `annual_deductible_usd`, plus `copays_usd` (the flat view, equal to the services' copays). The HSA plan's services all have a $0 copay with the deductible and 30% coinsurance applying. Self-pay has `cash_prices_usd` (telehealth $59), its services' copays are the cash prices, and its out-of-pocket max is null (no cap).
+  - Zips: Corvalle (urban, 00101-00105), Brightwater (suburban, 00201-00204, about 20 km), Pinecrest (rural, 00301-00303, about 35 km), each with `area_type`.
+  - Networks (B3) are applied by one function to every record: every ER and NightOwl accept all 10 plans; Platinum wherever Gold; HSA Bronze and the marketplace EPO wherever Silver; the Medicaid-style plan at a fixed subset (about half of urgent and primary care, one specialist); the senior plan at adult and all-ages providers that take Gold or Silver; self-pay everywhere except TH-002, TH-003 and TH-007. TH-006 (senior, 24/7) and TH-007 (Medicaid-style plan only, 24/7) are new.
+  - Coverage gaps (B4): `coverage_gaps.json` records, for each zip and plan, in-network urgent care, primary care accepting new patients and a specialist within 15 km, and urgent care in the zip itself. Result: 34 gaps, all in Pinecrest or Medicaid-style specialists in Brightwater; none for commercial plans' urgent or primary care in Corvalle or Brightwater; the Bronze 00105 in-zip urgent care gap is kept.
+  - Costs (B7): `costs.estimate` adds `deductible_applies` (with the coinsurance percentage), `waived_if_admitted` for the ER, and `cash_price_usd` for self-pay; the template explanation says "cash price" for self-pay. The invalid-zip message lists the service area from `zips.json`.
+  - Eval (B5): 4 routing cases (self-pay at midnight, rural ankle on Bronze, 72-year-old on the senior plan, Medicaid-style child in Brightwater) and 11 retrieval queries in Brightwater and Pinecrest, including an empty rural-gap query.
+- Alternatives considered: Generating networks randomly (rejected: gaps would land in unplanned places and break B4); real plan formularies (rejected: synthetic only).
+- Consequences: 1,143 tests pass offline; the eval meets every bar with 44 routing cases and 30 non-empty retrieval queries. The app's 3 km "nearby" radius (D-031) means rural requests usually see online alternatives (open question).
+
+## D-045: ER versus senior-plan rule for the pediatric ER
+- Date: 2026-10-27
+- Status: accepted
+- Context: Prompt1 B3 says both "every ER accepts every plan" and "the senior plan is accepted at adult and all-ages providers only, never pediatric-only". ER-004 is a pediatric-only ER, so the two rules conflict for one record, and B6 asks for a test of each.
+- Decision: Keep "every ER accepts every plan" (it matches each plan's emergency rule: any ER at in-network cost sharing) and scope the senior rule to non-emergency providers. Adults are never routed to ER-004 because retrieval filters by age group.
+- Alternatives considered: Removing the senior plan from ER-004 (rejected: breaks the ER rule for one record).
+- Consequences: Listed under open questions for confirmation.
+
+## D-046: Test changes for Prompt1 Part B
+- Date: 2026-10-27
+- Status: accepted
+- Context: Part B adds zips outside `001xx`, practitioners beyond 44, and networks where the old in-zip coverage rule can't hold (Pinecrest has one urgent care for three zips; the Medicaid-style network is a subset).
+- Decision: The `Zip` schema pattern is widened to `^00[1-3]\d\d$`; `test_coverage_in_every_zip_except_deliberate_gap` keeps its original guarantee for the original 5 zips and 4 plans, and the 12-zip, 10-plan rules are tested at 15 km in `tests/test_data_insurance.py` (B4); `test_practitioners_load_as_models` checks that all 44 original ids are still present instead of exactly 44 records; the generator test also copies `expansion.py` and compares `coverage_gaps.json`; the senior-plan test excludes ERs (D-045).
+- Alternatives considered: Giving every zip in-network urgent care for every plan (rejected: contradicts B2 and B3).
+- Consequences: Every original assertion about the original data still runs.

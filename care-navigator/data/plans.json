@@ -3,11 +3,98 @@
     "id": "PLAN_GOLD_PPO",
     "name": "Evergreen Health Gold PPO",
     "carrier": "Evergreen Health (fictional)",
+    "plan_type": "PPO",
+    "metal_tier": "gold",
+    "network_name": "Evergreen Network",
+    "plan_year": 2026,
+    "eligibility": "Employer group and individual",
+    "premium_monthly_usd": 520,
+    "deductible_usd": {
+      "individual": 1000,
+      "family": 2000
+    },
+    "out_of_pocket_max_usd": {
+      "individual": 5000,
+      "family": 10000
+    },
+    "coinsurance_pct": 10,
+    "services": {
+      "TELEHEALTH": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "PRIMARY_CARE": {
+        "copay_usd": 25,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "SPECIALIST": {
+        "copay_usd": 50,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "URGENT_CARE": {
+        "copay_usd": 50,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ER": {
+        "copay_usd": 250,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Waived if you are admitted"
+      },
+      "AMBULANCE": {
+        "copay_usd": 150,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "LAB": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "XRAY": {
+        "copay_usd": 40,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ADVANCED_IMAGING": {
+        "copay_usd": 200,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": ""
+      }
+    },
+    "er_copay_waived_if_admitted": true,
+    "out_of_network": {
+      "covered": true,
+      "coinsurance_pct": 40,
+      "note": "Covered at higher cost sharing"
+    },
+    "emergency_rule": "ER covered at in-network cost sharing anywhere, simplified",
+    "referral_required_for_specialist": false,
+    "prior_auth_required_for": [
+      "ADVANCED_IMAGING"
+    ],
+    "hsa_eligible": false,
+    "telehealth_partner_ids": [
+      "TH-002"
+    ],
+    "nurse_line": "1-800-555-0101",
+    "nurse_line_hours": "24/7",
+    "member_services": "1-800-555-0201",
     "tier": "gold",
     "network_type": "PPO",
     "annual_deductible_usd": 1000,
-    "coinsurance_pct": 10,
-    "referral_required_for_specialist": false,
     "copays_usd": {
       "TELEHEALTH": 0,
       "PRIMARY_CARE": 25,
@@ -15,19 +102,105 @@
       "URGENT_CARE": 50,
       "ER": 250
     },
-    "nurse_line": "1-800-555-0101",
-    "nurse_line_hours": "24/7",
     "synthetic": true
   },
   {
     "id": "PLAN_SILVER_HMO",
     "name": "Summit Care Silver HMO",
     "carrier": "Summit Care (fictional)",
+    "plan_type": "HMO",
+    "metal_tier": "silver",
+    "network_name": "Summit HMO Network",
+    "plan_year": 2026,
+    "eligibility": "Employer group and individual",
+    "premium_monthly_usd": 410,
+    "deductible_usd": {
+      "individual": 3000,
+      "family": 6000
+    },
+    "out_of_pocket_max_usd": {
+      "individual": 8000,
+      "family": 16000
+    },
+    "coinsurance_pct": 20,
+    "services": {
+      "TELEHEALTH": {
+        "copay_usd": 15,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "PRIMARY_CARE": {
+        "copay_usd": 35,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "SPECIALIST": {
+        "copay_usd": 70,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "URGENT_CARE": {
+        "copay_usd": 75,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ER": {
+        "copay_usd": 400,
+        "deductible_applies": true,
+        "coinsurance_applies": false,
+        "note": "Waived if you are admitted"
+      },
+      "AMBULANCE": {
+        "copay_usd": 250,
+        "deductible_applies": true,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "LAB": {
+        "copay_usd": 10,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "XRAY": {
+        "copay_usd": 50,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ADVANCED_IMAGING": {
+        "copay_usd": 300,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": ""
+      }
+    },
+    "er_copay_waived_if_admitted": true,
+    "out_of_network": {
+      "covered": false,
+      "coinsurance_pct": null,
+      "note": "Not covered except emergencies"
+    },
+    "emergency_rule": "ER covered at in-network cost sharing anywhere, simplified",
+    "referral_required_for_specialist": true,
+    "prior_auth_required_for": [
+      "SPECIALIST",
+      "ADVANCED_IMAGING"
+    ],
+    "hsa_eligible": false,
+    "telehealth_partner_ids": [
+      "TH-003"
+    ],
+    "nurse_line": "1-800-555-0102",
+    "nurse_line_hours": "24/7",
+    "member_services": "1-800-555-0202",
     "tier": "silver",
     "network_type": "HMO",
     "annual_deductible_usd": 3000,
-    "coinsurance_pct": 20,
-    "referral_required_for_specialist": true,
     "copays_usd": {
       "TELEHEALTH": 15,
       "PRIMARY_CARE": 35,
@@ -35,19 +208,104 @@
       "URGENT_CARE": 75,
       "ER": 400
     },
-    "nurse_line": "1-800-555-0102",
-    "nurse_line_hours": "24/7",
     "synthetic": true
   },
   {
     "id": "PLAN_BRONZE_LOCAL",
     "name": "Harbor Bronze Local",
     "carrier": "Harbor Mutual (fictional)",
+    "plan_type": "EPO",
+    "metal_tier": "bronze",
+    "network_name": "Harbor Local Network",
+    "plan_year": 2026,
+    "eligibility": "Individual",
+    "premium_monthly_usd": 290,
+    "deductible_usd": {
+      "individual": 7000,
+      "family": 14000
+    },
+    "out_of_pocket_max_usd": {
+      "individual": 9200,
+      "family": 18400
+    },
+    "coinsurance_pct": 40,
+    "services": {
+      "TELEHEALTH": {
+        "copay_usd": 30,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "PRIMARY_CARE": {
+        "copay_usd": 60,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "SPECIALIST": {
+        "copay_usd": 100,
+        "deductible_applies": true,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "URGENT_CARE": {
+        "copay_usd": 120,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ER": {
+        "copay_usd": 750,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": ""
+      },
+      "AMBULANCE": {
+        "copay_usd": 400,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": ""
+      },
+      "LAB": {
+        "copay_usd": 25,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "XRAY": {
+        "copay_usd": 75,
+        "deductible_applies": true,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ADVANCED_IMAGING": {
+        "copay_usd": 500,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": ""
+      }
+    },
+    "er_copay_waived_if_admitted": false,
+    "out_of_network": {
+      "covered": false,
+      "coinsurance_pct": null,
+      "note": "Narrow network: not covered except emergencies"
+    },
+    "emergency_rule": "ER covered at in-network cost sharing anywhere, simplified",
+    "referral_required_for_specialist": false,
+    "prior_auth_required_for": [
+      "ADVANCED_IMAGING"
+    ],
+    "hsa_eligible": false,
+    "telehealth_partner_ids": [
+      "TH-005"
+    ],
+    "nurse_line": "1-800-555-0103",
+    "nurse_line_hours": "08:00-20:00",
+    "member_services": "1-800-555-0203",
     "tier": "bronze",
     "network_type": "EPO (narrow network)",
     "annual_deductible_usd": 7000,
-    "coinsurance_pct": 40,
-    "referral_required_for_specialist": false,
     "copays_usd": {
       "TELEHEALTH": 30,
       "PRIMARY_CARE": 60,
@@ -55,19 +313,102 @@
       "URGENT_CARE": 120,
       "ER": 750
     },
-    "nurse_line": "1-800-555-0103",
-    "nurse_line_hours": "08:00-20:00",
     "synthetic": true
   },
   {
     "id": "PLAN_STUDENT",
     "name": "Campus Student Health Plan",
     "carrier": "Corvalle University (fictional)",
+    "plan_type": "PPO",
+    "metal_tier": "gold",
+    "network_name": "Campus Network",
+    "plan_year": 2026,
+    "eligibility": "Enrolled students",
+    "premium_monthly_usd": 180,
+    "deductible_usd": {
+      "individual": 500,
+      "family": 1000
+    },
+    "out_of_pocket_max_usd": {
+      "individual": 3000,
+      "family": 6000
+    },
+    "coinsurance_pct": 20,
+    "services": {
+      "TELEHEALTH": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "PRIMARY_CARE": {
+        "copay_usd": 20,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "SPECIALIST": {
+        "copay_usd": 40,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "URGENT_CARE": {
+        "copay_usd": 40,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ER": {
+        "copay_usd": 200,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Waived if you are admitted"
+      },
+      "AMBULANCE": {
+        "copay_usd": 150,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "LAB": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "XRAY": {
+        "copay_usd": 30,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ADVANCED_IMAGING": {
+        "copay_usd": 150,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      }
+    },
+    "er_copay_waived_if_admitted": true,
+    "out_of_network": {
+      "covered": true,
+      "coinsurance_pct": 40,
+      "note": "Covered at higher cost sharing"
+    },
+    "emergency_rule": "ER covered at in-network cost sharing anywhere, simplified",
+    "referral_required_for_specialist": false,
+    "prior_auth_required_for": [],
+    "hsa_eligible": false,
+    "telehealth_partner_ids": [
+      "TH-005"
+    ],
+    "nurse_line": "1-800-555-0104",
+    "nurse_line_hours": "24/7",
+    "member_services": "1-800-555-0204",
     "tier": "student",
     "network_type": "PPO",
     "annual_deductible_usd": 500,
-    "coinsurance_pct": 20,
-    "referral_required_for_specialist": false,
     "copays_usd": {
       "TELEHEALTH": 0,
       "PRIMARY_CARE": 20,
@@ -75,8 +416,641 @@
       "URGENT_CARE": 40,
       "ER": 200
     },
-    "nurse_line": "1-800-555-0104",
+    "synthetic": true
+  },
+  {
+    "id": "PLAN_PLATINUM_PPO",
+    "name": "Evergreen Health Platinum PPO",
+    "carrier": "Evergreen Health (fictional)",
+    "plan_type": "PPO",
+    "metal_tier": "platinum",
+    "network_name": "Evergreen Network",
+    "plan_year": 2026,
+    "eligibility": "Employer group and individual",
+    "premium_monthly_usd": 720,
+    "deductible_usd": {
+      "individual": 250,
+      "family": 500
+    },
+    "out_of_pocket_max_usd": {
+      "individual": 3000,
+      "family": 6000
+    },
+    "coinsurance_pct": 10,
+    "services": {
+      "TELEHEALTH": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "PRIMARY_CARE": {
+        "copay_usd": 15,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "SPECIALIST": {
+        "copay_usd": 30,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "URGENT_CARE": {
+        "copay_usd": 30,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ER": {
+        "copay_usd": 150,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Waived if you are admitted"
+      },
+      "AMBULANCE": {
+        "copay_usd": 100,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "LAB": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "XRAY": {
+        "copay_usd": 25,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ADVANCED_IMAGING": {
+        "copay_usd": 100,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      }
+    },
+    "er_copay_waived_if_admitted": true,
+    "out_of_network": {
+      "covered": true,
+      "coinsurance_pct": 30,
+      "note": "Covered at higher cost sharing"
+    },
+    "emergency_rule": "ER covered at in-network cost sharing anywhere, simplified",
+    "referral_required_for_specialist": false,
+    "prior_auth_required_for": [],
+    "hsa_eligible": false,
+    "telehealth_partner_ids": [
+      "TH-002"
+    ],
+    "nurse_line": "1-800-555-0101",
     "nurse_line_hours": "24/7",
+    "member_services": "1-800-555-0205",
+    "tier": "platinum",
+    "network_type": "PPO",
+    "annual_deductible_usd": 250,
+    "copays_usd": {
+      "TELEHEALTH": 0,
+      "PRIMARY_CARE": 15,
+      "SPECIALIST": 30,
+      "URGENT_CARE": 30,
+      "ER": 150
+    },
+    "synthetic": true
+  },
+  {
+    "id": "PLAN_HSA_BRONZE_HMO",
+    "name": "Summit Care HSA Bronze HMO",
+    "carrier": "Summit Care (fictional)",
+    "plan_type": "HMO",
+    "metal_tier": "bronze",
+    "network_name": "Summit HMO Network",
+    "plan_year": 2026,
+    "eligibility": "Individual, HSA eligible",
+    "premium_monthly_usd": 260,
+    "deductible_usd": {
+      "individual": 4000,
+      "family": 8000
+    },
+    "out_of_pocket_max_usd": {
+      "individual": 7500,
+      "family": 15000
+    },
+    "coinsurance_pct": 30,
+    "services": {
+      "TELEHEALTH": {
+        "copay_usd": 0,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": "No copay; you pay the full allowed cost until the deductible is met, then coinsurance"
+      },
+      "PRIMARY_CARE": {
+        "copay_usd": 0,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": "No copay; you pay the full allowed cost until the deductible is met, then coinsurance"
+      },
+      "SPECIALIST": {
+        "copay_usd": 0,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": "No copay; you pay the full allowed cost until the deductible is met, then coinsurance"
+      },
+      "URGENT_CARE": {
+        "copay_usd": 0,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": "No copay; you pay the full allowed cost until the deductible is met, then coinsurance"
+      },
+      "ER": {
+        "copay_usd": 0,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": "No copay; you pay the full allowed cost until the deductible is met, then coinsurance"
+      },
+      "AMBULANCE": {
+        "copay_usd": 0,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": "No copay; you pay the full allowed cost until the deductible is met, then coinsurance"
+      },
+      "LAB": {
+        "copay_usd": 0,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": "No copay; you pay the full allowed cost until the deductible is met, then coinsurance"
+      },
+      "XRAY": {
+        "copay_usd": 0,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": "No copay; you pay the full allowed cost until the deductible is met, then coinsurance"
+      },
+      "ADVANCED_IMAGING": {
+        "copay_usd": 0,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": "No copay; you pay the full allowed cost until the deductible is met, then coinsurance"
+      }
+    },
+    "er_copay_waived_if_admitted": false,
+    "out_of_network": {
+      "covered": false,
+      "coinsurance_pct": null,
+      "note": "Not covered except emergencies"
+    },
+    "emergency_rule": "ER covered at in-network cost sharing anywhere, simplified",
+    "referral_required_for_specialist": true,
+    "prior_auth_required_for": [
+      "SPECIALIST",
+      "ADVANCED_IMAGING"
+    ],
+    "hsa_eligible": true,
+    "telehealth_partner_ids": [
+      "TH-003"
+    ],
+    "nurse_line": "1-800-555-0102",
+    "nurse_line_hours": "24/7",
+    "member_services": "1-800-555-0206",
+    "tier": "bronze",
+    "network_type": "HMO",
+    "annual_deductible_usd": 4000,
+    "copays_usd": {
+      "TELEHEALTH": 0,
+      "PRIMARY_CARE": 0,
+      "SPECIALIST": 0,
+      "URGENT_CARE": 0,
+      "ER": 0
+    },
+    "synthetic": true
+  },
+  {
+    "id": "PLAN_COMMUNITY_MEDICAID",
+    "name": "Community Care Medicaid Plan",
+    "carrier": "Community Care (fictional)",
+    "plan_type": "Medicaid-style",
+    "metal_tier": null,
+    "network_name": "Community Care Network",
+    "plan_year": 2026,
+    "eligibility": "Low-income adults and children (fictional Medicaid-style)",
+    "premium_monthly_usd": 0,
+    "deductible_usd": {
+      "individual": 0,
+      "family": 0
+    },
+    "out_of_pocket_max_usd": {
+      "individual": 100,
+      "family": 200
+    },
+    "coinsurance_pct": 0,
+    "services": {
+      "TELEHEALTH": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "PRIMARY_CARE": {
+        "copay_usd": 2,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "SPECIALIST": {
+        "copay_usd": 3,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "URGENT_CARE": {
+        "copay_usd": 3,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ER": {
+        "copay_usd": 8,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "AMBULANCE": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "LAB": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "XRAY": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ADVANCED_IMAGING": {
+        "copay_usd": 3,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      }
+    },
+    "er_copay_waived_if_admitted": true,
+    "out_of_network": {
+      "covered": false,
+      "coinsurance_pct": null,
+      "note": "Not covered except emergencies"
+    },
+    "emergency_rule": "ER covered at in-network cost sharing anywhere, simplified",
+    "referral_required_for_specialist": true,
+    "prior_auth_required_for": [
+      "SPECIALIST",
+      "ADVANCED_IMAGING"
+    ],
+    "hsa_eligible": false,
+    "telehealth_partner_ids": [
+      "TH-007"
+    ],
+    "nurse_line": "1-800-555-0107",
+    "nurse_line_hours": "24/7",
+    "member_services": "1-800-555-0207",
+    "tier": "medicaid",
+    "network_type": "Medicaid-style (narrow network)",
+    "annual_deductible_usd": 0,
+    "copays_usd": {
+      "TELEHEALTH": 0,
+      "PRIMARY_CARE": 2,
+      "SPECIALIST": 3,
+      "URGENT_CARE": 3,
+      "ER": 8
+    },
+    "synthetic": true
+  },
+  {
+    "id": "PLAN_SENIOR_ADVANTAGE",
+    "name": "Golden Years Senior Advantage HMO",
+    "carrier": "Golden Years Health (fictional)",
+    "plan_type": "Medicare Advantage-style HMO",
+    "metal_tier": null,
+    "network_name": "Golden Years Network",
+    "plan_year": 2026,
+    "eligibility": "Age 65+ (fictional Medicare Advantage-style)",
+    "premium_monthly_usd": 0,
+    "deductible_usd": {
+      "individual": 0,
+      "family": 0
+    },
+    "out_of_pocket_max_usd": {
+      "individual": 4500,
+      "family": 4500
+    },
+    "coinsurance_pct": 20,
+    "services": {
+      "TELEHEALTH": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "PRIMARY_CARE": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "SPECIALIST": {
+        "copay_usd": 40,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "URGENT_CARE": {
+        "copay_usd": 45,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ER": {
+        "copay_usd": 95,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Waived if you are admitted"
+      },
+      "AMBULANCE": {
+        "copay_usd": 250,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "LAB": {
+        "copay_usd": 0,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "XRAY": {
+        "copay_usd": 15,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ADVANCED_IMAGING": {
+        "copay_usd": 150,
+        "deductible_applies": false,
+        "coinsurance_applies": true,
+        "note": ""
+      }
+    },
+    "er_copay_waived_if_admitted": true,
+    "out_of_network": {
+      "covered": false,
+      "coinsurance_pct": null,
+      "note": "Not covered except emergencies"
+    },
+    "emergency_rule": "ER covered at in-network cost sharing anywhere, simplified",
+    "referral_required_for_specialist": true,
+    "prior_auth_required_for": [
+      "ADVANCED_IMAGING"
+    ],
+    "hsa_eligible": false,
+    "telehealth_partner_ids": [
+      "TH-006"
+    ],
+    "nurse_line": "1-800-555-0108",
+    "nurse_line_hours": "24/7",
+    "member_services": "1-800-555-0208",
+    "tier": "senior",
+    "network_type": "HMO",
+    "annual_deductible_usd": 0,
+    "copays_usd": {
+      "TELEHEALTH": 0,
+      "PRIMARY_CARE": 0,
+      "SPECIALIST": 40,
+      "URGENT_CARE": 45,
+      "ER": 95
+    },
+    "synthetic": true
+  },
+  {
+    "id": "PLAN_MARKETPLACE_EPO",
+    "name": "Prairie Marketplace Silver EPO",
+    "carrier": "Prairie Mutual (fictional)",
+    "plan_type": "EPO",
+    "metal_tier": "silver",
+    "network_name": "Prairie Select Network",
+    "plan_year": 2026,
+    "eligibility": "Individual marketplace",
+    "premium_monthly_usd": 410,
+    "deductible_usd": {
+      "individual": 4500,
+      "family": 9000
+    },
+    "out_of_pocket_max_usd": {
+      "individual": 8700,
+      "family": 17400
+    },
+    "coinsurance_pct": 30,
+    "services": {
+      "TELEHEALTH": {
+        "copay_usd": 10,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "PRIMARY_CARE": {
+        "copay_usd": 40,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "SPECIALIST": {
+        "copay_usd": 80,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "URGENT_CARE": {
+        "copay_usd": 75,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ER": {
+        "copay_usd": 500,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": ""
+      },
+      "AMBULANCE": {
+        "copay_usd": 300,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": ""
+      },
+      "LAB": {
+        "copay_usd": 20,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "XRAY": {
+        "copay_usd": 50,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": ""
+      },
+      "ADVANCED_IMAGING": {
+        "copay_usd": 300,
+        "deductible_applies": true,
+        "coinsurance_applies": true,
+        "note": ""
+      }
+    },
+    "er_copay_waived_if_admitted": false,
+    "out_of_network": {
+      "covered": false,
+      "coinsurance_pct": null,
+      "note": "Not covered except emergencies"
+    },
+    "emergency_rule": "ER covered at in-network cost sharing anywhere, simplified",
+    "referral_required_for_specialist": false,
+    "prior_auth_required_for": [
+      "ADVANCED_IMAGING"
+    ],
+    "hsa_eligible": false,
+    "telehealth_partner_ids": [],
+    "nurse_line": "1-800-555-0109",
+    "nurse_line_hours": "24/7",
+    "member_services": "1-800-555-0209",
+    "tier": "silver",
+    "network_type": "EPO",
+    "annual_deductible_usd": 4500,
+    "copays_usd": {
+      "TELEHEALTH": 10,
+      "PRIMARY_CARE": 40,
+      "SPECIALIST": 80,
+      "URGENT_CARE": 75,
+      "ER": 500
+    },
+    "synthetic": true
+  },
+  {
+    "id": "SELF_PAY",
+    "name": "Self-pay (no insurance)",
+    "carrier": "None (self-pay)",
+    "plan_type": "SELF_PAY",
+    "metal_tier": null,
+    "network_name": null,
+    "plan_year": 2026,
+    "eligibility": "Anyone without insurance",
+    "premium_monthly_usd": 0,
+    "deductible_usd": {
+      "individual": 0,
+      "family": 0
+    },
+    "out_of_pocket_max_usd": {
+      "individual": null,
+      "family": null
+    },
+    "coinsurance_pct": 0,
+    "services": {
+      "TELEHEALTH": {
+        "copay_usd": 59,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Cash price"
+      },
+      "PRIMARY_CARE": {
+        "copay_usd": 140,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Cash price"
+      },
+      "SPECIALIST": {
+        "copay_usd": 220,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Cash price"
+      },
+      "URGENT_CARE": {
+        "copay_usd": 175,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Cash price"
+      },
+      "ER": {
+        "copay_usd": 1400,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Cash price"
+      },
+      "AMBULANCE": {
+        "copay_usd": 900,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Cash price"
+      },
+      "LAB": {
+        "copay_usd": 45,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Cash price"
+      },
+      "XRAY": {
+        "copay_usd": 110,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Cash price"
+      },
+      "ADVANCED_IMAGING": {
+        "copay_usd": 650,
+        "deductible_applies": false,
+        "coinsurance_applies": false,
+        "note": "Cash price"
+      }
+    },
+    "er_copay_waived_if_admitted": false,
+    "out_of_network": {
+      "covered": false,
+      "coinsurance_pct": null,
+      "note": "No network; cash prices apply"
+    },
+    "emergency_rule": "No insurance: the ER bills its cash price; financial assistance may apply (simplified)",
+    "referral_required_for_specialist": false,
+    "prior_auth_required_for": [],
+    "hsa_eligible": false,
+    "telehealth_partner_ids": [],
+    "nurse_line": "1-800-555-0110",
+    "nurse_line_hours": "08:00-20:00",
+    "member_services": "1-800-555-0210",
+    "tier": "self_pay",
+    "network_type": "none",
+    "annual_deductible_usd": 0,
+    "copays_usd": {
+      "TELEHEALTH": 59,
+      "PRIMARY_CARE": 140,
+      "SPECIALIST": 220,
+      "URGENT_CARE": 175,
+      "ER": 1400
+    },
+    "cash_prices_usd": {
+      "TELEHEALTH": 59,
+      "PRIMARY_CARE": 140,
+      "SPECIALIST": 220,
+      "URGENT_CARE": 175,
+      "ER": 1400,
+      "AMBULANCE": 900,
+      "LAB": 45,
+      "XRAY": 110,
+      "ADVANCED_IMAGING": 650
+    },
     "synthetic": true
   }
 ]

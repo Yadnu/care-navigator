@@ -182,8 +182,9 @@ def test_medicaid_network_is_a_deliberate_subset():
 
 
 def test_senior_plan_never_at_pediatric_only_providers():
+    # D-045: ERs accept every plan (B3) including ER-004; the age filter keeps adults out of it.
     for p in PRACS:
-        if p["patient_ages"] == "children":
+        if p["patient_ages"] == "children" and p["type"] != "ER":
             assert SENIOR not in p["accepted_plans"], p["id"]
 
 

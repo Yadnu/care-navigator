@@ -1,0 +1,1213 @@
+{
+  "note": "Synthetic in-network coverage within the radius; computed by data/generate.py.",
+  "synthetic": true,
+  "radius_km": 15,
+  "coverage": [
+    {
+      "zip": "00101",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00101",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00101",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00101",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00101",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00101",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00101",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00101",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00101",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00101",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00102",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00102",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00102",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00102",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00102",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00102",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00102",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00102",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00102",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00102",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00103",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00103",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00103",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00103",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00103",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00103",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00103",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00103",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00103",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00103",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00104",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00104",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00104",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00104",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00104",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00104",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00104",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00104",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00104",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00104",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00105",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00105",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00105",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00105",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00105",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00105",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00105",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00105",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00105",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00105",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00201",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00201",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00201",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00201",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00201",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00201",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00201",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00201",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00201",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00201",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00202",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00202",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00202",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00202",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00202",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00202",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00202",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00202",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00202",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00202",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00203",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00203",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00203",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00203",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00203",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00203",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00203",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00203",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00203",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00203",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00204",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00204",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00204",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00204",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00204",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00204",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00204",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00204",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00204",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00204",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": true,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": false,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": false,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00301",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": false,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": false,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00302",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": true
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_GOLD_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_SILVER_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_STUDENT",
+      "urgent_care": false,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_PLATINUM_PPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "urgent_care": false,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    },
+    {
+      "zip": "00303",
+      "plan": "SELF_PAY",
+      "urgent_care": true,
+      "primary_care": true,
+      "specialist": false,
+      "urgent_care_in_zip": false
+    }
+  ],
+  "gaps": [
+    {
+      "zip": "00201",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00202",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00203",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00204",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_GOLD_PPO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_SILVER_HMO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_STUDENT",
+      "missing": [
+        "urgent_care",
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_PLATINUM_PPO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "missing": [
+        "urgent_care",
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00301",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00301",
+      "plan": "SELF_PAY",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_GOLD_PPO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_SILVER_HMO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_STUDENT",
+      "missing": [
+        "urgent_care",
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_PLATINUM_PPO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "missing": [
+        "urgent_care",
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00302",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00302",
+      "plan": "SELF_PAY",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_GOLD_PPO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_SILVER_HMO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_BRONZE_LOCAL",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_STUDENT",
+      "missing": [
+        "urgent_care",
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_PLATINUM_PPO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_HSA_BRONZE_HMO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_COMMUNITY_MEDICAID",
+      "missing": [
+        "urgent_care",
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_SENIOR_ADVANTAGE",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00303",
+      "plan": "PLAN_MARKETPLACE_EPO",
+      "missing": [
+        "specialist"
+      ]
+    },
+    {
+      "zip": "00303",
+      "plan": "SELF_PAY",
+      "missing": [
+        "specialist"
+      ]
+    }
+  ]
+}

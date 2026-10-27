@@ -36,7 +36,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00101",
@@ -81,7 +87,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00102",
@@ -126,7 +138,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00104",
@@ -171,7 +189,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00103",
@@ -218,7 +242,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00101",
@@ -265,7 +295,12 @@
     "accepted_plans": [
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00101",
@@ -311,7 +346,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00102",
@@ -357,7 +398,11 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00102",
@@ -403,7 +448,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00103",
@@ -448,7 +499,12 @@
     "accepted_plans": [
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00103",
@@ -495,7 +551,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00104",
@@ -539,7 +601,10 @@
     },
     "accepted_plans": [
       "PLAN_GOLD_PPO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00104",
@@ -583,7 +648,12 @@
     "accepted_plans": [
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00105",
@@ -629,7 +699,13 @@
     "accepted_plans": [
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00105",
@@ -675,7 +751,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00101",
@@ -717,7 +799,12 @@
     },
     "accepted_plans": [
       "PLAN_GOLD_PPO",
-      "PLAN_SILVER_HMO"
+      "PLAN_SILVER_HMO",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00101",
@@ -762,7 +849,12 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00101",
@@ -806,7 +898,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00102",
@@ -850,7 +948,11 @@
     "accepted_plans": [
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00102",
@@ -893,7 +995,12 @@
     },
     "accepted_plans": [
       "PLAN_SILVER_HMO",
-      "PLAN_BRONZE_LOCAL"
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00102",
@@ -938,7 +1045,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00103",
@@ -979,7 +1092,10 @@
     },
     "accepted_plans": [
       "PLAN_GOLD_PPO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00103",
@@ -1022,7 +1138,12 @@
     },
     "accepted_plans": [
       "PLAN_GOLD_PPO",
-      "PLAN_SILVER_HMO"
+      "PLAN_SILVER_HMO",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00103",
@@ -1066,7 +1187,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00104",
@@ -1110,7 +1237,12 @@
     "accepted_plans": [
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
-      "PLAN_BRONZE_LOCAL"
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00104",
@@ -1152,7 +1284,11 @@
     },
     "accepted_plans": [
       "PLAN_SILVER_HMO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00104",
@@ -1197,7 +1333,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00105",
@@ -1239,7 +1381,12 @@
     },
     "accepted_plans": [
       "PLAN_GOLD_PPO",
-      "PLAN_SILVER_HMO"
+      "PLAN_SILVER_HMO",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00105",
@@ -1282,8 +1429,9 @@
       "sun": null
     },
     "accepted_plans": [
+      "PLAN_BRONZE_LOCAL",
       "PLAN_STUDENT",
-      "PLAN_BRONZE_LOCAL"
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00105",
@@ -1331,7 +1479,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": true,
     "zip": null,
@@ -1374,7 +1528,9 @@
       "sun": "24h"
     },
     "accepted_plans": [
-      "PLAN_GOLD_PPO"
+      "PLAN_GOLD_PPO",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_SENIOR_ADVANTAGE"
     ],
     "virtual": true,
     "zip": null,
@@ -1416,7 +1572,10 @@
       "sun": "07:00-22:00"
     },
     "accepted_plans": [
-      "PLAN_SILVER_HMO"
+      "PLAN_SILVER_HMO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO"
     ],
     "virtual": true,
     "zip": null,
@@ -1460,7 +1619,11 @@
     "accepted_plans": [
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": true,
     "zip": null,
@@ -1504,8 +1667,9 @@
       "sun": "24h"
     },
     "accepted_plans": [
+      "PLAN_BRONZE_LOCAL",
       "PLAN_STUDENT",
-      "PLAN_BRONZE_LOCAL"
+      "SELF_PAY"
     ],
     "virtual": true,
     "zip": null,
@@ -1548,7 +1712,12 @@
     },
     "accepted_plans": [
       "PLAN_GOLD_PPO",
-      "PLAN_SILVER_HMO"
+      "PLAN_SILVER_HMO",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00101",
@@ -1592,7 +1761,12 @@
     "accepted_plans": [
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00103",
@@ -1635,7 +1809,10 @@
     },
     "accepted_plans": [
       "PLAN_GOLD_PPO",
-      "PLAN_BRONZE_LOCAL"
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00104",
@@ -1678,7 +1855,12 @@
     },
     "accepted_plans": [
       "PLAN_GOLD_PPO",
-      "PLAN_SILVER_HMO"
+      "PLAN_SILVER_HMO",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00102",
@@ -1721,7 +1903,12 @@
     "accepted_plans": [
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00101",
@@ -1766,7 +1953,12 @@
     "accepted_plans": [
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
-      "PLAN_BRONZE_LOCAL"
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00105",
@@ -1808,7 +2000,12 @@
     },
     "accepted_plans": [
       "PLAN_GOLD_PPO",
-      "PLAN_SILVER_HMO"
+      "PLAN_SILVER_HMO",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00102",
@@ -1853,7 +2050,13 @@
       "PLAN_GOLD_PPO",
       "PLAN_SILVER_HMO",
       "PLAN_BRONZE_LOCAL",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00103",
@@ -1896,7 +2099,10 @@
     },
     "accepted_plans": [
       "PLAN_GOLD_PPO",
-      "PLAN_STUDENT"
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00104",
@@ -1940,7 +2146,11 @@
     },
     "accepted_plans": [
       "PLAN_SILVER_HMO",
-      "PLAN_BRONZE_LOCAL"
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
     ],
     "virtual": false,
     "zip": "00105",
@@ -1949,6 +2159,1452 @@
     "lng": -98.41523,
     "phone": "555-0143",
     "bio": "Sports and spine physician for running injuries, shin splints, lower back pain and muscle strains, with on-site physical therapy.",
+    "synthetic": true
+  },
+  {
+    "id": "ER-005",
+    "name": "Brightwater Medical Center",
+    "credential": null,
+    "facility_name": "Brightwater Medical Center",
+    "type": "ER",
+    "specialties": [
+      "emergency medicine"
+    ],
+    "conditions_treated": [
+      "chest pain",
+      "stroke",
+      "serious injuries",
+      "severe allergic reactions"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00201",
+    "address": "1033 Birch Ave, Brightwater 00201",
+    "lat": 39.68489,
+    "lng": -98.34424,
+    "phone": "555-0144",
+    "bio": "Brightwater's only emergency department, open around the clock. It handles chest pain, strokes, serious injuries and severe allergic reactions.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-011",
+    "name": "Brightwater Injury & X-ray Care",
+    "credential": null,
+    "facility_name": "Brightwater Injury & X-ray Care",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "minor orthopedics"
+    ],
+    "conditions_treated": [
+      "ankle sprains",
+      "wrist fractures",
+      "back strain",
+      "sports injuries",
+      "x-ray"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-20:00",
+      "tue": "08:00-20:00",
+      "wed": "08:00-20:00",
+      "thu": "08:00-20:00",
+      "fri": "08:00-20:00",
+      "sat": "08:00-20:00",
+      "sun": "09:00-17:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00201",
+    "address": "181 Meadow St, Brightwater 00201",
+    "lat": 39.68038,
+    "lng": -98.34753,
+    "phone": "555-0145",
+    "bio": "Injury-focused urgent care with digital X-ray on site. Splints, braces and crutches for sprains, wrist fractures and sports injuries.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-012",
+    "name": "Lakeview Stomach & Hydration Clinic",
+    "credential": null,
+    "facility_name": "Lakeview Stomach & Hydration Clinic",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "hydration therapy"
+    ],
+    "conditions_treated": [
+      "food poisoning",
+      "vomiting",
+      "diarrhea",
+      "dehydration",
+      "IV fluids"
+    ],
+    "languages": [
+      "English",
+      "Vietnamese"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-21:00",
+      "tue": "09:00-21:00",
+      "wed": "09:00-21:00",
+      "thu": "09:00-21:00",
+      "fri": "09:00-21:00",
+      "sat": "09:00-17:00",
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00202",
+    "address": "1318 Juniper Rd, Brightwater 00202",
+    "lat": 39.71334,
+    "lng": -98.33545,
+    "phone": "555-0146",
+    "bio": "Walk-in clinic for stomach illness by the lake. Treats food poisoning, vomiting and diarrhea, with IV fluids for mild dehydration.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-013",
+    "name": "Orchard Hill Kids Urgent Care",
+    "credential": null,
+    "facility_name": "Orchard Hill Kids Urgent Care",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "pediatric urgent care"
+    ],
+    "conditions_treated": [
+      "ear infections in children",
+      "fever in children",
+      "croup",
+      "sprains in children"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "children",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-21:00",
+      "tue": "09:00-21:00",
+      "wed": "09:00-21:00",
+      "thu": "09:00-21:00",
+      "fri": "09:00-21:00",
+      "sat": "09:00-17:00",
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00203",
+    "address": "1934 Harvest Ave, Brightwater 00203",
+    "lat": 39.6976,
+    "lng": -98.29393,
+    "phone": "555-0147",
+    "bio": "Urgent care only for babies, kids and teens, with pediatric nurses. Common visits are ear infections, fevers, croup and playground sprains.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-014",
+    "name": "Millbrook Skin & Allergy Walk-In",
+    "credential": null,
+    "facility_name": "Millbrook Skin & Allergy Walk-In",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "dermatology triage"
+    ],
+    "conditions_treated": [
+      "rashes",
+      "hives",
+      "poison ivy",
+      "insect bites",
+      "mild allergic reactions"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-20:00",
+      "tue": "08:00-20:00",
+      "wed": "08:00-20:00",
+      "thu": "08:00-20:00",
+      "fri": "08:00-20:00",
+      "sat": "08:00-20:00",
+      "sun": "09:00-17:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00204",
+    "address": "606 Prairie St, Brightwater 00204",
+    "lat": 39.6588,
+    "lng": -98.38511,
+    "phone": "555-0148",
+    "bio": "Same-day walk-in care for skin trouble in Millbrook. Rashes, hives, poison ivy and insect bites, plus mild allergic reactions without breathing problems.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-015",
+    "name": "Brightwater Family Walk-In",
+    "credential": null,
+    "facility_name": "Brightwater Family Walk-In",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "ear infections",
+      "colds",
+      "flu",
+      "sore throat",
+      "urinary tract infections"
+    ],
+    "languages": [
+      "English",
+      "Spanish",
+      "Tagalog"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-21:00",
+      "tue": "09:00-21:00",
+      "wed": "09:00-21:00",
+      "thu": "09:00-21:00",
+      "fri": "09:00-21:00",
+      "sat": "09:00-17:00",
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00201",
+    "address": "174 Prairie Way, Brightwater 00201",
+    "lat": 39.6793,
+    "lng": -98.35747,
+    "phone": "555-0149",
+    "bio": "Family walk-in clinic for kids and adults in central Brightwater. Ear infections, colds, flu, sore throats and urinary tract infections, with bilingual staff.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-016",
+    "name": "Dr. Ruth Mbeki",
+    "credential": "MD",
+    "facility_name": "Brightwater Family Health",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "checkups",
+      "vaccines",
+      "diabetes",
+      "colds"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00201",
+    "address": "1516 Juniper St, Brightwater 00201",
+    "lat": 39.67523,
+    "lng": -98.35771,
+    "phone": "555-0150",
+    "bio": "Family physician for all ages in central Brightwater: checkups, vaccines, colds and long-term diabetes care.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-017",
+    "name": "Dr. Joaquin Achterberg",
+    "credential": "DO",
+    "facility_name": "Brightwater Internal Medicine",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "internal medicine"
+    ],
+    "conditions_treated": [
+      "high blood pressure",
+      "cholesterol",
+      "fatigue",
+      "preventive care"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00201",
+    "address": "200 Willow St, Brightwater 00201",
+    "lat": 39.68404,
+    "lng": -98.34529,
+    "phone": "555-0151",
+    "bio": "Internist for adults focused on blood pressure, cholesterol, preventive screening and unexplained tiredness.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-018",
+    "name": "Dr. Darius Halvorsen",
+    "credential": "MD",
+    "facility_name": "Little Oaks Pediatrics",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "pediatrics"
+    ],
+    "conditions_treated": [
+      "well-child visits",
+      "fever in children",
+      "asthma in children",
+      "childhood vaccines"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "children",
+    "accepting_new": true,
+    "hours": {
+      "mon": "07:30-16:30",
+      "tue": "07:30-16:30",
+      "wed": "07:30-16:30",
+      "thu": "07:30-16:30",
+      "fri": "07:30-16:30",
+      "sat": "09:00-12:00",
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00201",
+    "address": "306 Meadow St, Brightwater 00201",
+    "lat": 39.68656,
+    "lng": -98.34569,
+    "phone": "555-0152",
+    "bio": "Pediatric practice for newborns through teens with early weekday and Saturday morning hours. Well-child visits, fevers, asthma and vaccines.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-019",
+    "name": "Dr. Darius Fairbanks",
+    "credential": "DO",
+    "facility_name": "Lakeview Community Clinic",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "women's health",
+      "checkups",
+      "vaccines",
+      "minor infections"
+    ],
+    "languages": [
+      "Spanish",
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00202",
+    "address": "1647 Prairie Way, Brightwater 00202",
+    "lat": 39.70996,
+    "lng": -98.33576,
+    "phone": "555-0153",
+    "bio": "Bilingual community clinic by the lake offering women's health visits, checkups, vaccines and care for minor infections.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-020",
+    "name": "Dr. Bram Mbeki",
+    "credential": "DO",
+    "facility_name": "Lakeview Senior Care",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "geriatrics",
+      "internal medicine"
+    ],
+    "conditions_treated": [
+      "older adult care",
+      "memory concerns",
+      "falls prevention",
+      "medication reviews"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00202",
+    "address": "2270 Birch Way, Brightwater 00202",
+    "lat": 39.71485,
+    "lng": -98.33377,
+    "phone": "555-0154",
+    "bio": "Primary care for older adults: memory concerns, preventing falls and reviewing long lists of medicines with families.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-021",
+    "name": "Dr. Ximena Nakamura",
+    "credential": "DO",
+    "facility_name": "Lakeview Sports & Family Medicine",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine",
+      "sports medicine"
+    ],
+    "conditions_treated": [
+      "knee pain",
+      "running injuries",
+      "sports physicals",
+      "tendonitis"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00202",
+    "address": "637 Juniper Rd, Brightwater 00202",
+    "lat": 39.7196,
+    "lng": -98.32755,
+    "phone": "555-0155",
+    "bio": "Family doctor with sports medicine training who sees runners and weekend athletes for knee pain, tendonitis and sports physicals.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-022",
+    "name": "Dr. Malik Mbeki",
+    "credential": "MD",
+    "facility_name": "Orchard Hill Family Practice",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "colds",
+      "stomach upset",
+      "minor injuries",
+      "checkups"
+    ],
+    "languages": [
+      "English",
+      "Polish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00203",
+    "address": "503 Harvest Rd, Brightwater 00203",
+    "lat": 39.68542,
+    "lng": -98.2951,
+    "phone": "555-0156",
+    "bio": "Neighborhood family practice in Orchard Hill for colds, stomach upset, minor injuries and yearly checkups.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-023",
+    "name": "Dr. Owen Okonkwo",
+    "credential": "MD",
+    "facility_name": "Orchard Hill Internal Medicine",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "internal medicine"
+    ],
+    "conditions_treated": [
+      "thyroid problems",
+      "high blood pressure",
+      "kidney health"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": false,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00203",
+    "address": "107 Harvest Way, Brightwater 00203",
+    "lat": 39.68948,
+    "lng": -98.30719,
+    "phone": "555-0157",
+    "bio": "Internist managing thyroid problems, blood pressure and kidney health. The panel is full, so no new patients right now.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-024",
+    "name": "Dr. Selin Kowalczyk",
+    "credential": "MD",
+    "facility_name": "Orchard Hill Young Adult Health",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine",
+      "young adult health"
+    ],
+    "conditions_treated": [
+      "stress",
+      "sleep problems",
+      "sexual health",
+      "acne"
+    ],
+    "languages": [
+      "English",
+      "Korean"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00203",
+    "address": "2255 Prairie St, Brightwater 00203",
+    "lat": 39.69396,
+    "lng": -98.30228,
+    "phone": "555-0158",
+    "bio": "Nurse practitioner clinic for people in their late teens and twenties: stress, sleep trouble, sexual health and acne.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-025",
+    "name": "Dr. Joaquin Pemberton",
+    "credential": "DO",
+    "facility_name": "Millbrook Family Doctors",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "checkups",
+      "colds",
+      "skin concerns",
+      "back pain"
+    ],
+    "languages": [
+      "English",
+      "Vietnamese"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00204",
+    "address": "1811 Birch Way, Brightwater 00204",
+    "lat": 39.66153,
+    "lng": -98.385,
+    "phone": "555-0159",
+    "bio": "Family doctors in Millbrook seeing all ages for checkups, colds, skin concerns and everyday back pain.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-026",
+    "name": "Dr. Mariela Okonkwo",
+    "credential": "MD",
+    "facility_name": "Millbrook Women's Primary Care",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine",
+      "women's health"
+    ],
+    "conditions_treated": [
+      "contraception",
+      "menstrual problems",
+      "menopause care",
+      "checkups"
+    ],
+    "languages": [
+      "English",
+      "French"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00204",
+    "address": "1170 Harvest Way, Brightwater 00204",
+    "lat": 39.65417,
+    "lng": -98.38587,
+    "phone": "555-0160",
+    "bio": "Primary care for women covering contraception, period problems, menopause care and routine checkups.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-027",
+    "name": "Dr. Tarek Yilmaz",
+    "credential": "MD",
+    "facility_name": "Millbrook Internal Medicine",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "internal medicine"
+    ],
+    "conditions_treated": [
+      "diabetes",
+      "high blood pressure",
+      "heart health follow-up"
+    ],
+    "languages": [
+      "English",
+      "Hindi"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00204",
+    "address": "747 Juniper Ave, Brightwater 00204",
+    "lat": 39.66156,
+    "lng": -98.37714,
+    "phone": "555-0161",
+    "bio": "Internist helping adults manage diabetes and blood pressure, and following up after heart tests.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-011",
+    "name": "Dr. Ruth Sorensen",
+    "credential": "DO",
+    "facility_name": "Brightwater Dermatology",
+    "type": "SPECIALIST",
+    "specialties": [
+      "dermatology"
+    ],
+    "conditions_treated": [
+      "eczema",
+      "psoriasis",
+      "acne",
+      "mole checks"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00201",
+    "address": "2015 Meadow Way, Brightwater 00201",
+    "lat": 39.67886,
+    "lng": -98.35702,
+    "phone": "555-0162",
+    "bio": "Dermatologist treating eczema, psoriasis and stubborn acne, and checking moles.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-012",
+    "name": "Dr. Callum Pemberton",
+    "credential": "DO",
+    "facility_name": "Lakeview Orthopedics",
+    "type": "SPECIALIST",
+    "specialties": [
+      "orthopedic surgery"
+    ],
+    "conditions_treated": [
+      "fracture follow-up",
+      "shoulder injuries",
+      "knee injuries",
+      "joint pain"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00202",
+    "address": "396 Meadow St, Brightwater 00202",
+    "lat": 39.71023,
+    "lng": -98.32816,
+    "phone": "555-0163",
+    "bio": "Orthopedic surgeon for fracture follow-up, shoulder and knee injuries, and joint pain that isn't getting better.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-013",
+    "name": "Dr. Lucia Mbeki",
+    "credential": "DO",
+    "facility_name": "Orchard Hill Digestive Care",
+    "type": "SPECIALIST",
+    "specialties": [
+      "gastroenterology"
+    ],
+    "conditions_treated": [
+      "acid reflux",
+      "chronic constipation",
+      "stomach pain that keeps coming back"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00203",
+    "address": "2298 Birch Ave, Brightwater 00203",
+    "lat": 39.69443,
+    "lng": -98.29372,
+    "phone": "555-0164",
+    "bio": "Gastroenterologist for long-running digestive problems: reflux, constipation and stomach pain that keeps returning.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-014",
+    "name": "Dr. Theo Nakamura",
+    "credential": "DO",
+    "facility_name": "Millbrook Heart & Vascular",
+    "type": "SPECIALIST",
+    "specialties": [
+      "cardiology"
+    ],
+    "conditions_treated": [
+      "palpitations follow-up",
+      "high blood pressure",
+      "cholesterol"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00204",
+    "address": "534 Juniper Ave, Brightwater 00204",
+    "lat": 39.66287,
+    "lng": -98.39268,
+    "phone": "555-0165",
+    "bio": "Cardiologist for planned follow-up of palpitations, hard-to-control blood pressure and high cholesterol.",
+    "synthetic": true
+  },
+  {
+    "id": "ER-006",
+    "name": "Pinecrest Critical Access Hospital",
+    "credential": null,
+    "facility_name": "Pinecrest Critical Access Hospital",
+    "type": "ER",
+    "specialties": [
+      "emergency medicine",
+      "critical access"
+    ],
+    "conditions_treated": [
+      "injuries",
+      "breathing problems",
+      "chest pain",
+      "stabilize and transfer"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00301",
+    "address": "2379 Meadow Way, Pinecrest 00301",
+    "lat": 39.18821,
+    "lng": -98.34605,
+    "phone": "555-0166",
+    "bio": "Small rural hospital emergency room open 24 hours. It treats injuries, breathing problems and chest pain, and stabilizes patients for transfer.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-016",
+    "name": "Cedar Hollow Rural Urgent Care",
+    "credential": null,
+    "facility_name": "Cedar Hollow Rural Urgent Care",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care"
+    ],
+    "conditions_treated": [
+      "farm injuries",
+      "cuts",
+      "sprains",
+      "colds"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "10:00-16:00",
+      "tue": "10:00-16:00",
+      "wed": "10:00-16:00",
+      "thu": "10:00-16:00",
+      "fri": "10:00-16:00",
+      "sat": "10:00-14:00",
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00302",
+    "address": "2327 Granite Way, Pinecrest 00302",
+    "lat": 39.15839,
+    "lng": -98.41784,
+    "phone": "555-0167",
+    "bio": "The only urgent care in the Pinecrest area, with short hours. It treats farm and ranch injuries, cuts, sprains and colds.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-028",
+    "name": "Dr. Malik Mbeki",
+    "credential": "DO",
+    "facility_name": "Pinecrest Family Clinic",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "checkups",
+      "vaccines",
+      "chronic conditions",
+      "minor injuries"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_COMMUNITY_MEDICAID",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00301",
+    "address": "564 Juniper St, Pinecrest 00301",
+    "lat": 39.17988,
+    "lng": -98.34454,
+    "phone": "555-0168",
+    "bio": "Family clinic in Pinecrest town for all ages: checkups, vaccines, long-term conditions and minor injuries.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-029",
+    "name": "Dr. Rafael Halvorsen",
+    "credential": "MD",
+    "facility_name": "Cedar Hollow Country Doctor",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "checkups",
+      "blood pressure",
+      "farm health"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": false,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00302",
+    "address": "1476 Birch Rd, Pinecrest 00302",
+    "lat": 39.14904,
+    "lng": -98.41361,
+    "phone": "555-0169",
+    "bio": "A long-time country doctor caring for Cedar Hollow families. The practice is full and not taking new patients.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-030",
+    "name": "Dr. Avery Delacroix",
+    "credential": "DO",
+    "facility_name": "Ridge Creek Health Center",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "checkups",
+      "back pain",
+      "colds",
+      "diabetes"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": false,
+    "zip": "00303",
+    "address": "409 Granite Rd, Pinecrest 00303",
+    "lat": 39.20743,
+    "lng": -98.47256,
+    "phone": "555-0170",
+    "bio": "Small health center in Ridge Creek offering checkups, care for back pain and colds, and diabetes follow-up.",
+    "synthetic": true
+  },
+  {
+    "id": "TH-006",
+    "name": "SilverLine Senior Telehealth",
+    "credential": null,
+    "facility_name": "SilverLine Senior Telehealth",
+    "type": "TELEHEALTH",
+    "specialties": [
+      "virtual primary care",
+      "geriatrics"
+    ],
+    "conditions_treated": [
+      "medication questions",
+      "colds",
+      "dizziness follow-up",
+      "chronic condition check-ins"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_PLATINUM_PPO",
+      "PLAN_HSA_BRONZE_HMO",
+      "PLAN_SENIOR_ADVANTAGE",
+      "PLAN_MARKETPLACE_EPO",
+      "SELF_PAY"
+    ],
+    "virtual": true,
+    "zip": null,
+    "address": null,
+    "lat": null,
+    "lng": null,
+    "phone": "555-0171",
+    "bio": "Around-the-clock video visits designed for older adults, with large-text screens and family call-in. Medication questions, colds and check-ins.",
+    "synthetic": true
+  },
+  {
+    "id": "TH-007",
+    "name": "Community Care Virtual Clinic",
+    "credential": null,
+    "facility_name": "Community Care Virtual Clinic",
+    "type": "TELEHEALTH",
+    "specialties": [
+      "virtual urgent care"
+    ],
+    "conditions_treated": [
+      "colds",
+      "rashes by photo",
+      "stomach bugs",
+      "prescription refill questions"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_COMMUNITY_MEDICAID"
+    ],
+    "virtual": true,
+    "zip": null,
+    "address": null,
+    "lat": null,
+    "lng": null,
+    "phone": "555-0172",
+    "bio": "Community Care members' own 24/7 video clinic for colds, rashes by photo, stomach bugs and refill questions. No cost to members.",
     "synthetic": true
   }
 ]

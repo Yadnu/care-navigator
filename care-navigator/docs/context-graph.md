@@ -2,7 +2,7 @@
 
 Living map of the system. Read this and `decisions.md` before any task; update it at the end of every phase.
 
-Last updated: 2026-10-27, end of Phase 6.
+Last updated: 2026-10-27, end of Phase 7.
 
 ## Request flow
 
@@ -47,6 +47,10 @@ flowchart TD
     PIPE[pipeline.py] -.orchestrates.-> VAL
     PIPE -.provider down: offline fallback, simplified flag.-> JEV1
     PIPE -.records every step.-> TRACE
+    APP[app.py Streamlit<br/>+ trace viewer] --> PIPE
+    CLI[cli.py demo] --> PIPE
+    EVAL[scripts/run_eval.py] --> PIPE
+    TRACE -.-> APP
 
     subgraph data
       ZIPS[(zips.json)]
@@ -83,15 +87,15 @@ flowchart TD
 | `navigator/retrieval/vector_store.py` | module | numpy | retriever | `test_retrieval.py` | D-006, D-029 | done |
 | `navigator/retrieval/bm25.py` | module | rank-bm25 | retriever | `test_retrieval.py` | D-006, D-030 | done |
 | `navigator/retrieval/fusion.py` | module | config | retriever | `test_retrieval.py` | D-006 | done |
-| `navigator/retrieval/retriever.py` | module | all retrieval, jev_client, data, models | pipeline | `test_retrieval.py` | D-005, D-006, D-030 | done |
+| `navigator/retrieval/retriever.py` | module | all retrieval, jev_client, data, models | pipeline, run_eval | `test_retrieval.py` | D-005, D-006, D-030, D-040 | done |
 | `navigator/costs.py` | module | data, models, config | pipeline | `test_costs.py` | D-035 | done |
 | `navigator/explainer.py` | module | models, care_engine (labels, rule reasons), anthropic | pipeline, guard | `test_explainer_guard.py` | D-004, D-007, D-034 | done (Claude not run live) |
 | `navigator/guard.py` | module | jev_client, explainer, data | pipeline | `test_explainer_guard.py`, `test_pipeline.py` | D-007, D-034 | done |
 | `navigator/trace.py` | module | redact, models | pipeline, app | `test_trace.py`, `test_pipeline.py` | D-009, D-035 | done |
 | `navigator/pipeline.py` | module | everything above | app, cli, run_eval | `test_pipeline.py` | D-001..D-009, D-031, D-033 | done |
-| `app.py` | module | pipeline, streamlit | user | - | - | not started |
-| `cli.py` | module | pipeline | `make demo` | - | - | not started |
-| `scripts/run_eval.py` | module | pipeline, data/eval | `make eval` | - | - | not started |
+| `app.py` | module | pipeline, config, data, streamlit | user (`make app`) | `test_app.py` | D-038, D-039 | done |
+| `cli.py` | module | pipeline, config | `make demo` | `test_cli.py` | D-038 | done |
+| `scripts/run_eval.py` | module | pipeline, data, data/eval | `make eval` | `test_run_eval.py` | D-038 | done |
 | `data/generate.py` + `eval_sets.py` | data | - | data files | `test_data.py`, `test_generate.py` | D-010, D-013 | done |
 | `data/zips.json` | data | generate.py | validate, retriever | `test_data.py`, `test_generate.py` | D-010, D-011, D-013 | done |
 | `data/plans.json` | data | generate.py | validate, costs | `test_data.py`, `test_generate.py` | D-010, D-011, D-013 | done |
@@ -108,15 +112,17 @@ flowchart TD
 - Retrieval: recall@3 = 1.0 on 20 queries (top-1 correct on all), 0 filter violations over a 1,600-search grid, coverage gap (RQ-019) returns an empty list.
 - Pipeline end to end: 40/40 red flags -> EMERGENCY (988 first for crisis wording), 40/40 routing cases on the expected outcome and an acceptable level, 15/15 vague -> one valid follow-up, 10/10 adversarial handled; injected instructions never change the outcome or level; Jev, Claude and Voyage failures all fall back with `simplified=True`.
 - Live verification (2026-10-27, D-036): Claude parser/clarifier/explainer, Jev (noul, choice, score, rerank) and Voyage all called successfully. Live routing 39/39 acceptable, 0 lower; six demo cases correct with guarded Claude explanations.
+- Phase 7: Streamlit app with trace viewer, CLI demo (6/6 as expected), eval runner. Offline eval: every pass bar met (red flags 100%, routing 100% acceptable / 0 lower, vague 100%, adversarial 100%, recall@3 100%, 0 violations).
 - In progress: -
-- Not started: Phases 7 to 8.
+- Not started: Phase 8 (README, final docs).
 
 ## Open questions
 
-- Phase 7 entry points must call `config.load_env_file()` (D-024).
 - The Voyage key hits its rate limit (HTTP 429) after one query in quick succession; requests fall back to offline search (D-037).
 - Live Jev rerank sends one score question per document (up to 10) in one request; cost per search is roughly 10x a single classification.
 
 - Negation ("no chest pain") still fires the red-flag screen (D-017). Acceptable over-triage for the prototype?
 
 - `make` is not installed on the dev machine (Windows); Makefile targets are plain one-liners that can be run directly.
+- `make eval` with keys in `.env` runs live (about 105 pipeline runs); the live eval hasn't been run end to end yet (live routing alone: 39/39).
+- The Sonnet 5.5 evaluation judge (D-004) isn't implemented (D-038).

@@ -330,3 +330,31 @@ Template:
 - Decision: Keep the existing fallback: on `EmbeddingError` the pipeline searches the offline TF-IDF index, marks the answer `simplified`, and the trace names the fallback. No retry loop.
 - Alternatives considered: Retrying with backoff (rejected: adds seconds per request for a demo); caching query embeddings (deferred: queries rarely repeat).
 - Consequences: With this key, most live requests use offline semantic search; raising the Voyage account limit would make Voyage answer every request.
+
+## D-038: Entry points, offline switches and eval definitions
+- Date: 2026-10-27
+- Status: accepted
+- Context: `app.py`, `cli.py` and `scripts/run_eval.py` load `.env` (D-024), but the test suite runs all three and must never go live.
+- Decision:
+  - `config.load_env_file()` skips the project `.env` when `CARE_NAVIGATOR_SKIP_DOTENV` is set; `tests/conftest.py` sets it for every test, on top of clearing the provider keys.
+  - `cli.py` and `scripts/run_eval.py` take `--offline` (ignore `.env`); `cli.py` also takes `--no-traces`. Without `--offline` they use whatever keys `.env` provides. Both exit 0 only when every demo case / pass bar is met.
+  - Eval metrics: red-flag recall = share of `red_flags.jsonl` with outcome EMERGENCY; routing acceptable = share of all 40 routing cases with the expected outcome and, for recommendations, a level in `acceptable_levels` and not below `expected_level`; routing below expected = count of recommendations below `expected_level` (or a non-recommendation where one was expected); vague = share with FOLLOW_UP; adversarial safe = no crash, a message, no `<script`, no diagnosis/medication wording (OfflineJev guard), the expected outcome when one is given, and at most 3 options; retrieval recall@3 = mean share of `expected_ids` in the top 3 over the 20 non-empty queries, using the navigator's own retriever; filter violations re-check every hard filter independently.
+  - The Sonnet 5.5 evaluation judge from D-004 is not implemented; all metrics are deterministic.
+- Alternatives considered: Making the tools offline by default (rejected: `make demo`/`make eval` should show the configured system); an LLM judge for explanation quality (deferred: the guard already enforces the hard constraints).
+- Consequences: `make eval` with keys in `.env` runs live and costs tokens (about 105 pipeline runs); `python scripts/run_eval.py --offline` is free.
+
+## D-039: Streamlit app
+- Date: 2026-10-27
+- Status: accepted
+- Context: The plan asks for inputs, outcome, top options with costs, the explanation, an offline/live banner, a synthetic/not-medical-advice note and an expandable trace viewer.
+- Decision: One page. Inputs: symptoms, severity slider, zip dropdown with "Other" (to demo an invalid zip), plan dropdown, adult/child, and time of request defaulting to "Now" with presets for the reference times (weekday 14:00 and 22:30, midnight 00:15, Saturday, Sunday) and a custom date/time. Emergency shows as a red error box and stops; a follow-up shows the question and one answer box (the answer is sent with the original request, so it is asked once); a recommendation shows the level, explanation, notes, options or online alternatives with distance, address, phone, matched text and cost estimate, the nurse line and the rule id. The trace viewer lists every step with model or rule, latency, tokens, input and output, plus the trace file path. No `unsafe_allow_html`; dollar signs are escaped so prices don't render as LaTeX. `Navigator.from_env()` is cached with `st.cache_resource`.
+- Alternatives considered: A multi-page app (rejected: one screen is enough for the demo).
+- Consequences: Tested with `streamlit.testing` (9 tests) and a headless launch.
+
+## D-040: Matched text fallback
+- Date: 2026-10-27
+- Status: accepted
+- Context: When nothing in a record overlapped the query, `matched_text` fell back to the first condition, so a sore-throat search showed "matched: food poisoning".
+- Decision: Fall back to the practitioner's specialties (for example "urgent care, family medicine"), which describes the place without implying a match.
+- Alternatives considered: Leaving it empty (rejected: the UI then shows a blank line).
+- Consequences: Covered by `test_matched_text_never_claims_an_unrelated_condition`.

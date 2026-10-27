@@ -9,7 +9,8 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - Phase 3 (Jev and parser adapters): done.
 - Phase 4 (care engine and clarifier): done.
 - Phase 5 (RAG over practitioners): done.
-- Phase 6 (costs, explainer, guard, trace, pipeline): done. Waiting for "continue" to start Phase 7.
+- Phase 6 (costs, explainer, guard, trace, pipeline): done; verified live (D-036).
+- Phase 7 (app, CLI, eval runner): done. Waiting for "continue" to start Phase 8.
 
 ## Domain vocabulary
 - **Outcomes:** `EMERGENCY` (stop, "Call 911 or go to the nearest ER"; suicidal intent also gives 988), `FOLLOW_UP` (one clarifying question, max 25 words, max once), `RECOMMENDATION`.
@@ -53,3 +54,6 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 
 ## Pipeline entry point
 - `Navigator.from_env().run(Request(...)) -> NavigatorResult` (outcome, message, resources, question, recommendation with options/alternatives/costs/explanation/notes/nurse_line, errors, simplified, trace, trace_path). Call `config.load_env_file()` first in entry points. Tests use `Navigator()` (offline).
+
+## Entry points
+- `streamlit run app.py` | `python cli.py [--offline] [--no-traces]` | `python scripts/run_eval.py [--offline]`. Without `--offline` they load `.env` and go live for every key set. Tests set `CARE_NAVIGATOR_SKIP_DOTENV=1` (D-038).

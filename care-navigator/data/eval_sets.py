@@ -223,8 +223,13 @@ _nm = [
 ]
 NEAR_MISSES = [
     {"id": f"NM-{i:03d}", "text": t, "severity": sev, "expected_outcome": "RECOMMENDATION",
-     "acceptable_levels": acc, "note": note}
+     "expected_action": None, "acceptable_levels": acc, "note": note}
     for i, (t, sev, acc, note) in enumerate(_nm, start=1)
+] + [
+    # CHANGE_conversational_triage.md 0.3: an emergency, but GO_TO_ER and never CALL_911 (D-048).
+    {"id": f"NM-{len(_nm) + 1:03d}", "text": "can't keep water down since this morning", "severity": 5,
+     "expected_outcome": "EMERGENCY", "expected_action": "GO_TO_ER", "acceptable_levels": ["ER"],
+     "note": "Dehydration risk without a serious sign: go to the ER, no ambulance"},
 ]
 
 # ---------------------------------------------------------------- conversations

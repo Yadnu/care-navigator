@@ -136,7 +136,11 @@ NEAR_MISSES = load_jsonl("near_misses.jsonl")
 
 @pytest.mark.parametrize("case", NEAR_MISSES, ids=[c["id"] for c in NEAR_MISSES])
 def test_near_misses_never_hit_tier1(case):
-    assert not screen_text(case["text"]).is_emergency, screen_text(case["text"]).hits
+    result = screen_text(case["text"])
+    if case.get("expected_action") == "GO_TO_ER":  # D-048: GO_TO_ER, never CALL_911
+        assert result.is_emergency and result.action == "GO_TO_ER", result.hits
+    else:
+        assert not result.is_emergency, result.hits
 
 
 @pytest.mark.parametrize("text", ["my arm hurts", "headache", "stomach pain", "short of breath"])

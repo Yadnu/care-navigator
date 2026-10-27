@@ -2,3 +2,5 @@
 data/*.json text eol=lf
 data/eval/*.jsonl text eol=lf
 Makefile text eol=lf
+*.py text eol=lf
+*.json text eol=lf

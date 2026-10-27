@@ -1,9 +1,12 @@
 PYTHON ?= python
 
-.PHONY: data test eval demo app
+.PHONY: data guide test eval demo app
 
-data:
+data: guide
 	$(PYTHON) data/generate.py
+
+guide:
+	$(PYTHON) data/build_symptom_guide.py
 
 test:
 	$(PYTHON) -m pytest

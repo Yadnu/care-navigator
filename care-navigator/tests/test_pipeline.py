@@ -60,7 +60,7 @@ def user_facing(result) -> str:
 @pytest.mark.parametrize("case", RED_FLAGS, ids=[c["id"] for c in RED_FLAGS])
 def test_every_red_flag_is_an_emergency(nav, case):
     result = nav.run(from_case(case))
-    assert result.outcome is Outcome.EMERGENCY
+    assert result.outcome is Outcome.EMERGENCY and result.action in {"CALL_911", "GO_TO_ER"}
     assert "911" in result.message
     if case.get("crisis_line"):
         assert result.resources[0] == "988" and "988" in result.message
@@ -302,3 +302,25 @@ def test_results_are_deterministic(nav):
     a, b = nav.run(req("Sore throat and fever for two days")), nav.run(req("Sore throat and fever for two days"))
     assert a.request_id != b.request_id
     assert a.recommendation == b.recommendation
+
+
+# ------------------------------------------------------------------ D-048: action on every emergency
+@pytest.mark.parametrize("text, action", [
+    ("crushing chest pain", "CALL_911"),
+    ("can't keep water down since this morning", "GO_TO_ER"),
+    ("can't keep water down and I'm confused", "CALL_911"),
+])
+def test_emergency_carries_its_action(nav, text, action):
+    result = nav.run(req(text))
+    assert result.outcome is Outcome.EMERGENCY and result.action == action and "911" in result.message
+
+
+def test_danger_answer_to_the_fluids_question_is_go_to_er(nav):
+    from navigator.models import Turn
+    turns = [Turn(slot="fluids_kept_down", question="q", answer="no, everything comes back up")]
+    result = nav.run(req("vomiting since lunch", turns=turns))
+    assert result.outcome is Outcome.EMERGENCY and result.action == "GO_TO_ER"
+
+
+def test_non_emergencies_have_no_action(nav):
+    assert nav.run(req("Sore throat and fever for two days")).action is None

@@ -66,7 +66,7 @@ Template:
 
 ## D-007: Explainer sees only the decision and retrieved records
 - Date: 2026-10-27
-- Status: accepted
+- Status: superseded by D-047
 - Context: Generated text could invent practitioners, plans or a different care level.
 - Decision: The explainer input is only the `CareDecision`, retrieved practitioners and cost estimates. Names, addresses and plans are copied from records, never generated.
 - Alternatives considered: Giving the explainer the raw symptom text (rejected: invites diagnosis and injection).
@@ -294,7 +294,7 @@ Template:
 
 ## D-034: Explanation and guard details
 - Date: 2026-10-27
-- Status: accepted
+- Status: superseded by D-047
 - Context: D-007 limits the explainer's input; the guard needs concrete rules that the template can always pass.
 - Decision: Each rule in `care_rules.yaml` (now v1.1) has a plain-English `reason`; two notes were reworded to avoid "you have", which the diagnosis guard treats as diagnosis wording. `TemplateExplainer` writes 4-5 sentences: why (level + reason, plus "moved up one level" if escalated), the closure note if any, the options with distance and the first option's copay and typical total, the rule's escalation note (or a generic one), then "This is not medical advice." `ClaudeExplainer` gets only `{decision, options}` as JSON (level, rule, reason, notes; facility, name, type, distance, copay, typical total), no symptom text, `effort: low`, no sampling params. The guard blocks when: the disclaimer is missing; the decision's level isn't named; another level is named outside a sentence that says it's closed / not in network or a conditional "if ..., go to the ER"; a directory practitioner or any "Dr. X" not in the retrieved list is named; or Jev (OfflineJev if Jev is down) flags a diagnosis or medication. Retrieved record names are removed before the level and diagnosis checks, because names like "Downtown Internal Medicine" are trusted record text. On block, the template is used and the trace says why.
 - Alternatives considered: Guarding only with Jev (rejected: level and name checks are deterministic and cheap).
@@ -424,3 +424,19 @@ Template:
 - Decision: The `Zip` schema pattern is widened to `^00[1-3]\d\d$`; `test_coverage_in_every_zip_except_deliberate_gap` keeps its original guarantee for the original 5 zips and 4 plans, and the 12-zip, 10-plan rules are tested at 15 km in `tests/test_data_insurance.py` (B4); `test_practitioners_load_as_models` checks that all 44 original ids are still present instead of exactly 44 records; the generator test also copies `expansion.py` and compares `coverage_gaps.json`; the senior-plan test excludes ERs (D-045).
 - Alternatives considered: Giving every zip in-network urgent care for every plan (rejected: contradicts B2 and B3).
 - Consequences: Every original assertion about the original data still runs.
+
+## D-047: Hedged possible causes from a curated guide (CHANGE_conversational_triage.md)
+- Date: 2026-10-27
+- Status: accepted (supersedes D-007 and D-034)
+- Context: The change request asks the app to behave like a triage nurse and say what a problem could be. Until now the explainer saw only the decision and records (D-007) and the guard blocked any condition name (D-034).
+- Decision: The app may mention possible causes, but only those listed for the matched cluster in `data/symptom_guide.json` (built by `data/build_symptom_guide.py`), always hedged ("One common possibility is ...", "A clinician needs to confirm this."). Diagnosis wording ("you have X") and medication names or doses stay forbidden. The guard moves from a block-list of condition names to an allow-list: a named cause must be one of the matched cluster's `possible_causes`. Practitioner names, prices and other facts still come only from data.
+- Alternatives considered: Keeping "never diagnose" and using only the guide's questions (rejected by the change request); letting Claude name causes freely (rejected: unverifiable).
+- Consequences: Implemented in Parts 2 and 3 of the change request; until then the existing guard stays in force. The guide is simplified and not clinically validated.
+
+## D-048: One source of truth per kind of safety rule, and an action on every emergency
+- Date: 2026-10-27
+- Status: accepted
+- Context: The guide's `danger_signs` and `red_flags.yaml` both describe danger signs. Before this change, Tier 1 meant "Call 911 or go to the nearest ER" with no distinction, while the guide separates `CALL_911` from `GO_TO_ER`, so the same sign could get two different actions (for example "can't keep fluids down": Tier 1 in `red_flags.yaml`, `GO_TO_ER` in the guide).
+- Decision: `red_flags.yaml` holds the Tier 1 phrases that stop immediately with no questions; each category now has an `action` (`CALL_911` or `GO_TO_ER`). `symptom_guide.json` `danger_signs` hold what the interviewer screens for during the conversation. The same sign must never have two different actions: `tests/test_safety_consistency.py` runs every guide danger sign through the Tier 1 screen and fails when a matching Tier 1 category has a different action. Emergency results carry the action (`CALL_911` wins when both apply); the outcome stays `EMERGENCY` until the change request's Part 1 splits it. "Can't keep fluids down" is `GO_TO_ER`; it is `CALL_911` only together with confusion, fainting, extreme sleepiness or blood in the vomit. The question bank's danger answer for fluids (`fluids_kept_down: no`) is `GO_TO_ER` to match. Other mismatches are listed for approval before any change.
+- Alternatives considered: Merging both files into one (rejected: the change request keeps Tier 1 phrases and interviewer screens separate); comparing the files by hand (rejected: drifts).
+- Consequences: A Tier 1 hit can now be a `GO_TO_ER` emergency; red-flag recall still counts both as emergencies.

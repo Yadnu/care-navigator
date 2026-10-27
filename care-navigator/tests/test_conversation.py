@@ -62,8 +62,12 @@ def test_every_bank_question_is_one_short_question_without_levels_or_diagnoses()
 def test_near_misses_schema():
     assert len(NEAR_MISSES) >= 20
     for r in NEAR_MISSES:
-        assert r["synthetic"] is True and r["expected_outcome"] == "RECOMMENDATION"
+        assert r["synthetic"] is True and r["expected_outcome"] in {"RECOMMENDATION", "EMERGENCY"}
         assert set(r["acceptable_levels"]) <= {l.value for l in CareLevel} and r["acceptable_levels"]
+        # D-048: a near miss may be a GO_TO_ER emergency that must never become CALL_911.
+        assert (r["expected_outcome"] == "EMERGENCY") == (r.get("expected_action") == "GO_TO_ER")
+    assert any(r["text"] == "can't keep water down since this morning" and r["expected_action"] == "GO_TO_ER"
+               for r in NEAR_MISSES)
     texts = " | ".join(r["text"] for r in NEAR_MISSES)
     for required in ["pain in my left hand ever since I played volleyball", "sore left arm after my flu shot",
                      "left wrist hurts after I fell skating", "chest muscles sore after bench press yesterday",
@@ -236,6 +240,9 @@ def test_follow_up_answer_shorthand_still_works(nav):
 @pytest.mark.parametrize("case", NEAR_MISSES, ids=[c["id"] for c in NEAR_MISSES])
 def test_near_misses_are_not_emergencies_and_route_acceptably(nav, case):
     result = nav.converse(req(case["text"], case["severity"]))
+    if case["expected_outcome"] == "EMERGENCY":  # D-048: GO_TO_ER, never CALL_911
+        assert result.outcome is Outcome.EMERGENCY and result.action == case["expected_action"], result
+        return
     assert result.outcome is Outcome.RECOMMENDATION, (case["text"], result.outcome, result.message)
     assert result.recommendation.decision.level.value in case["acceptable_levels"], (case["text"], result.recommendation.decision)
     assert result.questions_asked <= config.MAX_QUESTIONS

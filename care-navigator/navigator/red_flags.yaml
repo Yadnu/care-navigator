@@ -13,7 +13,7 @@
 # patterns: each entry is a list of regexes that must ALL match.
 # A match is ignored when a negation cue appears up to 3 words before it in the same clause
 # ("no chest pain"); commas, full stops and "but" end a clause.
-version: "2.1"
+version: "2.2"
 label: "Simplified, not clinically validated"
 
 messages:
@@ -90,12 +90,20 @@ categories:
       - vomiting blood
       - throwing up blood
       - coughing up blood
-      - black tarry stool
-      - tarry stool
       - blood is spurting
       - spurting blood
       - bleeding heavily
       - heavy bleeding
+    patterns:
+      - ['\b(black tarry|tarry stool|bloody stool|black stool)\b', '\b(faint\w*|passed out|dizz\w*)\b']
+  gi_bleeding:
+    resources: ["911"]
+    action: GO_TO_ER
+    phrases:
+      - black tarry stool
+      - tarry stool
+      - bloody stool
+      - black stool
   allergic_reaction:
     resources: ["911"]
     action: CALL_911
@@ -139,7 +147,7 @@ categories:
       - ['\b(cant|cannot|unable to) keep (any |anything )?\w* ?down\b', '\b(confus\w*|faint\w*|passed out|extremely sleepy|very sleepy|hard to wake|blood\w*)\b']
   infant_fever:
     resources: ["911"]
-    action: CALL_911
+    action: GO_TO_ER
     patterns:
       - ['\b(newborn|\d+ (day|days|week|weeks) old|[0-2] (month|months) old|one month old|two months old)\b', '\bfever\b']
   neuro:
@@ -170,21 +178,24 @@ categories:
       - poisoned
   pregnancy:
     resources: ["911"]
-    action: CALL_911
+    action: GO_TO_ER
     patterns:
       - ['\bpregnant\b', '\bbleed\w*']
   trauma:
     resources: ["911"]
-    action: CALL_911
+    action: GO_TO_ER
     phrases:
       - bone sticking out
       - bone is sticking out
       - clearly broken
+  trauma_crash:
+    resources: ["911"]
+    action: CALL_911
     patterns:
       - ['\b(car crash|car accident|hit by a car|fell from)\b', '\b(neck|back|head|tingl\w*|numb\w*)\b']
   abdominal:
     resources: ["911"]
-    action: CALL_911
+    action: GO_TO_ER
     phrases:
       - belly is hard
       - stomach is rigid
@@ -193,9 +204,15 @@ categories:
       - ['\blower right\b', '\b(fever|worse|worsening)\b']
   infection:
     resources: ["911"]
-    action: CALL_911
+    action: GO_TO_ER
     patterns:
       - ['\bstiff neck\b', '\bfever\b']
+  infection_serious:
+    resources: ["911"]
+    action: CALL_911
+    patterns:
+      - ['\b(fever|stiff neck)\b', '\brash\b', '\b(doesnt|does not|wont|will not|not) fade\b']
+      - ['\bfever\b', '\b(confus\w*|very hard to wake|hard to wake)\b']
 
 # Tier 2: one weak signal -> ask the safety question first (any pattern may match).
 # suppressed_by_injury: an injury or benign cause in the text ("lifted boxes", "after my flu shot")

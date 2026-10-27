@@ -17,13 +17,7 @@ ACTIONS = {"CALL_911", "GO_TO_ER"}
 
 # Mismatches found in Part 0.3 and listed for the user's decision. Strict xfail: once a mismatch is
 # resolved this test starts passing and pytest fails until the entry is removed from this list.
-PENDING_APPROVAL = {
-    ("vomiting_diarrhea", "severe or worsening belly pain, or a hard belly"),
-    ("abdominal_pain", "pain in the lower right belly that is getting worse, especially with fever"),
-    ("chest_pain", "chest pain with exertion that goes away with rest"),
-    ("headache", "headache with fever and stiff neck"),
-    ("sore_throat_ear", "can't swallow saliva or trouble breathing"),
-}
+PENDING_APPROVAL: set[tuple[str, str]] = set()  # all 14 rows approved and applied (D-049)
 
 
 def _params():

@@ -253,7 +253,7 @@
         },
         {
           "sign": "chest pain with exertion that goes away with rest",
-          "action": "GO_TO_ER",
+          "action": "CALL_911",
           "why": "This can be reduced blood flow to the heart."
         }
       ],
@@ -470,7 +470,7 @@
         },
         {
           "sign": "headache after a head injury with vomiting or sleepiness",
-          "action": "GO_TO_ER",
+          "action": "CALL_911",
           "why": "This can be a brain injury."
         }
       ],
@@ -543,7 +543,7 @@
         },
         {
           "sign": "short of breath while resting",
-          "action": "GO_TO_ER",
+          "action": "CALL_911",
           "why": "Breathing trouble at rest needs urgent evaluation."
         }
       ],
@@ -666,7 +666,7 @@
       "danger_signs": [
         {
           "sign": "can't swallow saliva or trouble breathing",
-          "action": "GO_TO_ER",
+          "action": "CALL_911",
           "why": "Severe throat swelling needs urgent care."
         }
       ],

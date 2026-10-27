@@ -109,7 +109,7 @@ CLUSTERS = [
             danger("crushing, squeezing, or heavy chest pain", CALL, "This can be a heart attack."),
             danger("chest pain with sweating, shortness of breath, nausea, or pain spreading to the arm, jaw, or back", CALL, "These together can be a heart attack."),
             danger("chest pain with fainting", CALL, "This can be a serious heart or lung problem."),
-            danger("chest pain with exertion that goes away with rest", ER, "This can be reduced blood flow to the heart."),
+            danger("chest pain with exertion that goes away with rest", CALL, "This can be reduced blood flow to the heart."),
         ],
         "possible_causes": [
             cause("a strained chest muscle", "Sore, sharp pain that is worse when pressing on the spot or moving, often after exercise or coughing.", "PRIMARY_CARE"),
@@ -181,7 +181,7 @@ CLUSTERS = [
             danger("sudden, worst headache of your life", CALL, "A sudden severe headache can be bleeding in the brain."),
             danger("headache with weakness, confusion, trouble speaking, or vision loss", CALL, "These can be signs of a stroke."),
             danger("headache with fever and stiff neck", ER, "This can be meningitis."),
-            danger("headache after a head injury with vomiting or sleepiness", ER, "This can be a brain injury."),
+            danger("headache after a head injury with vomiting or sleepiness", CALL, "This can be a brain injury."),
         ],
         "possible_causes": [
             cause("a tension headache", "Pressure-like pain often linked to stress, screens, or poor sleep.", "SELF_CARE"),
@@ -204,7 +204,7 @@ CLUSTERS = [
         "danger_signs": [
             danger("can't breathe or speak in full sentences", CALL, "This is a breathing emergency."),
             danger("lips or face turning blue or gray", CALL, "This means low oxygen."),
-            danger("short of breath while resting", ER, "Breathing trouble at rest needs urgent evaluation."),
+            danger("short of breath while resting", CALL, "Breathing trouble at rest needs urgent evaluation."),
         ],
         "possible_causes": [
             cause("a common cold or viral infection", "Cough and congestion that improve over a week or two.", "TELEHEALTH"),
@@ -246,7 +246,7 @@ CLUSTERS = [
         ],
         "possible_cause_questions": ["Has anyone around you had strep throat or a cold?"],
         "danger_signs": [
-            danger("can't swallow saliva or trouble breathing", ER, "Severe throat swelling needs urgent care."),
+            danger("can't swallow saliva or trouble breathing", CALL, "Severe throat swelling needs urgent care."),
         ],
         "possible_causes": [
             cause("a viral sore throat", "Often with a cold; improves in about a week.", "TELEHEALTH"),

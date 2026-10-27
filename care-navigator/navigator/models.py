@@ -111,6 +111,15 @@ class Practitioner(BaseModel):
     synthetic: Literal[True]
 
 
+class Match(BaseModel):
+    """A retrieved practitioner. Everything shown about it comes from the record (D-007)."""
+
+    practitioner: Practitioner
+    distance_km: Optional[float]  # None for virtual practitioners
+    score: float
+    matched_text: str             # the record text that best matches the query
+
+
 class Recommendation(BaseModel):
     decision: CareDecision
     practitioners: list[Practitioner] = []

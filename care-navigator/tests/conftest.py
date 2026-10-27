@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-PROVIDER_ENV = ["ANTHROPIC_API_KEY", "JEV_API_KEY", "VOYAGE_API_KEY", "JEV_BASE_URL", "JEV_MODEL"]
+PROVIDER_ENV = ["ANTHROPIC_API_KEY", "JEV_API_KEY", "VOYAGE_API_KEY", "JEV_BASE_URL", "JEV_MODEL", "VOYAGE_MODEL"]
 
 
 @pytest.fixture(autouse=True)

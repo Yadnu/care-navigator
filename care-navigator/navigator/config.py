@@ -52,6 +52,16 @@ def _has(key: str) -> bool:
     return bool(_get(key))
 
 
+VOYAGE_URL = "https://api.voyageai.com/v1/embeddings"
+VOYAGE_DEFAULT_MODEL = "voyage-4"
+VOYAGE_TIMEOUT_S = 10.0
+VOYAGE_BATCH_SIZE = 128  # API allows up to 1,000 texts per request
+
+
+def voyage_model() -> str:
+    return _get("VOYAGE_MODEL", VOYAGE_DEFAULT_MODEL)
+
+
 def jev_base_url() -> str:
     return _get("JEV_BASE_URL", JEV_DEFAULT_URL)
 
@@ -82,6 +92,12 @@ FUZZY_MIN_TOKEN_LEN = 4
 JEV_EMERGENCY_THRESHOLD = 0.5
 JEV_VAGUE_THRESHOLD = 0.5
 GUARD_THRESHOLD = 0.5
+
+# ------------------------------------------------------------------ retrieval (D-006)
+MAX_DISTANCE_KM = 10.0
+RRF_K = 60
+RERANK_TOP_N = 10
+TOP_K = 3
 
 # ------------------------------------------------------------------ confidence gating
 # high -> act on the rule; medium -> escalate one level; low -> ask the follow-up (D-003).

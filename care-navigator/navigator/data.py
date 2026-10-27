@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
@@ -29,6 +30,13 @@ def load_plans() -> tuple[dict, ...]:
 @lru_cache(maxsize=1)
 def load_zips() -> tuple[dict, ...]:
     return tuple(_load("zips.json"))
+
+
+def haversine_km(a_lat: float, a_lng: float, b_lat: float, b_lng: float) -> float:
+    p1, p2 = math.radians(a_lat), math.radians(b_lat)
+    dp, dl = p2 - p1, math.radians(b_lng - a_lng)
+    h = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * 6371.0 * math.asin(math.sqrt(h))
 
 
 def is_open(hours: dict[str, str | None], when: datetime) -> bool:

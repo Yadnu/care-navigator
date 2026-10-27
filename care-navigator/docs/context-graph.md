@@ -2,7 +2,7 @@
 
 Living map of the system. Read this and `decisions.md` before any task; update it at the end of every phase.
 
-Last updated: 2026-10-27, end of Phase 3.
+Last updated: 2026-10-27, end of Phase 4.
 
 ## Request flow
 
@@ -25,8 +25,14 @@ flowchart TD
     VAGUE -->|yes, first time| CLAR[clarifier.py]
     CLAR --> FU([FOLLOW_UP question])
     FU -.->|answer, max once| REQ
-    VAGUE -->|no| ENG[care_engine.py<br/>care_rules.yaml]
-    ENG --> RET[retrieval/retriever.py]
+    VAGUE -->|no, or still vague after follow-up: escalate| ENG[care_engine.py<br/>care_rules.yaml<br/>first match + gating]
+    ENG --> HRS{anything open now<br/>at this level?}
+    HRS -->|no| AH[rule after_hours level,<br/>then step up; never self-care]
+    AH --> RET
+    HRS -->|yes| RET
+    RET[retrieval/retriever.py]
+    DATA[data.py<br/>loaders + is_open] -.-> HRS
+    DATA -.-> RET
     RET --> FIL[hard filters] --> HYB[embeddings + vector_store<br/>+ bm25] --> RRF[fusion.py RRF k=60] --> RR[Jev rerank]
     RR --> COST[costs.py]
     COST --> EXP[explainer.py<br/>Template / Claude]
@@ -65,8 +71,9 @@ flowchart TD
 | `navigator/lexicon.py` | module | - | jev_client, parser | via `test_jev_client.py`, `test_parser.py` | D-021 | done |
 | `navigator/jev_client.py` | module | config, lexicon, redflags.normalize, requests | pipeline, retriever, guard | `test_jev_client.py` | D-002, D-004, D-008, D-019, D-023 | done (HttpJev matches TypeSafe docs; live `noul` call verified) |
 | `navigator/parser.py` | module | models, config, lexicon, redflags, anthropic | pipeline | `test_parser.py` | D-004, D-008, D-009, D-018, D-020 | done |
-| `navigator/clarifier.py` | module | models | pipeline | - | D-003 | not started |
-| `navigator/care_engine.py` + `care_rules.yaml` | module + config | models, practitioners.json | pipeline | - | D-001, D-003 | not started |
+| `navigator/clarifier.py` | module | models, config, jev_client (guard), anthropic | pipeline | `test_clarifier.py` | D-003, D-004, D-028 | done |
+| `navigator/care_engine.py` + `care_rules.yaml` | module + config | models, data, pyyaml | pipeline | `test_care_engine.py` | D-001, D-003, D-025, D-026 | done (20 rules, v1.0) |
+| `navigator/data.py` | module | data/*.json, models | care_engine, retrieval | `test_care_engine.py` | D-027 | done |
 | `navigator/retrieval/embeddings.py` | module | scikit-learn | vector_store | - | D-008 | not started |
 | `navigator/retrieval/vector_store.py` | module | embeddings, numpy | retriever | - | D-006 | not started |
 | `navigator/retrieval/bm25.py` | module | rank-bm25 | retriever | - | D-006 | not started |
@@ -90,16 +97,17 @@ flowchart TD
 
 ## Current status
 
-- Done: Phase 0 scaffold. Phase 1 synthetic data (D-013). Phase 2 schemas (`models.py`, incl. ordered `CareLevel.escalate`), PII redaction, keyword + fuzzy red-flag screen. Phase 3 config (env switches, model ids, thresholds, confidence gate), shared lexicon, Jev interface (OfflineJev + HttpJev), parser interface (OfflineParser + ClaudeParser with one retry and offline fallback).
+- Done: Phase 0 scaffold. Phase 1 synthetic data (D-013). Phase 2 schemas (`models.py`, incl. ordered `CareLevel.escalate`), PII redaction, keyword + fuzzy red-flag screen. Phase 3 config (env switches, model ids, thresholds, confidence gate), shared lexicon, Jev interface (OfflineJev + HttpJev), parser interface (OfflineParser + ClaudeParser with one retry and offline fallback). Phase 4 care rules (20, v1.0), care engine (first match, gating, opening hours + after-hours levels), data access module, clarifier (templates + Claude with validation).
 - Red-flag coverage: keyword screen 33/40; OfflineJev 12/12 of the `parsed_or_jev` cases; combined 40/40 (D-015, D-019).
+- Routing (engine with offline parser + OfflineJev): 38/39 non-emergency cases exactly on `expected_level`, 1 one level higher (RT-008), 0 lower. Midnight food poisoning -> TELEHEALTH with the ER-if-no-fluids note.
 - In progress: -
-- Not started: Phases 4 to 8.
+- Not started: Phases 5 to 8.
 
 ## Open questions
 
 - HttpJev follows the TypeSafe Jev API reference (D-023). One live `noul` call succeeded; `choice` (category) and `score` (urgency, rerank) are verified only against mocked HTTP.
 - Phase 7 entry points must call `config.load_env_file()` (D-024).
-- Many routing cases state no duration, so OfflineParser marks them `medium` confidence, which the gate escalates one level. Phase 4 must check this doesn't push cases above `acceptable_levels` (for example, treat a missing duration as "escalate" only when the matched rule depends on duration).
+- ClaudeClarifier sends `output_config.effort: low`; not yet exercised live.
 
 - Negation ("no chest pain") still fires the red-flag screen (D-017). Acceptable over-triage for the prototype?
 

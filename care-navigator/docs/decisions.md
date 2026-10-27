@@ -212,3 +212,35 @@ Template:
 - Decision: `config.load_env_file()` (no new dependency) reads `KEY=value` lines, skips comments, blank values and malformed lines, strips quotes, and never overrides a variable already in the environment. Entry points (`cli.py`, `app.py`, `scripts/run_eval.py`) call it; importing `config` does not. `tests/conftest.py` clears all provider variables for every test as a second guard.
 - Alternatives considered: `python-dotenv` (rejected: a dependency for 15 lines); loading on import (rejected: tests could go live).
 - Consequences: Phase 7 entry points must call `config.load_env_file()` first.
+
+## D-025: When medium confidence escalates
+- Date: 2026-10-27
+- Status: accepted
+- Context: The plan says medium confidence escalates one level. `OfflineParser` marks a report medium whenever the duration isn't stated, which is true for about half the routing cases ("Pink eye, crusty eyes"). Escalating all of them pushes 10+ cases out of `acceptable_levels` (for example, a twisted ankle to the ER in daytime).
+- Decision: Escalate one level when (a) confidence is medium and either nothing is listed as missing (the parser itself was unsure) or a material field is missing (anything except duration and body area), or (b) after the one follow-up, the main symptom is still missing. A missing duration alone does not escalate, because rules that depend on duration (`min_duration_hours`, the long-standing rule R-05) never match when it is unknown, so an unknown duration is treated as recent rather than as a long-standing, lower-acuity problem. No rule reads body area.
+- Alternatives considered: Literal "medium -> escalate" (rejected: over-triages 10+ cases); dropping the parser's medium label for missing duration (rejected: the label is still useful for the follow-up question).
+- Consequences: 38/39 non-emergency routing cases land exactly on `expected_level`, 1 lands one level higher (RT-008, closed urgent care -> ER), 0 lower.
+
+## D-026: Time of day is handled by opening hours and per-rule after-hours levels
+- Date: 2026-10-27
+- Status: accepted
+- Context: The same symptom needs different answers by time: daytime food poisoning -> urgent care, midnight -> telehealth (RT-002/RT-004); an evening ankle injury must not drop to telehealth (RT-008 accepts only urgent care or higher).
+- Decision: Each rule has a `level` and an `after_hours` level (never SELF_CARE). The engine checks whether any practitioner of the chosen type is open at the request time, accepts the plan (ignored if the plan is unknown or missing) and sees the age group. If none is, it moves to the rule's `after_hours` level (virtual-friendly problems -> TELEHEALTH; injuries needing an exam -> ER), then steps up until something is open; ER is always the last stop. SELF_CARE needs no open practitioner. A note says what was closed and where the person is going instead. Distance is not checked here; that is retrieval's hard filter (Phase 5), so a coverage gap shows up as an empty retrieval result, not a different level.
+- Alternatives considered: Time-of-day conditions inside rules (rejected: duplicates every rule for day/night and drifts from real opening hours); always stepping up when closed (rejected: midnight food poisoning would go to the ER, against the eval).
+- Consequences: Care levels follow the synthetic opening hours exactly; changing the data changes routing at night.
+
+## D-027: Shared data access module
+- Date: 2026-10-27
+- Status: accepted
+- Context: The care engine and retrieval both need practitioners, plans, zips and the opening-hours check.
+- Decision: Add `navigator/data.py` (not in the planned layout): cached loaders returning Pydantic `Practitioner` models and plan/zip dicts, plus `is_open(hours, when)` (start inclusive, end exclusive, "24h", null = closed).
+- Alternatives considered: Putting `is_open` in `care_engine.py` and importing it from retrieval (rejected: odd dependency direction).
+- Consequences: One place to change if the data moves to a real directory.
+
+## D-028: Follow-up question validation
+- Date: 2026-10-27
+- Status: accepted
+- Context: The follow-up question must be one question, at most 25 words, and never suggest a diagnosis or a care level, whether a template or Claude wrote it.
+- Decision: `is_valid_question` requires exactly one "?" at the end, <= 25 words, no care-level words (ER, emergency, urgent care, telehealth, primary care, self-care, 911, 988, hospital, clinic, nurse line, doctor, ambulance), and the diagnosis/medication guard below threshold. `OfflineClarifier` uses templates keyed by the first missing field (main symptom, then duration, then body area). `ClaudeClarifier` (Haiku 5.5, `effort: low`, no sampling params) gets one attempt; invalid output, a refusal or an API error falls back to the template. Asking at most once is enforced by the pipeline (Phase 6) via `after_followup`.
+- Alternatives considered: Retrying Claude on invalid output (rejected: the template is always valid and cheaper).
+- Consequences: Claude's question can be rejected for harmless wording such as "doctor"; the template then applies.

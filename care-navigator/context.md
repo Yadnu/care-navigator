@@ -48,8 +48,8 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 
 ## Models (optional, env-gated)
 - `ANTHROPIC_API_KEY` -> Claude Haiku 5.5 `claude-haiku-5-5` (parser, clarifier, explainer); Sonnet 5.5 `claude-sonnet-5-5` only as offline eval judge.
-- `JEV_API_KEY` -> Jev classifier (API shape unverified: mark `TODO: verify against Jev docs`).
-- `VOYAGE_API_KEY` -> Voyage embeddings.
+- `JEV_API_KEY` -> TypeSafe Jev classifier (shape from TypeSafe docs, D-023; `noul` verified live).
+- `VOYAGE_API_KEY` -> Voyage embeddings (`VOYAGE_MODEL`, default `voyage-4`, D-030).
 
 ## Pipeline entry point
 - `Navigator.from_env().run(Request(...)) -> NavigatorResult` (outcome, message, resources, question, recommendation with options/alternatives/costs/explanation/notes/nurse_line, errors, simplified, trace, trace_path). Call `config.load_env_file()` first in entry points. Tests use `Navigator()` (offline).

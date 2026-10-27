@@ -1,0 +1,1954 @@
+[
+  {
+    "id": "ER-001",
+    "name": "Corvalle General Hospital Emergency Department",
+    "credential": null,
+    "facility_name": "Corvalle General Hospital",
+    "type": "ER",
+    "specialties": [
+      "emergency medicine",
+      "trauma"
+    ],
+    "conditions_treated": [
+      "chest pain",
+      "stroke",
+      "severe bleeding",
+      "severe dehydration",
+      "broken bones",
+      "head injury"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00101",
+    "address": "880 Harbor Blvd, Corvalle 00101",
+    "lat": 39.49445,
+    "lng": -98.34507,
+    "phone": "555-0100",
+    "bio": "Level II trauma center with a 24-hour emergency department. Board-certified emergency physicians handle heart attacks, strokes, serious injuries and severe dehydration needing IV fluids.",
+    "synthetic": true
+  },
+  {
+    "id": "ER-002",
+    "name": "Northside Regional Medical Center Emergency",
+    "credential": null,
+    "facility_name": "Northside Regional Medical Center",
+    "type": "ER",
+    "specialties": [
+      "emergency medicine",
+      "cardiac care"
+    ],
+    "conditions_treated": [
+      "chest pain",
+      "shortness of breath",
+      "severe abdominal pain",
+      "allergic reactions"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00102",
+    "address": "2117 Ridge Blvd, Corvalle 00102",
+    "lat": 39.53362,
+    "lng": -98.35259,
+    "phone": "555-0101",
+    "bio": "Full-service emergency department open around the clock, with an on-site cardiac catheterization lab and CT imaging for chest pain and severe abdominal pain.",
+    "synthetic": true
+  },
+  {
+    "id": "ER-003",
+    "name": "Southpoint Community Hospital Emergency",
+    "credential": null,
+    "facility_name": "Southpoint Community Hospital",
+    "type": "ER",
+    "specialties": [
+      "emergency medicine"
+    ],
+    "conditions_treated": [
+      "injuries",
+      "severe vomiting",
+      "high fever",
+      "breathing problems"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00104",
+    "address": "421 Ridge Ave, Corvalle 00104",
+    "lat": 39.46087,
+    "lng": -98.36235,
+    "phone": "555-0102",
+    "bio": "Community hospital emergency room serving the south side 24 hours a day. Treats serious injuries, breathing problems, high fevers and vomiting that won't stop.",
+    "synthetic": true
+  },
+  {
+    "id": "ER-004",
+    "name": "St. Aldric Children's Pediatric Emergency",
+    "credential": null,
+    "facility_name": "St. Aldric Children's Hospital",
+    "type": "ER",
+    "specialties": [
+      "pediatric emergency medicine"
+    ],
+    "conditions_treated": [
+      "high fever in infants",
+      "breathing problems in children",
+      "dehydration in children",
+      "seizures"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "children",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00103",
+    "address": "948 Mill Blvd, Corvalle 00103",
+    "lat": 39.50942,
+    "lng": -98.2961,
+    "phone": "555-0103",
+    "bio": "Emergency department staffed by pediatric emergency specialists, for children and teens only. Open 24/7 for infant fevers, breathing trouble, seizures and dehydration.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-001",
+    "name": "Downtown QuickCare",
+    "credential": null,
+    "facility_name": "Downtown QuickCare",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "colds",
+      "flu",
+      "sore throat",
+      "strep test",
+      "minor cuts",
+      "pink eye"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-20:00",
+      "tue": "08:00-20:00",
+      "wed": "08:00-20:00",
+      "thu": "08:00-20:00",
+      "fri": "08:00-20:00",
+      "sat": "08:00-20:00",
+      "sun": "08:00-20:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00101",
+    "address": "1437 Ridge Ave, Corvalle 00101",
+    "lat": 39.505,
+    "lng": -98.35479,
+    "phone": "555-0104",
+    "bio": "Walk-in urgent care for everyday illness. Rapid strep and flu testing on site, plus care for minor cuts and pink eye. Open every day until 8 pm.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-002",
+    "name": "Riverwalk Urgent Care",
+    "credential": null,
+    "facility_name": "Riverwalk Urgent Care",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "hydration therapy"
+    ],
+    "conditions_treated": [
+      "food poisoning",
+      "stomach bugs",
+      "vomiting",
+      "diarrhea",
+      "dehydration",
+      "IV fluids"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-21:00",
+      "tue": "09:00-21:00",
+      "wed": "09:00-21:00",
+      "thu": "09:00-21:00",
+      "fri": "09:00-21:00",
+      "sat": "09:00-17:00",
+      "sun": "09:00-17:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00101",
+    "address": "1405 Cedar St, Corvalle 00101",
+    "lat": 39.49615,
+    "lng": -98.34376,
+    "phone": "555-0105",
+    "bio": "Urgent care with a focus on stomach illness. Treats food poisoning, stomach bugs, vomiting and diarrhea, and gives IV fluids for mild to moderate dehydration. Spanish spoken.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-003",
+    "name": "Northside Express Care",
+    "credential": null,
+    "facility_name": "Northside Express Care",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "minor orthopedics"
+    ],
+    "conditions_treated": [
+      "sprains",
+      "minor fractures",
+      "x-ray",
+      "back strain",
+      "sports injuries"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-20:00",
+      "tue": "08:00-20:00",
+      "wed": "08:00-20:00",
+      "thu": "08:00-20:00",
+      "fri": "08:00-20:00",
+      "sat": "08:00-20:00",
+      "sun": "08:00-20:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00102",
+    "address": "979 Mill Rd, Corvalle 00102",
+    "lat": 39.54539,
+    "lng": -98.35112,
+    "phone": "555-0106",
+    "bio": "Urgent care with on-site X-ray for sprains, simple fractures and sports injuries. Splinting and crutches available. Open daily 8 am to 8 pm.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-004",
+    "name": "Little Sprouts Pediatric Urgent Care",
+    "credential": null,
+    "facility_name": "Little Sprouts Pediatric Urgent Care",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "pediatric urgent care"
+    ],
+    "conditions_treated": [
+      "ear infections in children",
+      "fever in children",
+      "croup",
+      "rashes in children",
+      "minor injuries in children"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "children",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-21:00",
+      "tue": "09:00-21:00",
+      "wed": "09:00-21:00",
+      "thu": "09:00-21:00",
+      "fri": "09:00-21:00",
+      "sat": "09:00-17:00",
+      "sun": "09:00-17:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00102",
+    "address": "873 Mill St, Corvalle 00102",
+    "lat": 39.54102,
+    "lng": -98.34434,
+    "phone": "555-0107",
+    "bio": "Urgent care just for kids, staffed by pediatric providers. Handles ear infections, fevers, croup and small injuries in a child-friendly setting.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-005",
+    "name": "Eastgate Walk-In Clinic",
+    "credential": null,
+    "facility_name": "Eastgate Walk-In Clinic",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care"
+    ],
+    "conditions_treated": [
+      "urinary tract infections",
+      "coughs",
+      "bronchitis",
+      "sinus infections",
+      "sore throat"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "10:00-19:00",
+      "tue": "10:00-19:00",
+      "wed": "10:00-19:00",
+      "thu": "10:00-19:00",
+      "fri": "10:00-19:00",
+      "sat": "10:00-19:00",
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00103",
+    "address": "1699 Oak Rd, Corvalle 00103",
+    "lat": 39.50187,
+    "lng": -98.29962,
+    "phone": "555-0108",
+    "bio": "Neighborhood walk-in clinic with bilingual English and Spanish staff. Common visits include urinary tract infections, coughs, bronchitis and sinus infections.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-006",
+    "name": "Eastgate Sports & Injury Urgent Care",
+    "credential": null,
+    "facility_name": "Eastgate Sports & Injury",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "sports medicine"
+    ],
+    "conditions_treated": [
+      "ankle sprains",
+      "knee injuries",
+      "wrist injuries",
+      "minor fractures",
+      "running injuries"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-20:00",
+      "tue": "08:00-20:00",
+      "wed": "08:00-20:00",
+      "thu": "08:00-20:00",
+      "fri": "08:00-20:00",
+      "sat": "08:00-20:00",
+      "sun": "08:00-20:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00103",
+    "address": "1673 Ridge Rd, Corvalle 00103",
+    "lat": 39.50836,
+    "lng": -98.29312,
+    "phone": "555-0109",
+    "bio": "Injury-focused urgent care run by sports medicine providers. Same-day X-ray and bracing for ankle sprains, knee and wrist injuries from sports or falls.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-007",
+    "name": "Southpoint Urgent Care",
+    "credential": null,
+    "facility_name": "Southpoint Urgent Care",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "wound care"
+    ],
+    "conditions_treated": [
+      "cuts needing stitches",
+      "minor burns",
+      "animal bites",
+      "splinters",
+      "tetanus shots"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-20:00",
+      "tue": "08:00-20:00",
+      "wed": "08:00-20:00",
+      "thu": "08:00-20:00",
+      "fri": "08:00-20:00",
+      "sat": "08:00-20:00",
+      "sun": "08:00-20:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00104",
+    "address": "1279 Main St, Corvalle 00104",
+    "lat": 39.46452,
+    "lng": -98.35734,
+    "phone": "555-0110",
+    "bio": "Urgent care experienced in wound care: stitches, minor burns, animal bites and tetanus shots. Open daily until 8 pm.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-008",
+    "name": "Southpoint Same-Day Care",
+    "credential": null,
+    "facility_name": "Southpoint Same-Day Care",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "dermatology triage"
+    ],
+    "conditions_treated": [
+      "skin rashes",
+      "hives",
+      "mild allergic reactions",
+      "poison ivy",
+      "insect bites"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "10:00-19:00",
+      "tue": "10:00-19:00",
+      "wed": "10:00-19:00",
+      "thu": "10:00-19:00",
+      "fri": "10:00-19:00",
+      "sat": "10:00-19:00",
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00104",
+    "address": "2211 Oak Rd, Corvalle 00104",
+    "lat": 39.4559,
+    "lng": -98.34899,
+    "phone": "555-0111",
+    "bio": "Same-day care for skin problems such as rashes, hives, poison ivy and insect bites, plus mild allergic reactions that don't affect breathing.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-009",
+    "name": "Westfield Urgent Care",
+    "credential": null,
+    "facility_name": "Westfield Urgent Care",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care"
+    ],
+    "conditions_treated": [
+      "flu",
+      "fever",
+      "sore throat",
+      "ear pain",
+      "minor injuries"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-20:00",
+      "tue": "08:00-20:00",
+      "wed": "08:00-20:00",
+      "thu": "08:00-20:00",
+      "fri": "08:00-20:00",
+      "sat": "08:00-20:00",
+      "sun": "08:00-20:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00105",
+    "address": "342 Elm Ave, Corvalle 00105",
+    "lat": 39.50274,
+    "lng": -98.4082,
+    "phone": "555-0112",
+    "bio": "General urgent care on the west side for flu, fevers, sore throats, ear pain and minor injuries. Not in the Harbor Bronze Local network.",
+    "synthetic": true
+  },
+  {
+    "id": "UC-010",
+    "name": "Westfield Family Urgent Care",
+    "credential": null,
+    "facility_name": "Westfield Family Urgent Care",
+    "type": "URGENT_CARE",
+    "specialties": [
+      "urgent care",
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "ear infections",
+      "pink eye",
+      "colds",
+      "stomach bugs",
+      "urinary tract infections"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-21:00",
+      "tue": "09:00-21:00",
+      "wed": "09:00-21:00",
+      "thu": "09:00-21:00",
+      "fri": "09:00-21:00",
+      "sat": "09:00-17:00",
+      "sun": "09:00-17:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00105",
+    "address": "2325 Main Ave, Corvalle 00105",
+    "lat": 39.49039,
+    "lng": -98.40268,
+    "phone": "555-0113",
+    "bio": "Family urgent care seeing kids and adults for ear infections, pink eye, colds and stomach bugs. Bilingual staff.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-001",
+    "name": "Dr. Elena Marsh",
+    "credential": "MD",
+    "facility_name": "Corvalle Family Health",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "annual checkups",
+      "colds",
+      "minor infections",
+      "vaccines",
+      "follow-up visits"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00101",
+    "address": "1190 Harbor Blvd, Corvalle 00101",
+    "lat": 39.49678,
+    "lng": -98.35498,
+    "phone": "555-0114",
+    "bio": "Family physician caring for patients of all ages, from checkups and vaccines to follow-up after an urgent care or ER visit.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-002",
+    "name": "Dr. Samuel Okafor",
+    "credential": "DO",
+    "facility_name": "Downtown Internal Medicine",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "internal medicine"
+    ],
+    "conditions_treated": [
+      "high blood pressure",
+      "diabetes",
+      "cholesterol",
+      "fatigue"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO"
+    ],
+    "virtual": false,
+    "zip": "00101",
+    "address": "446 Oak Rd, Corvalle 00101",
+    "lat": 39.50298,
+    "lng": -98.34784,
+    "phone": "555-0115",
+    "bio": "Internist focused on long-term adult health: blood pressure, diabetes and cholesterol management, and workups for ongoing fatigue.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-003",
+    "name": "Priya Natarajan",
+    "credential": "NP",
+    "facility_name": "Corvalle Family Health",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine",
+      "women's health"
+    ],
+    "conditions_treated": [
+      "women's health",
+      "contraception",
+      "annual checkups"
+    ],
+    "languages": [
+      "English",
+      "Tamil"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": false,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00101",
+    "address": "1755 Oak St, Corvalle 00101",
+    "lat": 39.49813,
+    "lng": -98.35154,
+    "phone": "555-0116",
+    "bio": "Nurse practitioner offering women's health visits, contraception counseling and annual checkups. Not accepting new patients.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-004",
+    "name": "Dr. Marcus Hale",
+    "credential": "MD",
+    "facility_name": "Northside Primary Care",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "checkups",
+      "back pain",
+      "sinus problems",
+      "mild asthma"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00102",
+    "address": "2193 Elm St, Corvalle 00102",
+    "lat": 39.53841,
+    "lng": -98.34848,
+    "phone": "555-0117",
+    "bio": "Family doctor treating back pain, sinus problems and mild asthma, with same-week appointments for new patients.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-005",
+    "name": "Dr. Lina Haddad",
+    "credential": "MD",
+    "facility_name": "Northside Pediatrics",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "pediatrics"
+    ],
+    "conditions_treated": [
+      "well-child visits",
+      "childhood vaccines",
+      "ear infections in children",
+      "asthma in children"
+    ],
+    "languages": [
+      "English",
+      "Arabic"
+    ],
+    "patient_ages": "children",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00102",
+    "address": "2013 Oak Blvd, Corvalle 00102",
+    "lat": 39.53386,
+    "lng": -98.34943,
+    "phone": "555-0118",
+    "bio": "Pediatrician for newborns through teens: well-child visits, vaccines, ear infections and childhood asthma.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-006",
+    "name": "Dr. Tomás Reyes",
+    "credential": "MD",
+    "facility_name": "Clínica Northside",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "internal medicine"
+    ],
+    "conditions_treated": [
+      "diabetes",
+      "high blood pressure",
+      "stomach problems",
+      "checkups"
+    ],
+    "languages": [
+      "Spanish",
+      "English"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL"
+    ],
+    "virtual": false,
+    "zip": "00102",
+    "address": "341 Oak Ave, Corvalle 00102",
+    "lat": 39.53255,
+    "lng": -98.35034,
+    "phone": "555-0119",
+    "bio": "Bilingual internist serving the Spanish-speaking community, with a focus on diabetes, blood pressure and ongoing stomach problems.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-007",
+    "name": "Dr. Grace Liu",
+    "credential": "MD",
+    "facility_name": "Eastgate Family Medicine",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "checkups",
+      "skin concerns",
+      "headaches",
+      "minor injuries"
+    ],
+    "languages": [
+      "English",
+      "Mandarin"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00103",
+    "address": "1050 Harbor Blvd, Corvalle 00103",
+    "lat": 39.50052,
+    "lng": -98.29992,
+    "phone": "555-0120",
+    "bio": "Family physician who sees adults and children for checkups, recurring headaches, skin concerns and minor injuries.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-008",
+    "name": "Jordan Ellis",
+    "credential": "PA",
+    "facility_name": "Eastgate Family Medicine",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "sports physicals",
+      "colds",
+      "minor infections"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00103",
+    "address": "1284 Main Blvd, Corvalle 00103",
+    "lat": 39.50952,
+    "lng": -98.29782,
+    "phone": "555-0121",
+    "bio": "Physician assistant offering sports physicals and visits for colds and minor infections.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-009",
+    "name": "Dr. Amara Bello",
+    "credential": "MD",
+    "facility_name": "Eastgate Senior Health",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "internal medicine",
+      "geriatrics"
+    ],
+    "conditions_treated": [
+      "older adult care",
+      "memory concerns",
+      "falls prevention"
+    ],
+    "languages": [
+      "English",
+      "Yoruba"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": false,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO"
+    ],
+    "virtual": false,
+    "zip": "00103",
+    "address": "882 Elm Rd, Corvalle 00103",
+    "lat": 39.50275,
+    "lng": -98.29596,
+    "phone": "555-0122",
+    "bio": "Internist specializing in older adults: memory concerns, fall prevention and managing several medications. Not accepting new patients.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-010",
+    "name": "Dr. Henrik Lund",
+    "credential": "MD",
+    "facility_name": "Southpoint Family Practice",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "checkups",
+      "colds",
+      "stomach upset",
+      "minor injuries"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": "09:00-12:00",
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00104",
+    "address": "1820 Main Ave, Corvalle 00104",
+    "lat": 39.45407,
+    "lng": -98.35769,
+    "phone": "555-0123",
+    "bio": "Family practice with Saturday morning hours for colds, stomach upset and minor injuries.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-011",
+    "name": "Dr. Rosa Delgado",
+    "credential": "MD",
+    "facility_name": "Southpoint Pediatrics",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "pediatrics"
+    ],
+    "conditions_treated": [
+      "well-child visits",
+      "fever in children",
+      "rashes in children",
+      "vaccines"
+    ],
+    "languages": [
+      "Spanish",
+      "English"
+    ],
+    "patient_ages": "children",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL"
+    ],
+    "virtual": false,
+    "zip": "00104",
+    "address": "1442 Oak St, Corvalle 00104",
+    "lat": 39.46021,
+    "lng": -98.36284,
+    "phone": "555-0124",
+    "bio": "Bilingual pediatrician seeing children for fevers, rashes, vaccines and well-child visits.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-012",
+    "name": "Dr. Kwame Asante",
+    "credential": "DO",
+    "facility_name": "Southpoint Internal Medicine",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "internal medicine"
+    ],
+    "conditions_treated": [
+      "high blood pressure",
+      "thyroid problems",
+      "fatigue"
+    ],
+    "languages": [
+      "English",
+      "Twi"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_SILVER_HMO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00104",
+    "address": "2228 Elm Ave, Corvalle 00104",
+    "lat": 39.45481,
+    "lng": -98.35001,
+    "phone": "555-0125",
+    "bio": "Internist managing blood pressure, thyroid problems and persistent fatigue in adults.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-013",
+    "name": "Dr. Nadia Petrov",
+    "credential": "MD",
+    "facility_name": "Westfield Family Clinic",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine"
+    ],
+    "conditions_treated": [
+      "checkups",
+      "colds",
+      "minor infections",
+      "vaccines"
+    ],
+    "languages": [
+      "English",
+      "Russian"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00105",
+    "address": "1558 Ridge St, Corvalle 00105",
+    "lat": 39.50023,
+    "lng": -98.40804,
+    "phone": "555-0126",
+    "bio": "Family physician on the west side accepting new patients of all ages for checkups, vaccines and common illnesses.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-014",
+    "name": "Dr. Ethan Brooks",
+    "credential": "MD",
+    "facility_name": "Westfield Family Clinic",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine",
+      "sports medicine"
+    ],
+    "conditions_treated": [
+      "running injuries",
+      "knee pain",
+      "sports physicals"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO"
+    ],
+    "virtual": false,
+    "zip": "00105",
+    "address": "2229 Mill Ave, Corvalle 00105",
+    "lat": 39.49017,
+    "lng": -98.41281,
+    "phone": "555-0127",
+    "bio": "Primary care doctor with sports medicine training who treats knee pain and running injuries alongside routine care.",
+    "synthetic": true
+  },
+  {
+    "id": "PC-015",
+    "name": "Mei Tanaka",
+    "credential": "NP",
+    "facility_name": "Corvalle University Student Health",
+    "type": "PRIMARY_CARE",
+    "specialties": [
+      "family medicine",
+      "young adult health"
+    ],
+    "conditions_treated": [
+      "colds",
+      "stress",
+      "sleep problems",
+      "sexual health"
+    ],
+    "languages": [
+      "English",
+      "Japanese"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "08:00-17:00",
+      "tue": "08:00-17:00",
+      "wed": "08:00-17:00",
+      "thu": "08:00-17:00",
+      "fri": "08:00-17:00",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_STUDENT",
+      "PLAN_BRONZE_LOCAL"
+    ],
+    "virtual": false,
+    "zip": "00105",
+    "address": "793 Oak St, Corvalle 00105",
+    "lat": 39.49395,
+    "lng": -98.4075,
+    "phone": "555-0128",
+    "bio": "Nurse practitioner at the student health center caring for young adults: colds, stress, sleep problems and sexual health.",
+    "synthetic": true
+  },
+  {
+    "id": "TH-001",
+    "name": "NightOwl Virtual Care",
+    "credential": null,
+    "facility_name": "NightOwl Virtual Care",
+    "type": "TELEHEALTH",
+    "specialties": [
+      "virtual urgent care"
+    ],
+    "conditions_treated": [
+      "nausea",
+      "vomiting",
+      "food poisoning",
+      "diarrhea",
+      "colds",
+      "rashes by photo",
+      "pink eye"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": true,
+    "zip": null,
+    "address": null,
+    "lat": null,
+    "lng": null,
+    "phone": "555-0129",
+    "bio": "Video visits with a licensed clinician 24 hours a day, usually within 15 minutes. Common late-night visits include food poisoning, vomiting, colds and rashes reviewed by photo.",
+    "synthetic": true
+  },
+  {
+    "id": "TH-002",
+    "name": "Evergreen Health Virtual Visits",
+    "credential": null,
+    "facility_name": "Evergreen Health (fictional)",
+    "type": "TELEHEALTH",
+    "specialties": [
+      "virtual urgent care",
+      "virtual primary care"
+    ],
+    "conditions_treated": [
+      "colds",
+      "flu",
+      "allergies",
+      "urinary tract infections",
+      "stomach bugs"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO"
+    ],
+    "virtual": true,
+    "zip": null,
+    "address": null,
+    "lat": null,
+    "lng": null,
+    "phone": "555-0130",
+    "bio": "Evergreen Health members' own 24/7 video visit service with no copay, for colds, flu, allergies, UTIs and stomach bugs.",
+    "synthetic": true
+  },
+  {
+    "id": "TH-003",
+    "name": "Summit Care Telehealth",
+    "credential": null,
+    "facility_name": "Summit Care (fictional)",
+    "type": "TELEHEALTH",
+    "specialties": [
+      "virtual urgent care"
+    ],
+    "conditions_treated": [
+      "colds",
+      "sinus infections",
+      "pink eye",
+      "minor rashes"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "07:00-22:00",
+      "tue": "07:00-22:00",
+      "wed": "07:00-22:00",
+      "thu": "07:00-22:00",
+      "fri": "07:00-22:00",
+      "sat": "07:00-22:00",
+      "sun": "07:00-22:00"
+    },
+    "accepted_plans": [
+      "PLAN_SILVER_HMO"
+    ],
+    "virtual": true,
+    "zip": null,
+    "address": null,
+    "lat": null,
+    "lng": null,
+    "phone": "555-0131",
+    "bio": "Summit Care members' video visits from 7 am to 10 pm for colds, sinus infections, pink eye and minor rashes.",
+    "synthetic": true
+  },
+  {
+    "id": "TH-004",
+    "name": "KidsLine Pediatric Telehealth",
+    "credential": null,
+    "facility_name": "KidsLine",
+    "type": "TELEHEALTH",
+    "specialties": [
+      "pediatric telehealth"
+    ],
+    "conditions_treated": [
+      "fever in children",
+      "rashes in children",
+      "ear pain in children",
+      "vomiting in children"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "children",
+    "accepting_new": true,
+    "hours": {
+      "mon": "07:00-22:00",
+      "tue": "07:00-22:00",
+      "wed": "07:00-22:00",
+      "thu": "07:00-22:00",
+      "fri": "07:00-22:00",
+      "sat": "07:00-22:00",
+      "sun": "07:00-22:00"
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": true,
+    "zip": null,
+    "address": null,
+    "lat": null,
+    "lng": null,
+    "phone": "555-0132",
+    "bio": "Video visits with pediatric clinicians from 7 am to 10 pm for children's fevers, rashes, ear pain and vomiting.",
+    "synthetic": true
+  },
+  {
+    "id": "TH-005",
+    "name": "Campus Connect Telehealth",
+    "credential": null,
+    "facility_name": "Corvalle University (fictional)",
+    "type": "TELEHEALTH",
+    "specialties": [
+      "virtual urgent care",
+      "young adult health"
+    ],
+    "conditions_treated": [
+      "colds",
+      "food poisoning",
+      "hangover-like symptoms",
+      "stress",
+      "minor injuries"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "24h",
+      "tue": "24h",
+      "wed": "24h",
+      "thu": "24h",
+      "fri": "24h",
+      "sat": "24h",
+      "sun": "24h"
+    },
+    "accepted_plans": [
+      "PLAN_STUDENT",
+      "PLAN_BRONZE_LOCAL"
+    ],
+    "virtual": true,
+    "zip": null,
+    "address": null,
+    "lat": null,
+    "lng": null,
+    "phone": "555-0133",
+    "bio": "24/7 video visits for students and young adults, covering colds, food poisoning, stress and minor injury questions.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-001",
+    "name": "Dr. Victor Chen",
+    "credential": "MD",
+    "facility_name": "Corvalle ENT Associates",
+    "type": "SPECIALIST",
+    "specialties": [
+      "otolaryngology (ENT)"
+    ],
+    "conditions_treated": [
+      "chronic sinus problems",
+      "ear infections that keep coming back",
+      "tonsil problems",
+      "hearing loss"
+    ],
+    "languages": [
+      "English",
+      "Cantonese"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO"
+    ],
+    "virtual": false,
+    "zip": "00101",
+    "address": "822 Lake Ave, Corvalle 00101",
+    "lat": 39.49614,
+    "lng": -98.34905,
+    "phone": "555-0134",
+    "bio": "Ear, nose and throat specialist for chronic sinus problems, repeated ear infections, tonsil issues and hearing loss.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-002",
+    "name": "Dr. Hannah Weiss",
+    "credential": "MD",
+    "facility_name": "Eastgate Sports Medicine",
+    "type": "SPECIALIST",
+    "specialties": [
+      "sports medicine"
+    ],
+    "conditions_treated": [
+      "knee pain from running",
+      "ACL injuries",
+      "tendonitis",
+      "shin splints"
+    ],
+    "languages": [
+      "English",
+      "German"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00103",
+    "address": "752 Main Blvd, Corvalle 00103",
+    "lat": 39.49948,
+    "lng": -98.29809,
+    "phone": "555-0135",
+    "bio": "Sports medicine physician who treats runners and athletes: knee pain from running, ACL injuries, tendonitis and shin splints.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-003",
+    "name": "Dr. Luis Romero",
+    "credential": "MD",
+    "facility_name": "Southpoint Orthopedics",
+    "type": "SPECIALIST",
+    "specialties": [
+      "orthopedic surgery"
+    ],
+    "conditions_treated": [
+      "fractures",
+      "back pain",
+      "shoulder injuries",
+      "joint replacement"
+    ],
+    "languages": [
+      "Spanish",
+      "English"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_BRONZE_LOCAL"
+    ],
+    "virtual": false,
+    "zip": "00104",
+    "address": "1678 Lake Rd, Corvalle 00104",
+    "lat": 39.45464,
+    "lng": -98.35033,
+    "phone": "555-0136",
+    "bio": "Orthopedic surgeon handling fracture follow-up, back pain, shoulder injuries and joint problems.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-004",
+    "name": "Dr. Fatima Siddiqui",
+    "credential": "MD",
+    "facility_name": "Northside Digestive Health",
+    "type": "SPECIALIST",
+    "specialties": [
+      "gastroenterology"
+    ],
+    "conditions_treated": [
+      "acid reflux",
+      "irritable bowel syndrome",
+      "chronic diarrhea",
+      "stomach pain that keeps coming back"
+    ],
+    "languages": [
+      "English",
+      "Urdu"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO"
+    ],
+    "virtual": false,
+    "zip": "00102",
+    "address": "1398 Main St, Corvalle 00102",
+    "lat": 39.53361,
+    "lng": -98.35274,
+    "phone": "555-0137",
+    "bio": "Gastroenterologist for ongoing digestive problems such as acid reflux, irritable bowel syndrome and long-lasting diarrhea or stomach pain.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-005",
+    "name": "Dr. Owen Gallagher",
+    "credential": "MD",
+    "facility_name": "Downtown Dermatology",
+    "type": "SPECIALIST",
+    "specialties": [
+      "dermatology"
+    ],
+    "conditions_treated": [
+      "eczema",
+      "acne",
+      "rashes that won't go away",
+      "skin checks"
+    ],
+    "languages": [
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00101",
+    "address": "512 Oak Blvd, Corvalle 00101",
+    "lat": 39.50225,
+    "lng": -98.35658,
+    "phone": "555-0138",
+    "bio": "Dermatologist treating eczema, acne, stubborn rashes and doing skin checks for moles.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-006",
+    "name": "Dr. Ana Moreira",
+    "credential": "MD",
+    "facility_name": "Westfield Allergy & Asthma",
+    "type": "SPECIALIST",
+    "specialties": [
+      "allergy and immunology"
+    ],
+    "conditions_treated": [
+      "seasonal allergies",
+      "asthma",
+      "hives",
+      "food allergies"
+    ],
+    "languages": [
+      "Portuguese",
+      "Spanish",
+      "English"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL"
+    ],
+    "virtual": false,
+    "zip": "00105",
+    "address": "754 Harbor Rd, Corvalle 00105",
+    "lat": 39.50278,
+    "lng": -98.41477,
+    "phone": "555-0139",
+    "bio": "Allergist for seasonal allergies, asthma, recurring hives and food allergy testing.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-007",
+    "name": "Dr. Daniel Kim",
+    "credential": "MD",
+    "facility_name": "Northside Heart Clinic",
+    "type": "SPECIALIST",
+    "specialties": [
+      "cardiology"
+    ],
+    "conditions_treated": [
+      "heart palpitations follow-up",
+      "high blood pressure",
+      "heart rhythm problems"
+    ],
+    "languages": [
+      "English",
+      "Korean"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO"
+    ],
+    "virtual": false,
+    "zip": "00102",
+    "address": "1944 Lake Blvd, Corvalle 00102",
+    "lat": 39.5367,
+    "lng": -98.34064,
+    "phone": "555-0140",
+    "bio": "Cardiologist for non-emergency follow-up of palpitations, heart rhythm problems and hard-to-control blood pressure.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-008",
+    "name": "Dr. Leila Farah",
+    "credential": "MD",
+    "facility_name": "Eastgate Women's Health",
+    "type": "SPECIALIST",
+    "specialties": [
+      "obstetrics and gynecology"
+    ],
+    "conditions_treated": [
+      "pregnancy care",
+      "pelvic pain",
+      "menstrual problems"
+    ],
+    "languages": [
+      "English",
+      "Arabic",
+      "French"
+    ],
+    "patient_ages": "adults",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00103",
+    "address": "469 Cedar Ave, Corvalle 00103",
+    "lat": 39.49952,
+    "lng": -98.29367,
+    "phone": "555-0141",
+    "bio": "OB/GYN providing pregnancy care and treatment for pelvic pain and menstrual problems.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-009",
+    "name": "Dr. Benjamin Ortiz",
+    "credential": "DPM",
+    "facility_name": "Southpoint Foot & Ankle",
+    "type": "SPECIALIST",
+    "specialties": [
+      "podiatry"
+    ],
+    "conditions_treated": [
+      "ankle pain",
+      "foot pain",
+      "plantar fasciitis",
+      "ingrown toenails"
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_GOLD_PPO",
+      "PLAN_STUDENT"
+    ],
+    "virtual": false,
+    "zip": "00104",
+    "address": "2126 Harbor Blvd, Corvalle 00104",
+    "lat": 39.45326,
+    "lng": -98.35286,
+    "phone": "555-0142",
+    "bio": "Podiatrist treating foot and ankle pain, plantar fasciitis and ingrown toenails.",
+    "synthetic": true
+  },
+  {
+    "id": "SP-010",
+    "name": "Dr. Chloe Martin",
+    "credential": "MD",
+    "facility_name": "Westfield Sports & Spine",
+    "type": "SPECIALIST",
+    "specialties": [
+      "sports medicine",
+      "physical medicine"
+    ],
+    "conditions_treated": [
+      "running injuries",
+      "shin splints",
+      "lower back pain",
+      "hamstring strains"
+    ],
+    "languages": [
+      "English",
+      "French"
+    ],
+    "patient_ages": "all",
+    "accepting_new": true,
+    "hours": {
+      "mon": "09:00-16:30",
+      "tue": "09:00-16:30",
+      "wed": "09:00-16:30",
+      "thu": "09:00-16:30",
+      "fri": "09:00-16:30",
+      "sat": null,
+      "sun": null
+    },
+    "accepted_plans": [
+      "PLAN_SILVER_HMO",
+      "PLAN_BRONZE_LOCAL"
+    ],
+    "virtual": false,
+    "zip": "00105",
+    "address": "834 Ridge Rd, Corvalle 00105",
+    "lat": 39.49053,
+    "lng": -98.41523,
+    "phone": "555-0143",
+    "bio": "Sports and spine physician for running injuries, shin splints, lower back pain and muscle strains, with on-site physical therapy.",
+    "synthetic": true
+  }
+]

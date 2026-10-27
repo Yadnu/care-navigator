@@ -1,0 +1,15 @@
+{"id": "VG-001", "text": "I just feel off", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-002", "text": "not great", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-003", "text": "something's wrong", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-004", "text": "I'm sick", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-005", "text": "help", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-006", "text": "my body hurts", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-007", "text": "feeling weird since yesterday", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-008", "text": "not myself today", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-009", "text": "pain", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-010", "text": "I don't feel good at all", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-011", "text": "kind of dizzy maybe?", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-012", "text": "tired and blah", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-013", "text": "it hurts", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-014", "text": "something with my stomach I think", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}
+{"id": "VG-015", "text": "my kid is sick", "severity": 3, "expected_outcome": "FOLLOW_UP", "synthetic": true}

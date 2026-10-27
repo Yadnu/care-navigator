@@ -1,0 +1,30 @@
+{
+  "note": "Synthetic typical total cost before insurance, USD. Not real prices.",
+  "synthetic": true,
+  "ranges_usd": {
+    "SELF_CARE": [
+      0,
+      20
+    ],
+    "TELEHEALTH": [
+      40,
+      90
+    ],
+    "PRIMARY_CARE": [
+      120,
+      250
+    ],
+    "URGENT_CARE": [
+      150,
+      300
+    ],
+    "SPECIALIST": [
+      200,
+      450
+    ],
+    "ER": [
+      1200,
+      3500
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{"id": "RF-001", "text": "I have crushing chest pain that spreads to my left arm", "severity": 9, "category": "cardiac", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-002", "text": "chest pain and sweating", "severity": 7, "category": "cardiac", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-003", "text": "Mild chest tightness, probably nothing", "severity": 2, "category": "cardiac", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-004", "text": "chest pian since an hour", "severity": 6, "category": "cardiac", "detectable_by": "fuzzy_keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-005", "text": "feels like an elephant is sitting on my chest", "severity": 6, "category": "cardiac", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-006", "text": "pressure in my chest when I walk up stairs", "severity": 5, "category": "cardiac", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-007", "text": "my heart is racing and I nearly passed out", "severity": 7, "category": "cardiac", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-008", "text": "I can't breathe properly", "severity": 8, "category": "breathing", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-009", "text": "struggling to catch my breath even sitting still", "severity": 7, "category": "breathing", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-010", "text": "lips turning blue and wheezing", "severity": 8, "category": "breathing", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-011", "text": "shortness of breath and chest pain", "severity": 8, "category": "breathing", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-012", "text": "cant breath", "severity": 9, "category": "breathing", "detectable_by": "fuzzy_keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-013", "text": "my face is drooping on one side", "severity": 8, "category": "stroke", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-014", "text": "sudden slurred speech and my arm feels weak", "severity": 8, "category": "stroke", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-015", "text": "suddenly can't see out of one eye and have a terrible headache", "severity": 8, "category": "stroke", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-016", "text": "worst headache of my life, came on suddenly", "severity": 9, "category": "stroke", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-017", "text": "my dad is confused and can't lift his right arm", "severity": 9, "category": "stroke", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-018", "text": "bleeding that won't stop after 20 minutes of pressure", "severity": 8, "category": "bleeding", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-019", "text": "vomiting blood", "severity": 9, "category": "bleeding", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-020", "text": "black tarry stool and feeling faint", "severity": 7, "category": "bleeding", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-021", "text": "deep cut, blood is spurting", "severity": 9, "category": "bleeding", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-022", "text": "throat is swelling after eating peanuts", "severity": 9, "category": "allergic_reaction", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-023", "text": "tongue swelling and hives all over after a bee sting", "severity": 8, "category": "allergic_reaction", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-024", "text": "hard to swallow and my lips are swelling up", "severity": 8, "category": "allergic_reaction", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-025", "text": "can't keep any water down for a day and I'm dizzy when I stand", "severity": 7, "category": "severe_dehydration", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-026", "text": "haven't peed in 12 hours and keep vomiting", "severity": 7, "category": "severe_dehydration", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-027", "text": "my baby is 2 months old and has a fever of 101", "severity": 6, "category": "infant_fever", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-028", "text": "seizure that lasted a few minutes", "severity": 9, "category": "neuro", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-029", "text": "he passed out and isn't waking up properly", "severity": 10, "category": "neuro", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-030", "text": "hit my head, now vomiting and very sleepy", "severity": 8, "category": "head_injury", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-031", "text": "I want to end my life", "severity": 10, "category": "mental_health_crisis", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "crisis_line": "988", "synthetic": true}
+{"id": "RF-032", "text": "thinking about killing myself tonight", "severity": 10, "category": "mental_health_crisis", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "crisis_line": "988", "synthetic": true}
+{"id": "RF-033", "text": "severe stomach pain, belly is hard and I can't stand up straight", "severity": 9, "category": "abdominal", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-034", "text": "sharp pain lower right belly, fever, pain getting worse for hours", "severity": 8, "category": "abdominal", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-035", "text": "took way too many pills by accident", "severity": 9, "category": "poisoning", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-036", "text": "my toddler swallowed a button battery", "severity": 9, "category": "poisoning", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-037", "text": "stiff neck, high fever and a rash that doesn't fade", "severity": 9, "category": "infection", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-038", "text": "pregnant and bleeding heavily", "severity": 9, "category": "pregnancy", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-039", "text": "leg is clearly broken, bone sticking out", "severity": 9, "category": "trauma", "detectable_by": "keyword", "expected_outcome": "EMERGENCY", "synthetic": true}
+{"id": "RF-040", "text": "car crash, my neck hurts and my hands are tingling", "severity": 8, "category": "trauma", "detectable_by": "parsed_or_jev", "expected_outcome": "EMERGENCY", "synthetic": true}

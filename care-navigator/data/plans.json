@@ -1,0 +1,82 @@
+[
+  {
+    "id": "PLAN_GOLD_PPO",
+    "name": "Evergreen Health Gold PPO",
+    "carrier": "Evergreen Health (fictional)",
+    "tier": "gold",
+    "network_type": "PPO",
+    "annual_deductible_usd": 1000,
+    "coinsurance_pct": 10,
+    "referral_required_for_specialist": false,
+    "copays_usd": {
+      "TELEHEALTH": 0,
+      "PRIMARY_CARE": 25,
+      "SPECIALIST": 50,
+      "URGENT_CARE": 50,
+      "ER": 250
+    },
+    "nurse_line": "1-800-555-0101",
+    "nurse_line_hours": "24/7",
+    "synthetic": true
+  },
+  {
+    "id": "PLAN_SILVER_HMO",
+    "name": "Summit Care Silver HMO",
+    "carrier": "Summit Care (fictional)",
+    "tier": "silver",
+    "network_type": "HMO",
+    "annual_deductible_usd": 3000,
+    "coinsurance_pct": 20,
+    "referral_required_for_specialist": true,
+    "copays_usd": {
+      "TELEHEALTH": 15,
+      "PRIMARY_CARE": 35,
+      "SPECIALIST": 70,
+      "URGENT_CARE": 75,
+      "ER": 400
+    },
+    "nurse_line": "1-800-555-0102",
+    "nurse_line_hours": "24/7",
+    "synthetic": true
+  },
+  {
+    "id": "PLAN_BRONZE_LOCAL",
+    "name": "Harbor Bronze Local",
+    "carrier": "Harbor Mutual (fictional)",
+    "tier": "bronze",
+    "network_type": "EPO (narrow network)",
+    "annual_deductible_usd": 7000,
+    "coinsurance_pct": 40,
+    "referral_required_for_specialist": false,
+    "copays_usd": {
+      "TELEHEALTH": 30,
+      "PRIMARY_CARE": 60,
+      "SPECIALIST": 100,
+      "URGENT_CARE": 120,
+      "ER": 750
+    },
+    "nurse_line": "1-800-555-0103",
+    "nurse_line_hours": "08:00-20:00",
+    "synthetic": true
+  },
+  {
+    "id": "PLAN_STUDENT",
+    "name": "Campus Student Health Plan",
+    "carrier": "Corvalle University (fictional)",
+    "tier": "student",
+    "network_type": "PPO",
+    "annual_deductible_usd": 500,
+    "coinsurance_pct": 20,
+    "referral_required_for_specialist": false,
+    "copays_usd": {
+      "TELEHEALTH": 0,
+      "PRIMARY_CARE": 20,
+      "SPECIALIST": 40,
+      "URGENT_CARE": 40,
+      "ER": 200
+    },
+    "nurse_line": "1-800-555-0104",
+    "nurse_line_hours": "24/7",
+    "synthetic": true
+  }
+]

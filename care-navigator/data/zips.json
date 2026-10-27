@@ -1,0 +1,42 @@
+[
+  {
+    "zip": "00101",
+    "neighborhood": "Downtown",
+    "city": "Corvalle",
+    "lat": 39.5,
+    "lng": -98.35,
+    "synthetic": true
+  },
+  {
+    "zip": "00102",
+    "neighborhood": "Northside",
+    "city": "Corvalle",
+    "lat": 39.54,
+    "lng": -98.345,
+    "synthetic": true
+  },
+  {
+    "zip": "00103",
+    "neighborhood": "Eastgate",
+    "city": "Corvalle",
+    "lat": 39.505,
+    "lng": -98.3,
+    "synthetic": true
+  },
+  {
+    "zip": "00104",
+    "neighborhood": "Southpoint",
+    "city": "Corvalle",
+    "lat": 39.46,
+    "lng": -98.355,
+    "synthetic": true
+  },
+  {
+    "zip": "00105",
+    "neighborhood": "Westfield",
+    "city": "Corvalle",
+    "lat": 39.498,
+    "lng": -98.41,
+    "synthetic": true
+  }
+]

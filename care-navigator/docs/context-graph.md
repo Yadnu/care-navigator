@@ -2,7 +2,7 @@
 
 Living map of the system. Read this and `decisions.md` before any task; update it at the end of every phase.
 
-Last updated: 2026-10-27, end of Phase 2.
+Last updated: 2026-10-27, end of Phase 3.
 
 ## Request flow
 
@@ -12,7 +12,9 @@ flowchart TD
     VAL -->|invalid zip/plan| MSG[Clear message<br/>care level still given]
     VAL --> RED[redact.py]
     RED --> RF1[redflags.py<br/>red_flags.yaml]
-    RED --> JEV1[jev_client.py<br/>is_emergency]
+    RED --> JEV1[jev_client.py<br/>is_emergency<br/>OfflineJev / HttpJev]
+    LEX[lexicon.py] -.-> JEV1
+    LEX -.-> PARSE
     RF1 -->|hit| EMER([EMERGENCY: call 911 / 988])
     JEV1 -->|hit| EMER
     RF1 --> PARSE[parser.py<br/>OfflineParser / ClaudeParser]
@@ -54,12 +56,13 @@ flowchart TD
 | Node | Type | Depends on | Used by | Tests | Related decisions | Status |
 |---|---|---|---|---|---|---|
 | `navigator/__init__.py` | module | - | everything | `test_smoke.py` | - | done |
-| `navigator/config.py` | config | env vars | redflags (Phase 2); model adapters, gating (Phase 3) | via `test_redflags.py` | D-004, D-008, D-014 | in progress (fuzzy thresholds only) |
+| `navigator/config.py` | config | env vars | redflags, jev_client, parser, care_engine (gating) | `test_config.py` | D-003, D-004, D-008, D-014, D-019 | done |
 | `navigator/models.py` | module | pydantic | all modules | `test_models.py` | D-001, D-003 | done |
 | `navigator/redact.py` | module | - | pipeline, trace | `test_redact.py` | D-009 | done |
 | `navigator/redflags.py` + `red_flags.yaml` | module + config | rapidfuzz, pyyaml, config, models | pipeline | `test_redflags.py` | D-002, D-014, D-015, D-016, D-017 | done |
-| `navigator/jev_client.py` | module | config | pipeline, retriever, guard | - | D-004, D-008 | not started |
-| `navigator/parser.py` | module | models, config, anthropic | pipeline | - | D-004, D-008, D-009 | not started |
+| `navigator/lexicon.py` | module | - | jev_client, parser | via `test_jev_client.py`, `test_parser.py` | D-021 | done |
+| `navigator/jev_client.py` | module | config, lexicon, redflags.normalize, requests | pipeline, retriever, guard | `test_jev_client.py` | D-002, D-004, D-008, D-019, D-022 | done (HTTP shape unverified) |
+| `navigator/parser.py` | module | models, config, lexicon, redflags, anthropic | pipeline | `test_parser.py` | D-004, D-008, D-009, D-018, D-020 | done |
 | `navigator/clarifier.py` | module | models | pipeline | - | D-003 | not started |
 | `navigator/care_engine.py` + `care_rules.yaml` | module + config | models, practitioners.json | pipeline | - | D-001, D-003 | not started |
 | `navigator/retrieval/embeddings.py` | module | scikit-learn | vector_store | - | D-008 | not started |
@@ -85,12 +88,15 @@ flowchart TD
 
 ## Current status
 
-- Done: Phase 0 scaffold. Phase 1 synthetic data (D-013). Phase 2 schemas (`models.py`, incl. ordered `CareLevel.escalate`), PII redaction, keyword + fuzzy red-flag screen (100% of keyword-detectable red flags, 0 false positives on non-emergency routing and vague cases).
-- In progress: `config.py` (only fuzzy thresholds so far).
-- Not started: Phases 3 to 8.
-- Red flags still needing Jev / parsed-field checks (Phase 3): RF-005, RF-009, RF-015, RF-017, RF-024, RF-034, RF-040 (D-015).
+- Done: Phase 0 scaffold. Phase 1 synthetic data (D-013). Phase 2 schemas (`models.py`, incl. ordered `CareLevel.escalate`), PII redaction, keyword + fuzzy red-flag screen. Phase 3 config (env switches, model ids, thresholds, confidence gate), shared lexicon, Jev interface (OfflineJev + HttpJev), parser interface (OfflineParser + ClaudeParser with one retry and offline fallback).
+- Red-flag coverage: keyword screen 33/40; OfflineJev 12/12 of the `parsed_or_jev` cases; combined 40/40 (D-015, D-019).
+- In progress: -
+- Not started: Phases 4 to 8.
 
 ## Open questions
+
+- Jev HTTP request/response shape and endpoint are assumptions (D-022); verify against Jev docs before enabling `JEV_API_KEY`.
+- Many routing cases state no duration, so OfflineParser marks them `medium` confidence, which the gate escalates one level. Phase 4 must check this doesn't push cases above `acceptable_levels` (for example, treat a missing duration as "escalate" only when the matched rule depends on duration).
 
 - Negation ("no chest pain") still fires the red-flag screen (D-017). Acceptable over-triage for the prototype?
 

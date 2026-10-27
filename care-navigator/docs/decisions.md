@@ -151,3 +151,43 @@ Template:
 - Decision: The keyword screen ignores negation; "no chest pain" fires. This errs toward more care (D-003).
 - Alternatives considered: NegEx-style negation windows (rejected: risk of suppressing real flags such as "not sure but chest pain").
 - Consequences: Some over-triage to EMERGENCY. Logged as an open question in the context graph.
+
+## D-018: Claude parser request shape on Claude Haiku 5.5
+- Date: 2026-10-27
+- Status: accepted
+- Context: The plan asks for "temperature 0". Claude Haiku 5.5 returns HTTP 400 for any non-default sampling parameter (`temperature`, `top_p`, `top_k`), and API version `2026-10-21` rejects them on every model.
+- Decision: `ClaudeParser` sends no sampling parameters. Output is made predictable by a forced tool call (`tool_choice: {"type": "tool", "name": "record_symptoms"}`, which Haiku 5.5 accepts) with `strict: true` and `additionalProperties: false`, plus Pydantic validation. Invalid output or a `refusal` stop reason -> one retry -> `OfflineParser`. An API error (timeout, 5xx, connection) skips the retry and goes straight offline, because the SDK already retries once (`max_retries=1`). Severity is never taken from the model; it is passed through from the request.
+- Alternatives considered: Sending `temperature=0` (rejected: 400); structured outputs via `output_config.format` (viable, but the plan specifies tool use and the forced tool already gives a schema guarantee).
+- Consequences: Extraction can vary slightly between runs; the rules downstream are deterministic. If a future model rejects forced `tool_choice` (as Opus 5.5 and Sonnet 5.5 do), switch to `auto` plus a prompt instruction.
+
+## D-019: Jev thresholds and offline heuristics
+- Date: 2026-10-27
+- Status: accepted
+- Context: Jev returns probabilities; the pipeline needs yes/no decisions, and offline mode needs a transparent stand-in.
+- Decision: Probabilities >= 0.5 count as "yes" for emergency, too-vague and the output guard (`config.JEV_EMERGENCY_THRESHOLD`, `JEV_VAGUE_THRESHOLD`, `GUARD_THRESHOLD`). `OfflineJev` uses pattern combinations (all patterns in a combo must match) for indirect emergencies, a weighted lexicon for category (symptom term 2, body area 1, ties go to the earlier category), +/- cue counts for urgency (base 2, clamped 1-5), "named symptom, or body area + pain word" for vagueness, stem overlap for rerank, and a pattern list for diagnosis/medication. Offline confidences are fixed (0.6; vague 0.7) to signal "heuristic".
+- Alternatives considered: A small trained classifier offline (rejected: opaque, more setup, not needed for 44 records and ~100 eval rows).
+- Consequences: Keyword screen + OfflineJev together catch 40/40 red flags; OfflineJev alone catches all 12 `parsed_or_jev` cases. Zero emergency or vague false positives on routing cases. The heuristics are tuned on the eval phrasing and will generalise less well than a real classifier.
+
+## D-020: Relative durations are approximations
+- Date: 2026-10-27
+- Status: accepted
+- Context: People say "since dinner", "this morning", "tonight" instead of hours.
+- Decision: `OfflineParser` maps relative phrases to fixed hours (yesterday 24, breakfast 10, lunch 8, morning 6, dinner 5, afternoon 3, tonight 2; "for days/weeks/months" 72/336/2160). Explicit amounts ("2 days", "two days", "an hour") are computed; "N year(s) old" is ignored as an age.
+- Alternatives considered: Computing from the request time (for example "since dinner" at 00:15 = about 5 h) (rejected for now: more code, and the rules only need short vs. multi-day).
+- Consequences: Duration is coarse; rules must use wide bands, not exact hours.
+
+## D-021: Shared lexicon module
+- Date: 2026-10-27
+- Status: accepted
+- Context: OfflineJev (category, vagueness) and OfflineParser (main symptom, body area) must agree on what counts as a symptom, or the vague check and the parser's confidence could disagree.
+- Decision: Add `navigator/lexicon.py` (not in the planned layout) with symptom terms by category, body areas and pain words. Categories: respiratory, ent, gastrointestinal, musculoskeletal, skin, eye, urinary, wound, dental, mental_health, chronic, allergy, fever, neuro, plus `general` when nothing is recognised.
+- Alternatives considered: Duplicating word lists in both modules (rejected: they would drift).
+- Consequences: Phase 4 `care_rules.yaml` keys on these category names.
+
+## D-022: Jev HTTP shape is unverified
+- Date: 2026-10-27
+- Status: accepted
+- Context: No Jev API docs are available, and the plan forbids guessing silently.
+- Decision: All request building lives in `build_jev_request` and response reading in `parse_jev_response`, both marked `TODO: verify against Jev docs`. Assumed shape: POST `{state, questions: [{id, type: yes_no|choice|score, text, options|min|max}]}` with `Authorization: Bearer <JEV_API_KEY>`; response `{answers: [{id, probabilities|score, confidence}]}`. Endpoint from `JEV_BASE_URL` (placeholder default). Any network error, non-200 or unreadable body raises `JevError`; the pipeline (Phase 6) falls back to `OfflineJev`. Tested with mocked HTTP only.
+- Alternatives considered: Leaving `HttpJev` unimplemented (rejected: the plan asks for a real client behind the interface).
+- Consequences: Must be checked against real docs before `JEV_API_KEY` is used.

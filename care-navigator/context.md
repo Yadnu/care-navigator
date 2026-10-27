@@ -5,13 +5,16 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 ## Current phase
 - Phase 0 (scaffold): done.
 - Phase 1 (synthetic data): done. Data provided; only change is LF-pinned output (D-013).
-- Phase 2 (schemas, redaction, red flags): done. Waiting for "continue" to start Phase 3.
+- Phase 2 (schemas, redaction, red flags): done.
+- Phase 3 (Jev and parser adapters): done. Waiting for "continue" to start Phase 4.
 
 ## Domain vocabulary
 - **Outcomes:** `EMERGENCY` (stop, "Call 911 or go to the nearest ER"; suicidal intent also gives 988), `FOLLOW_UP` (one clarifying question, max 25 words, max once), `RECOMMENDATION`.
 - **Care levels, low -> high:** `SELF_CARE < TELEHEALTH < PRIMARY_CARE < URGENT_CARE < ER`. Escalation = move one step right. Never move left to compensate for closures.
 - **Practitioner types:** `ER, URGENT_CARE, PRIMARY_CARE, TELEHEALTH, SPECIALIST`.
-- **Confidence gating:** high -> act; medium -> escalate one level; low -> ask the follow-up.
+- **Confidence gating:** high -> act; medium -> escalate one level; low -> ask the follow-up (`config.confidence_action`).
+- **Symptom categories** (`lexicon.py`; `care_rules.yaml` keys on these): respiratory, ent, gastrointestinal, musculoskeletal, skin, eye, urinary, wound, dental, mental_health, chronic, allergy, fever, neuro, general.
+- **Claude on Haiku 5.5:** no `temperature` (400s); forced tool + `strict: true` instead (D-018).
 
 ## Data facts (synthetic, town "Corvalle")
 - Zips `00101`-`00105`; 4 plans: `PLAN_GOLD_PPO`, `PLAN_SILVER_HMO`, `PLAN_BRONZE_LOCAL`, `PLAN_STUDENT`.

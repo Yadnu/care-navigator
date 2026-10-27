@@ -37,7 +37,8 @@ from navigator.models import (
 from navigator.parser import OfflineParser, Parser, get_parser
 from navigator.questions import classify, extract, is_danger, load_bank, routine_answer
 from navigator.redact import redact
-from navigator.redflags import Signal, normalize, screen_report, screen_text, tier2_signals, unmatched_flags
+from navigator.redflags import (Signal, emergency_message, normalize, screen_report, screen_text, tier2_signals,
+                                unmatched_flags)
 from navigator.redflags import load_rules as load_red_flag_rules
 from navigator.retrieval.embeddings import Embedder, EmbeddingError, get_embedder
 from navigator.retrieval.retriever import RetrievalResult, Retriever, build_query
@@ -53,6 +54,7 @@ class NavigatorResult(BaseModel):
     outcome: Optional[Outcome] = None        # None when the request itself is invalid
     message: str                             # the one line to show first
     resources: list[str] = []                # emergency numbers, crisis line first
+    action: Optional[str] = None             # CALL_911 or GO_TO_ER for an EMERGENCY (D-048)
     question: Optional[str] = None           # the safety or follow-up question, if any
     slot: Optional[str] = None               # question-bank slot of that question
     quick_replies: list[str] = []
@@ -180,8 +182,14 @@ class Navigator:
             result.trace_path = str(run.tracer.save(self.trace_dir, summary))
         return result
 
-    def _emergency(self, run: _Run, message: str, resources: list[str]) -> NavigatorResult:
-        return self._finish(run, outcome=Outcome.EMERGENCY, message=message, resources=resources)
+    def _emergency(self, run: _Run, message: str, resources: list[str], action: str) -> NavigatorResult:
+        return self._finish(run, outcome=Outcome.EMERGENCY, message=message, resources=resources, action=action)
+
+    def _danger_emergency(self, run: _Run, slots: list[str]) -> NavigatorResult:
+        """A danger answer: the question bank's action for that slot; CALL_911 wins (D-048)."""
+        actions = {load_bank()[slot]["danger_action"] for slot in slots}
+        action = "CALL_911" if "CALL_911" in actions else "GO_TO_ER"
+        return self._emergency(run, emergency_message(action, ["911"]), ["911"], action)
 
     def _ask(self, run: _Run, outcome: Outcome, slot: str, context: str) -> NavigatorResult:
         step = "safety_check" if outcome is Outcome.SAFETY_CHECK else "clarify"
@@ -250,7 +258,7 @@ class Navigator:
             flags = screen_text(clean)
             s.output = ", ".join(f"{h.category}:{h.phrase} ({h.method})" for h in flags.hits) or "none"
         if flags.is_emergency:
-            return self._emergency(run, flags.message, flags.resources)
+            return self._emergency(run, flags.message, flags.resources, flags.action)
 
         # 4. answers -> slots; a danger answer to a question we asked is an emergency
         bank = load_bank()
@@ -267,12 +275,12 @@ class Navigator:
             danger = [slot for slot in run.asked if slot in bank and is_danger(slot, slots.get(slot))]
             s.output = f"slots={slots} danger={danger}"
         if danger:
-            return self._emergency(run, EMERGENCY_MESSAGE, ["911"])
+            return self._danger_emergency(run, danger)
 
         # 5. Jev alone: emergency only when very sure; a middling probability is a Tier 2 signal
         prob, confidence = self._jev(run, "jev_emergency", "is_emergency", clean)
         if prob >= config.JEV_EMERGENCY_THRESHOLD and confidence >= config.JEV_HIGH_CONFIDENCE:
-            return self._emergency(run, EMERGENCY_MESSAGE, ["911"])
+            return self._emergency(run, EMERGENCY_MESSAGE, ["911"], "CALL_911")  # more care when unsure which
         extra = [Signal(name="jev", slot=GENERIC_SAFETY_SLOT, phrase=f"p={prob:.2f}")] \
             if prob >= config.JEV_SAFETY_THRESHOLD else []
 
@@ -288,7 +296,7 @@ class Navigator:
             parsed_flags = screen_report(report)
             s2.output = ", ".join(f"{h.category}:{h.phrase}" for h in parsed_flags.hits) or "none"
         if parsed_flags.is_emergency:
-            return self._emergency(run, parsed_flags.message, parsed_flags.resources)
+            return self._emergency(run, parsed_flags.message, parsed_flags.resources, parsed_flags.action)
 
         # 7. Tier 2: weak signals ask a safety question first (at most 2 safety questions)
         uncertain = request.skip  # "Skip, just tell me where to go" escalates one level
@@ -302,7 +310,7 @@ class Navigator:
             s.output = (f"signals={[f'{sig.name}:{sig.phrase}' for sig in signals]} pending={pending} "
                         f"danger={danger}")
         if danger:
-            return self._emergency(run, EMERGENCY_MESSAGE, ["911"])
+            return self._danger_emergency(run, danger)
         if pending:
             if run.budget > 0 and safety_asked < MAX_SAFETY_QUESTIONS:
                 return self._ask(run, Outcome.SAFETY_CHECK, pending[0], clean)

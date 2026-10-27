@@ -14,6 +14,8 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - Phase 8 (README, final docs): done.
 - Prompt1 Part A (three-tier red flags, question bank, conversations): done.
 - Prompt1 Part B (10 plans, 12 zips, 73 practitioners, coverage gaps, cost display): done.
+- CHANGE_conversational_triage.md Part 0: done except item 0.3.5 (mismatch table awaiting the user's OK). Parts 1-6 next.
+- **Emergency actions:** every Tier 1 category and question-bank danger answer has `CALL_911` or `GO_TO_ER`; CALL_911 wins; the same sign must have one action across `red_flags.yaml` and `symptom_guide.json` (D-048).
 
 ## Domain vocabulary
 - **Outcomes:** `EMERGENCY` (stop; 988 first for crisis wording), `SAFETY_CHECK` (Tier 2 safety question), `FOLLOW_UP` (missing detail), `RECOMMENDATION`. At most 3 questions per conversation, one at a time, only from `data/question_bank.json`; Skip or running out escalates one level (D-041).

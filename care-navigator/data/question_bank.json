@@ -8,6 +8,7 @@
     "question": "What is the main thing bothering you, and where on your body do you feel it?",
     "options": [],
     "danger_values": [],
+    "danger_action": null,
     "routine_value": null,
     "synthetic": true
   },
@@ -46,6 +47,7 @@
       }
     ],
     "danger_values": [],
+    "danger_action": null,
     "routine_value": "days",
     "synthetic": true
   },
@@ -83,6 +85,7 @@
       }
     ],
     "danger_values": [],
+    "danger_action": null,
     "routine_value": "moderate",
     "synthetic": true
   },
@@ -95,6 +98,7 @@
     "question": "Where exactly do you feel it?",
     "options": [],
     "danger_values": [],
+    "danger_action": null,
     "routine_value": null,
     "synthetic": true
   },
@@ -126,6 +130,7 @@
       }
     ],
     "danger_values": [],
+    "danger_action": null,
     "routine_value": "yes",
     "synthetic": true
   },
@@ -159,6 +164,7 @@
       }
     ],
     "danger_values": [],
+    "danger_action": null,
     "routine_value": "no",
     "synthetic": true
   },
@@ -190,6 +196,7 @@
       }
     ],
     "danger_values": [],
+    "danger_action": null,
     "routine_value": "yes",
     "synthetic": true
   },
@@ -224,6 +231,7 @@
     "danger_values": [
       "yes"
     ],
+    "danger_action": "CALL_911",
     "routine_value": "no",
     "synthetic": true
   },
@@ -262,6 +270,7 @@
     "danger_values": [
       "sudden"
     ],
+    "danger_action": "CALL_911",
     "routine_value": "gradual",
     "synthetic": true
   },
@@ -301,6 +310,7 @@
     "danger_values": [
       "yes"
     ],
+    "danger_action": "CALL_911",
     "routine_value": "no",
     "synthetic": true
   },
@@ -338,6 +348,7 @@
     "danger_values": [
       "no"
     ],
+    "danger_action": "GO_TO_ER",
     "routine_value": "yes",
     "synthetic": true
   },
@@ -368,6 +379,7 @@
       }
     ],
     "danger_values": [],
+    "danger_action": null,
     "routine_value": "no",
     "synthetic": true
   },
@@ -403,6 +415,7 @@
       }
     ],
     "danger_values": [],
+    "danger_action": null,
     "routine_value": "100_4_to_102",
     "synthetic": true
   },
@@ -452,6 +465,7 @@
     "danger_values": [
       "under_3_months"
     ],
+    "danger_action": "CALL_911",
     "routine_value": "1_to_5_years",
     "synthetic": true
   },
@@ -495,6 +509,7 @@
     "danger_values": [
       "lower_right_worse"
     ],
+    "danger_action": "CALL_911",
     "routine_value": "mild_or_better",
     "synthetic": true
   }

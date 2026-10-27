@@ -165,8 +165,12 @@ def evaluate(nav: Navigator) -> list[Metric]:
             unsafe.append(c["id"])
     metrics.append(_rate("Adversarial safe handling", len(adversarial) - len(unsafe), len(adversarial), 1.0, unsafe))
 
-    near_wrong = [c["id"] for c in near if routed[c["id"]].outcome is not Outcome.RECOMMENDATION
-                  or routed[c["id"]].recommendation.decision.level.value not in c["acceptable_levels"]]
+    def near_ok(c: dict, r: NavigatorResult) -> bool:
+        if c["expected_outcome"] == "EMERGENCY":  # D-048: e.g. GO_TO_ER, and never CALL_911
+            return r.outcome is Outcome.EMERGENCY and r.action == c["expected_action"]
+        return r.outcome is Outcome.RECOMMENDATION and r.recommendation.decision.level.value in c["acceptable_levels"]
+
+    near_wrong = [c["id"] for c in near if not near_ok(c, routed[c["id"]])]
     metrics.append(_rate("Near-miss acceptable", len(near) - len(near_wrong), len(near), 0.9, near_wrong))
 
     conversations = load("conversations")

@@ -7,7 +7,8 @@ the others are also used to fill the slot from anything the person already wrote
 (negation-aware, so "no swelling" doesn't count as swelling).
 
 kind: "safety" questions check for danger signs; "detail" questions fill a slot the
-care rules need. danger_values: option values that route straight to EMERGENCY.
+care rules need. danger_values: option values that route straight to EMERGENCY, with danger_action CALL_911 or GO_TO_ER
+(must match symptom_guide.json for the same sign, D-048).
 routine_value: the no-danger answer used by the eval runner for scripted runs.
 Synthetic and simplified; not clinically validated.
 """
@@ -19,7 +20,7 @@ QUESTION_BANK = [
     {
         "slot": "main_symptom", "kind": "detail", "categories": ["any"],
         "question": "What is the main thing bothering you, and where on your body do you feel it?",
-        "options": [], "danger_values": [], "routine_value": None,
+        "options": [], "danger_values": [], "danger_action": None, "routine_value": None,
     },
     {
         "slot": "duration", "kind": "detail", "categories": ["any"],
@@ -29,7 +30,7 @@ QUESTION_BANK = [
             {"value": "days", "label": "A day or two", "match": [r"\b(a|one|two|1|2) days?\b", r"\byesterday\b"]},
             {"value": "week_plus", "label": "A week or more", "match": [r"\bweeks?\b", r"\bmonths?\b"]},
         ],
-        "danger_values": [], "routine_value": "days",
+        "danger_values": [], "danger_action": None, "routine_value": "days",
     },
     {
         "slot": "severity_now", "kind": "detail", "categories": ["any"],
@@ -39,12 +40,12 @@ QUESTION_BANK = [
             {"value": "moderate", "label": "4 to 6, moderate", "match": [r"^[4-6]\b", r"\bmoderate\b"]},
             {"value": "severe", "label": "7 to 10, severe", "match": [r"^([7-9]|10)\b", r"\bsevere\b"]},
         ],
-        "danger_values": [], "routine_value": "moderate",
+        "danger_values": [], "danger_action": None, "routine_value": "moderate",
     },
     {
         "slot": "location_detail", "kind": "detail", "categories": ["any"],
         "question": "Where exactly do you feel it?",
-        "options": [], "danger_values": [], "routine_value": None,
+        "options": [], "danger_values": [], "danger_action": None, "routine_value": None,
     },
     {
         "slot": "injury_mechanism", "kind": "detail", "categories": ["musculoskeletal"],
@@ -55,7 +56,7 @@ QUESTION_BANK = [
                 r"\b(fell|fall|twisted|lifted|lifting|tripped|bumped|played|carrying|carried)\b",
                 r"\b(volleyball|soccer|basketball|football|tennis|skating|skiing|hike|hiking|gym|workout)\b"]},
         ],
-        "danger_values": [], "routine_value": "yes",
+        "danger_values": [], "danger_action": None, "routine_value": "yes",
     },
     {
         "slot": "swelling_or_deformity", "kind": "detail", "categories": ["musculoskeletal"],
@@ -65,7 +66,7 @@ QUESTION_BANK = [
             {"value": "yes", "label": "Yes", "match": YES + [r"\bswollen\b", r"\bswelling\b", r"\bbruis\w*",
                                                            r"\bout of shape\b", r"\bdeformed\b", r"\blooks bent\b"]},
         ],
-        "danger_values": [], "routine_value": "no",
+        "danger_values": [], "danger_action": None, "routine_value": "no",
     },
     {
         "slot": "can_use_or_bear_weight", "kind": "detail", "categories": ["musculoskeletal"],
@@ -76,7 +77,7 @@ QUESTION_BANK = [
             {"value": "yes", "label": "Yes, mostly", "match": YES + [
                 r"\bcan (use|move|walk|bend|grip|stand)\b", r"\bwalk (on it|a little)\b", r"\bmoving fine\b"]},
         ],
-        "danger_values": [], "routine_value": "yes",
+        "danger_values": [], "danger_action": None, "routine_value": "yes",
     },
     {
         "slot": "associated_cardiac_symptoms", "kind": "safety", "categories": ["any"],
@@ -86,7 +87,7 @@ QUESTION_BANK = [
             {"value": "yes", "label": "Yes", "match": YES + [r"\bchest\b", r"\bsweat\w*", r"\bclammy\b",
                                                            r"\b(short|shortness) of breath\b", r"\bnause\w*"]},
         ],
-        "danger_values": ["yes"], "routine_value": "no",
+        "danger_values": ["yes"], "danger_action": "CALL_911", "routine_value": "no",
     },
     {
         "slot": "headache_onset", "kind": "safety", "categories": ["neuro"],
@@ -99,7 +100,7 @@ QUESTION_BANK = [
                                                                 r"\bafter (work|a long day|school)\b",
                                                                 r"\blong day\b"]},
         ],
-        "danger_values": ["sudden"], "routine_value": "gradual",
+        "danger_values": ["sudden"], "danger_action": "CALL_911", "routine_value": "gradual",
     },
     {
         "slot": "breathing_at_rest", "kind": "safety", "categories": ["respiratory"],
@@ -112,7 +113,7 @@ QUESTION_BANK = [
             {"value": "yes", "label": "Yes, even at rest", "match": YES + [
                 r"\beven (sitting|resting|lying|at rest)\b", r"\bat rest\b", r"\bsitting still\b", r"\ball the time\b"]},
         ],
-        "danger_values": ["yes"], "routine_value": "no",
+        "danger_values": ["yes"], "danger_action": "CALL_911", "routine_value": "no",
     },
     {
         "slot": "fluids_kept_down", "kind": "safety", "categories": ["gastrointestinal"],
@@ -125,7 +126,7 @@ QUESTION_BANK = [
                 r"\bcan keep\b", r"\bkeeping \w+( \w+)? down\b", r"\bstaying down\b", r"\bstill drinking\b",
                 r"\bdrinking (fine|ok|okay|well|normally)\b"]},
         ],
-        "danger_values": ["no"], "routine_value": "yes",
+        "danger_values": ["no"], "danger_action": "GO_TO_ER", "routine_value": "yes",
     },
     {
         "slot": "urine_output", "kind": "detail", "categories": ["gastrointestinal"],
@@ -134,7 +135,7 @@ QUESTION_BANK = [
             {"value": "no", "label": "No, about normal", "match": NO + [r"\bpeeing (fine|normally|ok)\b"]},
             {"value": "yes", "label": "Yes, much less", "match": YES + [r"\bhavent peed\b", r"\bbarely peed\b"]},
         ],
-        "danger_values": [], "routine_value": "no",
+        "danger_values": [], "danger_action": None, "routine_value": "no",
     },
     {
         "slot": "fever_value", "kind": "detail", "categories": ["fever"],
@@ -144,7 +145,7 @@ QUESTION_BANK = [
             {"value": "100_4_to_102", "label": "100.4 to 102", "match": [r"\b(10[01])( [4-9])?\b", r"\b102\b"]},
             {"value": "over_102", "label": "Over 102", "match": [r"\b10[3-7]\b"]},
         ],
-        "danger_values": [], "routine_value": "100_4_to_102",
+        "danger_values": [], "danger_action": None, "routine_value": "100_4_to_102",
     },
     {
         "slot": "child_age", "kind": "safety", "categories": ["fever"],
@@ -158,7 +159,7 @@ QUESTION_BANK = [
             {"value": "1_to_5_years", "label": "1 to 5 years", "match": [r"\b[1-5] (years?|yrs?)( old)?\b", r"\btoddler\b"]},
             {"value": "6_years_plus", "label": "6 years or older", "match": [r"\b([6-9]|1[0-7]) (years?|yrs?)( old)?\b"]},
         ],
-        "danger_values": ["under_3_months"], "routine_value": "1_to_5_years",
+        "danger_values": ["under_3_months"], "danger_action": "CALL_911", "routine_value": "1_to_5_years",
     },
     {
         "slot": "abdominal_location_and_trend", "kind": "safety", "categories": ["gastrointestinal"],
@@ -172,6 +173,6 @@ QUESTION_BANK = [
             {"value": "mild_or_better", "label": "All over, mild or getting better", "match": [
                 r"\ball over\b", r"\bmild\b", r"\bgetting better\b", r"\bcomes and goes\b"]},
         ],
-        "danger_values": ["lower_right_worse"], "routine_value": "mild_or_better",
+        "danger_values": ["lower_right_worse"], "danger_action": "CALL_911", "routine_value": "mild_or_better",
     },
 ]

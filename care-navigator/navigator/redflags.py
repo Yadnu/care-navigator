@@ -37,6 +37,7 @@ class RedFlagResult(BaseModel):
     hits: list[RedFlagHit] = []
     resources: list[str] = []
     message: str = ""
+    action: Optional[str] = None  # CALL_911 or GO_TO_ER; CALL_911 wins when both hit (D-048)
 
     @property
     def is_emergency(self) -> bool:
@@ -146,8 +147,18 @@ def screen_text(text: str) -> RedFlagResult:
             if r not in resources:
                 resources.append(r)
     resources.sort(key=lambda r: r != "988")  # crisis line first when present
-    message = " ".join(rules["messages"][r] for r in resources[:1])
-    return RedFlagResult(hits=hits, resources=resources, message=message)
+    actions = {rules["categories"][h.category]["action"] for h in hits}
+    action = None if not hits else "CALL_911" if "CALL_911" in actions else "GO_TO_ER"
+    return RedFlagResult(hits=hits, resources=resources, action=action,
+                         message=emergency_message(action, resources) if hits else "")
+
+
+def emergency_message(action: str, resources: list[str]) -> str:
+    """988 first for crisis wording; otherwise the message for the action."""
+    messages = load_rules()["messages"]
+    if resources and resources[0] == "988":
+        return messages["988"]
+    return messages["911"] if action == "CALL_911" else messages["GO_TO_ER"]
 
 
 def has_injury_context(text: str) -> bool:

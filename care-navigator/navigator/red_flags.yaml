@@ -1,6 +1,9 @@
 # Red flags in three tiers (D-041). Simplified, not clinically validated. Prototype only.
 #
 # Tier 1 (categories): unmistakable signs. Any hit -> EMERGENCY immediately, no questions.
+#   Each category has an action: CALL_911 or GO_TO_ER; CALL_911 wins when both hit (D-048).
+#   symptom_guide.json danger_signs must give the same action for the same sign
+#   (tests/test_safety_consistency.py).
 # Tier 2 (tier2): a single weak signal. Ask the mapped safety question first; a danger answer
 #   -> EMERGENCY, otherwise routing continues.
 # Tier 3: neither. Normal clarification and routing.
@@ -10,11 +13,12 @@
 # patterns: each entry is a list of regexes that must ALL match.
 # A match is ignored when a negation cue appears up to 3 words before it in the same clause
 # ("no chest pain"); commas, full stops and "but" end a clause.
-version: "2.0"
+version: "2.1"
 label: "Simplified, not clinically validated"
 
 messages:
   "911": "Call 911 or go to the nearest ER."
+  "GO_TO_ER": "Go to the nearest ER now and have someone else drive. Call 911 if it gets worse."
   "988": "Call or text 988 (Suicide & Crisis Lifeline) now, or call 911 if you are in immediate danger."
 
 # Quoted: an unquoted `no` is the boolean false in YAML 1.1.
@@ -24,6 +28,7 @@ clause_breaks: ["but", "however", "though", "although"]
 categories:
   cardiac:
     resources: ["911"]
+    action: CALL_911
     phrases:
       - chest pain
       - pain in my chest
@@ -41,6 +46,7 @@ categories:
       - ['\bchest\b', '\b(tight\w*|pressure|heavy|heaviness|squeez\w*|crush\w*|elephant|sitting on)\b']
   breathing:
     resources: ["911"]
+    action: CALL_911
     phrases:
       - cant breathe
       - cannot breathe
@@ -58,6 +64,7 @@ categories:
       - ['\b(short of breath|shortness of breath)\b', '\bchest (pain|tight\w*|pressure)\b']
   stroke:
     resources: ["911"]
+    action: CALL_911
     phrases:
       - face is drooping
       - face drooping
@@ -75,6 +82,7 @@ categories:
       - ['\bheadache\b', '\bworst\b.{0,30}\b(life|ever)\b']
   bleeding:
     resources: ["911"]
+    action: CALL_911
     phrases:
       - bleeding that wont stop
       - wont stop bleeding
@@ -90,6 +98,7 @@ categories:
       - heavy bleeding
   allergic_reaction:
     resources: ["911"]
+    action: CALL_911
     phrases:
       - throat is swelling
       - throat swelling
@@ -101,6 +110,7 @@ categories:
       - ['\b(lips|tongue|throat)\b', '\bswell\w*']
   mental_health_crisis:
     resources: ["988", "911"]
+    action: CALL_911
     phrases:
       - end my life
       - kill myself
@@ -111,19 +121,30 @@ categories:
       - hurt myself
   severe_dehydration:
     resources: ["911"]
+    action: GO_TO_ER
     phrases:
       - cant keep any water down
       - cant keep water down
       - cant keep fluids down
       - cant keep anything down
+      - unable to keep fluids down
+      - unable to keep any fluids down
     patterns:
       - ['\b(havent peed|no urine|not peeing)\b', '\b(vomit\w*|dizz\w*)\b']
+  # Can't keep fluids down is GO_TO_ER; with confusion, fainting, extreme sleepiness or blood it is CALL_911.
+  dehydration_serious:
+    resources: ["911"]
+    action: CALL_911
+    patterns:
+      - ['\b(cant|cannot|unable to) keep (any |anything )?\w* ?down\b', '\b(confus\w*|faint\w*|passed out|extremely sleepy|very sleepy|hard to wake|blood\w*)\b']
   infant_fever:
     resources: ["911"]
+    action: CALL_911
     patterns:
       - ['\b(newborn|\d+ (day|days|week|weeks) old|[0-2] (month|months) old|one month old|two months old)\b', '\bfever\b']
   neuro:
     resources: ["911"]
+    action: CALL_911
     phrases:
       - seizure
       - convulsion
@@ -134,10 +155,12 @@ categories:
       - isnt waking up
   head_injury:
     resources: ["911"]
+    action: CALL_911
     patterns:
       - ['\b(hit|bumped|banged|hurt) (my |his |her |their )?head\b', '\b(vomit\w*|throwing up|sleepy|drowsy|confused|passed out)\b']
   poisoning:
     resources: ["911"]
+    action: CALL_911
     phrases:
       - too many pills
       - overdose
@@ -147,10 +170,12 @@ categories:
       - poisoned
   pregnancy:
     resources: ["911"]
+    action: CALL_911
     patterns:
       - ['\bpregnant\b', '\bbleed\w*']
   trauma:
     resources: ["911"]
+    action: CALL_911
     phrases:
       - bone sticking out
       - bone is sticking out
@@ -159,6 +184,7 @@ categories:
       - ['\b(car crash|car accident|hit by a car|fell from)\b', '\b(neck|back|head|tingl\w*|numb\w*)\b']
   abdominal:
     resources: ["911"]
+    action: CALL_911
     phrases:
       - belly is hard
       - stomach is rigid
@@ -167,6 +193,7 @@ categories:
       - ['\blower right\b', '\b(fever|worse|worsening)\b']
   infection:
     resources: ["911"]
+    action: CALL_911
     patterns:
       - ['\bstiff neck\b', '\bfever\b']
 

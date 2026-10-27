@@ -2,7 +2,7 @@
 
 Living map of the system. Read this and `decisions.md` before any task; update it at the end of every phase.
 
-Last updated: 2026-10-27, Prompt1 Parts A and B done.
+Last updated: 2026-10-27, Prompt1 Parts A and B done; CHANGE_conversational_triage.md Part 0 done.
 
 ## Request flow
 
@@ -83,7 +83,7 @@ flowchart TD
 | `tests/conftest.py` | test | pytest | every test | - | D-008, D-024 | done |
 | `navigator/models.py` | module | pydantic | all modules | `test_models.py` | D-001, D-003 | done |
 | `navigator/redact.py` | module | - | pipeline, trace | `test_redact.py` | D-009 | done |
-| `navigator/redflags.py` + `red_flags.yaml` | module + config | rapidfuzz (JaroWinkler), pyyaml, config, models | pipeline, questions | `test_redflags.py`, `test_conversation.py` | D-015, D-016, D-041 | done (v2.0, three tiers) |
+| `navigator/redflags.py` + `red_flags.yaml` | module + config | rapidfuzz (JaroWinkler), pyyaml, config, models | pipeline, questions | `test_redflags.py`, `test_conversation.py`, `test_safety_consistency.py` | D-015, D-016, D-041, D-048 | done (v2.1, action per category) |
 | `navigator/questions.py` | module | data/question_bank.json, redflags.TextView | pipeline, clarifier, run_eval | `test_conversation.py` | D-041 | done |
 | `navigator/lexicon.py` | module | - | jev_client, parser | via `test_jev_client.py`, `test_parser.py` | D-021 | done |
 | `navigator/jev_client.py` | module | config, lexicon, redflags.normalize, requests | pipeline, retriever, guard | `test_jev_client.py` | D-002, D-004, D-008, D-019, D-023 | done (all question types verified live) |
@@ -111,19 +111,23 @@ flowchart TD
 | `data/coverage_gaps.json` | data | generate.py (expansion.coverage_gaps) | data README, tests | `test_data_insurance.py` | D-044 | done (34 gaps at 15 km) |
 | `data/cost_ranges.json` | data | generate.py | costs | `test_data.py`, `test_generate.py` | D-010, D-011, D-013 | done |
 | `data/eval/*.jsonl` | data | eval_sets.py | tests, run_eval | `test_data.py`, `test_generate.py`, `test_conversation.py` | D-013, D-041 | done (+ near_misses 21, conversations 12) |
+| `data/symptom_guide.json` (+ `build_symptom_guide.py`) | data | - | consistency test; interviewer and final answer (change request Parts 1-3) | `test_safety_consistency.py` | D-047, D-048 | done (13 clusters); not yet used by the pipeline |
+| `tests/test_safety_consistency.py` | test | red_flags.yaml, symptom_guide.json, question_bank.json | - | - | D-048 | done (5 mismatches xfail, awaiting approval) |
 | `data/question_bank.json` (+ `question_bank_src.py`) | data | generate.py | questions, clarifier | `test_conversation.py`, `test_generate.py` | D-041 | done (15 slots) |
 | `pyproject.toml`, `requirements.txt`, `Makefile` | config | - | dev workflow | - | - | done |
 | `README.md` | doc | everything | reviewers | - | - | done |
 
 ## Current status
 
-- Done: Phases 0 to 8. Prompt1 Part A (three-tier red flags, question bank, conversations; D-041 to D-043). Prompt1 Part B (10 plans, 12 zips in 3 towns, 73 practitioners, network rules, coverage_gaps.json, cost display; D-044 to D-046).
-- Tests: 1,143 passing offline with no API keys.
-- Offline eval: red-flag recall 100% (40/40), false-emergency rate 0% (0/64), routing 100% (44/44) with 0 below expected, vague -> question 100% (15/15), adversarial 100% (10/10), near misses 100% (21/21), conversations 100% (12/12), 0.39 questions on average (77 runs), 0 over 3 questions, retrieval recall@3 100% (30 queries), 0 filter violations.
-- In progress: -
-- Not started: -
+- Done: Phases 0 to 8; Prompt1 Parts A and B (D-041 to D-046); change request Part 0 (guide moved to `data/`, built, LF rules, `make guide`; D-047 and D-048; one action per danger sign, "can't keep fluids down" is GO_TO_ER; emergencies carry `action`).
+- Tests: 1,197 passing, 5 xfailed (the mismatches awaiting approval), offline with no API keys.
+- Offline eval: red-flag recall 100% (40/40), false-emergency rate 0% (0/64), routing 100% (44/44) with 0 below expected, vague -> question 100% (15/15), adversarial 100% (10/10), near misses 100% (22/22), conversations 100% (12/12), 0.39 questions on average (77 runs), 0 over 3 questions, retrieval recall@3 100% (30 queries), 0 filter violations.
+- In progress: change request Part 0.3 item 5 (danger-sign mismatches listed, waiting for the user's OK).
+- Not started: change request Parts 1 to 6 (interviewer loop, final answer, guards, guide-based tests and evals, chat UI, docs).
 
 ## Open questions
+
+- Change request 0.3 item 5: 14 danger-sign action mismatches between `red_flags.yaml` / the question bank and `symptom_guide.json` await the user's OK (5 are tracked as strict xfails in `test_safety_consistency.py`).
 
 - D-045: confirm that the pediatric ER (ER-004) should list the senior plan because every ER accepts every plan.
 - The 3 km "nearby" radius (D-031) suits urban Corvalle; rural Pinecrest requests usually get online alternatives only. A radius by `area_type` would need a decision.

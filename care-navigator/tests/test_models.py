@@ -94,6 +94,7 @@ def test_jev_answers_probabilities_are_bounded():
 def test_care_decision_fields():
     d = CareDecision(level="URGENT_CARE", rule_id="R-07", escalated=False, rules_version="1.0")
     assert d.level is CareLevel.URGENT_CARE
+    assert d.notes == []
 
 
 def test_every_practitioner_in_data_validates():

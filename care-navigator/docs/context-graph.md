@@ -125,3 +125,8 @@ flowchart TD
 - `make` is not installed on the dev machine (Windows); Makefile targets are plain one-liners that can be run directly.
 - `make eval` with keys in `.env` runs live (about 105 pipeline runs); the live eval hasn't been run end to end yet (live routing alone: 39/39).
 - The Sonnet 5.5 evaluation judge (D-004) isn't implemented (D-038).
+
+## In progress: Prompt1.md Part A (conversational triage)
+
+- A1 done. Reproduced "My left hand have severe pain ever since I have played volleyball" -> EMERGENCY from trace `traces/8340ab6389a1.json` (live run). Step that fired: `red_flags_parsed`, output `parsed:severe pain`. Cause: `navigator/redflags.py:109-112` (`screen_report`) turns any parser-listed red flag that no rule matches into an emergency; Claude listed "severe pain". The keyword screen had no hits and Jev was 0.49.
+- Next: A2 to A5 (three-tier red flags, question bank, multi-turn pipeline, near-miss and conversation evals, D-003 superseded), then Part B. Checked: `rapidfuzz.distance.JaroWinkler.normalized_similarity` exists in rapidfuzz 3.14.6 ("pian"/"pain" 0.925, "can"/"cant" 0.94, so short words must stay exact).

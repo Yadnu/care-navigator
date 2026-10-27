@@ -266,4 +266,44 @@ Template:
   - Query: built from the parsed `SymptomReport` (main symptom + body area), never the raw text, so injected instructions can't steer retrieval.
   - Each match carries `matched_text`: the record segment (condition, specialty or bio sentence) sharing the most terms with the query.
 - Alternatives considered: Word-level TF-IDF (rejected: misses "sprain" vs "sprains" without a stemmer); ordering by distance before relevance (rejected: the plan says distance is the tie-break).
-- Consequences: recall@3 = 1.0 on the 20 non-empty retrieval queries (top-1 correct on all 20), zero filter violations across a 1,600-search grid, the coverage-gap query returns an empty list. Voyage hasn't been called live.
+- Consequences: recall@3 = 1.0 on the 20 non-empty retrieval queries (top-1 correct on all 20), zero filter violations across a 1,600-search grid, the coverage-gap query returns an empty list. Voyage hasn't been called live. The default radius was later changed to 3 km (D-031).
+
+## D-031: "Nearby" means 3 km
+- Date: 2026-10-27
+- Status: accepted
+- Context: Zip centroids are 4-10 km apart and every zip has its own in-network urgent and primary care except the deliberate gap (D-012). With a 10 km default, the whole town counts as nearby and the Bronze/00105 gap never shows (UC-001 is 4.8 km away), so demo case 5 can't happen.
+- Decision: `config.MAX_DISTANCE_KM = 3.0` (the person's own neighbourhood; matches the eval's gap query RQ-019). Retrieval eval queries still pass their own `max_distance_km`.
+- Alternatives considered: 10 km (rejected: hides the coverage gap); widening the radius when fewer than 3 results are found (rejected: also hides the gap and makes "nearby" vary per request).
+- Consequences: Most requests show 1-2 in-person options, not 3. The gap note names the radius ("within 3 km of zip 00105").
+
+## D-032: Test correction, number of options in the representative case
+- Date: 2026-10-27
+- Status: accepted
+- Context: `test_representative_case` and the embedding-fallback test asserted exactly 3 options. That was my assumption, not the plan's ("top 3" = up to 3). With the 3 km radius (D-031) the representative case has 2 open in-network urgent cares.
+- Decision: Assert 1 to 3 options (and "some options" for the fallback test). Every other assertion (level, copay $75, typical $150-$300, 3-5 sentences, disclaimer) is unchanged.
+- Alternatives considered: Widening the radius to get 3 (rejected, see D-031).
+- Consequences: None for behaviour.
+
+## D-033: Pipeline behaviour on invalid or incomplete input
+- Date: 2026-10-27
+- Status: accepted
+- Context: The plan asks for clear messages for empty text, too-long text and invalid zip or plan, while still giving the care level where possible.
+- Decision: Empty text and text over 2,000 characters (`config.MAX_TEXT_CHARS`) stop the request with `outcome=None` and a clear message; nothing is sent to any model. An unknown zip or plan doesn't stop it: the rules still pick the level, `errors` explains the limitation, the engine ignores an unknown plan for the opening-hours check, and retrieval drops in-person options for an unknown zip (D-030) and everything for an unknown plan (nothing is in-network). When the level is urgent or primary care and nothing in-network is open within 3 km, the result says so, lists telehealth `alternatives` and shows the plan's nurse line. The follow-up answer is appended to the original text and re-screened from the start (red flags first); `after_followup=True` means the pipeline never asks a second question (D-003). Off-topic and non-English text in offline mode get the follow-up question.
+- Alternatives considered: A fourth outcome such as INVALID (rejected: the plan fixes three outcomes); truncating long text (rejected: the end of a long message may hold the red flag).
+- Consequences: Everything above is covered by `tests/test_pipeline.py` including all 10 adversarial cases.
+
+## D-034: Explanation and guard details
+- Date: 2026-10-27
+- Status: accepted
+- Context: D-007 limits the explainer's input; the guard needs concrete rules that the template can always pass.
+- Decision: Each rule in `care_rules.yaml` (now v1.1) has a plain-English `reason`; two notes were reworded to avoid "you have", which the diagnosis guard treats as diagnosis wording. `TemplateExplainer` writes 4-5 sentences: why (level + reason, plus "moved up one level" if escalated), the closure note if any, the options with distance and the first option's copay and typical total, the rule's escalation note (or a generic one), then "This is not medical advice." `ClaudeExplainer` gets only `{decision, options}` as JSON (level, rule, reason, notes; facility, name, type, distance, copay, typical total), no symptom text, `effort: low`, no sampling params. The guard blocks when: the disclaimer is missing; the decision's level isn't named; another level is named outside a sentence that says it's closed / not in network or a conditional "if ..., go to the ER"; a directory practitioner or any "Dr. X" not in the retrieved list is named; or Jev (OfflineJev if Jev is down) flags a diagnosis or medication. Retrieved record names are removed before the level and diagnosis checks, because names like "Downtown Internal Medicine" are trusted record text. On block, the template is used and the trace says why.
+- Alternatives considered: Guarding only with Jev (rejected: level and name checks are deterministic and cheap).
+- Consequences: The template passes the guard on all 39 non-emergency routing cases (tested). A Claude explanation that paraphrases a level differently ("walk-in clinic") may fail the "level named" check and fall back to the template.
+
+## D-035: Costs and traces
+- Date: 2026-10-27
+- Status: accepted
+- Context: The plan asks for copay + typical range labeled as estimates, deductible when high, and a JSON trace per request.
+- Decision: `costs.estimate(care_type, plan)` returns the plan's copay for that type and the typical total from `cost_ranges.json`, labeled "Estimate"; the deductible is mentioned at or above $3,000 (`config.HIGH_DEDUCTIBLE_USD`: Silver and Bronze). Unknown plan -> typical range only; self-care -> no copay. `Tracer` records each step (name, input, output, model or rule, latency, tokens) and re-applies `redact()` to every input and output as a safety net on top of redacting before any model call; the raw text is never logged. One JSON file per request in `traces/` (gitignored), with a summary (outcome, level, rule, simplified, errors, request fields without text). Token counts are recorded for Claude steps; dollar cost is left empty because only totals, not input/output splits, are kept.
+- Alternatives considered: Logging raw text with access controls (rejected: D-009).
+- Consequences: The trace viewer (Phase 7) reads these files or the in-memory `result.trace`.

@@ -8,7 +8,8 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - Phase 2 (schemas, redaction, red flags): done.
 - Phase 3 (Jev and parser adapters): done.
 - Phase 4 (care engine and clarifier): done.
-- Phase 5 (RAG over practitioners): done. Waiting for "continue" to start Phase 6.
+- Phase 5 (RAG over practitioners): done.
+- Phase 6 (costs, explainer, guard, trace, pipeline): done. Waiting for "continue" to start Phase 7.
 
 ## Domain vocabulary
 - **Outcomes:** `EMERGENCY` (stop, "Call 911 or go to the nearest ER"; suicidal intent also gives 988), `FOLLOW_UP` (one clarifying question, max 25 words, max once), `RECOMMENDATION`.
@@ -19,7 +20,7 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - **Symptom categories** (`lexicon.py`; `care_rules.yaml` keys on these): respiratory, ent, gastrointestinal, musculoskeletal, skin, eye, urinary, wound, dental, mental_health, chronic, allergy, fever, neuro, general.
 - **Claude on Haiku 5.5:** no `temperature` (400s); forced tool + `strict: true` instead (D-018).
 - **Jev = TypeSafe Jev:** `POST https://api.typesafe.ai/v1/systemone`, model `jev-latest`, question types `noul` / `choice` / `score` (D-023).
-- **Retrieval:** filters (type, plan, open, new patients, age, <= 10 km unless virtual) -> TF-IDF/Voyage + BM25 -> RRF k=60 -> Jev rerank top 10 -> top 3; query from the parsed report only; empty list = coverage gap (D-030).
+- **Retrieval:** filters (type, plan, open, new patients, age, <= 3 km unless virtual, D-031) -> TF-IDF/Voyage + BM25 -> RRF k=60 -> Jev rerank top 10 -> top 3; query from the parsed report only; empty list = coverage gap (D-030).
 - **Env:** keys in `care-navigator/.env` (gitignored, template `.env.example`); loaded only by entry points via `config.load_env_file()`, never in tests (D-024).
 
 ## Data facts (synthetic, town "Corvalle")
@@ -49,3 +50,6 @@ Quick-reference facts needed while coding. Architecture lives in `docs/context-g
 - `ANTHROPIC_API_KEY` -> Claude Haiku 5.5 `claude-haiku-5-5` (parser, clarifier, explainer); Sonnet 5.5 `claude-sonnet-5-5` only as offline eval judge.
 - `JEV_API_KEY` -> Jev classifier (API shape unverified: mark `TODO: verify against Jev docs`).
 - `VOYAGE_API_KEY` -> Voyage embeddings.
+
+## Pipeline entry point
+- `Navigator.from_env().run(Request(...)) -> NavigatorResult` (outcome, message, resources, question, recommendation with options/alternatives/costs/explanation/notes/nurse_line, errors, simplified, trace, trace_path). Call `config.load_env_file()` first in entry points. Tests use `Navigator()` (offline).

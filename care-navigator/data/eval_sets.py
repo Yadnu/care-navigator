@@ -177,10 +177,94 @@ RETRIEVAL_QUERIES = [
     for i, (q, c, p, z, rt, a, km, ids, n) in enumerate(_rq, 1)
 ]
 
+# ---------------------------------------------------------------- near misses
+# Not emergencies, but they share words with red flags. Run as a conversation with the
+# question bank's routine answers; must never be EMERGENCY and must land in acceptable_levels.
+U, P, T, S = "URGENT_CARE", "PRIMARY_CARE", "TELEHEALTH", "SELF_CARE"
+_nm = [
+    ("I have pain in my left hand ever since I played volleyball", 4, [P, U], "Prompt1 A1 report"),
+    ("sore left arm after my flu shot", 3, [S, T, P, U], "Arm pain with a benign cause"),
+    ("left wrist hurts after I fell skating", 4, [U, P], "Injury, not cardiac"),
+    ("chest muscles sore after bench press yesterday, no shortness of breath", 3, [S, T, P, U], "Exercise soreness"),
+    ("short of breath after running, normal again in 5 minutes", 2, [T, P, U], "Exertional, resolves"),
+    ("headache after a long day at the screen", 3, [S, T, P], "Gradual headache"),
+    ("cut my hand, bleeding stopped with pressure", 3, [U, T, P], "Bleeding controlled"),
+    ("stomach ache after spicy food, mild", 2, [S, T, P], "Mild indigestion"),
+    ("back pain after moving furniture, can bend fine", 3, [P, U, T], "Lifting strain"),
+    ("my jaw is sore after the dentist", 3, [T, P, U], "Jaw pain with a benign cause"),
+    ("chest cold with a cough for 3 days", 3, [T, P, U], "Chest cold, not chest pain"),
+    ("my baby is 6 months old with a runny nose, no fever", 2, [T, P, U], "Infant without fever"),
+    ("throat is a bit scratchy, no swelling", 2, [T, P, U], "Throat without swelling"),
+    ("my neck is stiff from sleeping wrong", 3, [S, T, P, U], "Stiff neck without fever"),
+    ("ankle hurts after a hike, can walk on it, a little swollen", 4, [U, P], "Mild ankle injury"),
+    ("knee sore after soccer practice, no swelling, can walk", 3, [S, T, P, U], "Minor knee strain"),
+    ("bumped my head on a cabinet, small bump, no vomiting, feel normal", 2, [S, T, P, U], "Minor head bump"),
+    ("my left arm is sore from carrying groceries", 2, [S, T, P, U], "Arm strain"),
+    ("short of breath after climbing stairs, fine at rest", 3, [T, P, U], "Exertional only"),
+    ("vomited once after a big meal, keeping water down fine", 3, [T, U, P], "Single vomit, fluids down"),
+    ("my gums bleed a little when I brush my teeth", 2, [T, P, U], "Minor gum bleeding"),
+]
+NEAR_MISSES = [
+    {"id": f"NM-{i:03d}", "text": t, "severity": sev, "expected_outcome": "RECOMMENDATION",
+     "acceptable_levels": acc, "note": note}
+    for i, (t, sev, acc, note) in enumerate(_nm, start=1)
+]
+
+# ---------------------------------------------------------------- conversations
+# Scripted multi-turn conversations. answers are keyed by question-bank slot;
+# any other question gets default_answer. must_ask: slots that must be asked.
+E = "EMERGENCY"
+_cv = [
+    ("I have pain in my left hand ever since I played volleyball", 4, "adult", TUE_DAY,
+     {"swelling_or_deformity": "yes, it's swollen", "can_use_or_bear_weight": "I can move my fingers but gripping hurts"},
+     "RECOMMENDATION", [U], 3, ["swelling_or_deformity"], "Injury: swelling -> urgent care"),
+    ("my arm hurts", 3, "adult", TUE_DAY,
+     {"associated_cardiac_symptoms": "no chest pain, I lifted boxes yesterday", "swelling_or_deformity": "no",
+      "can_use_or_bear_weight": "yes, I can use it fine"},
+     "RECOMMENDATION", [P, U], 3, ["associated_cardiac_symptoms"], "Safety check clears, then injury"),
+    ("my arm hurts", 3, "adult", TUE_DAY,
+     {"associated_cardiac_symptoms": "my chest feels tight and I'm sweating"},
+     E, [], 1, ["associated_cardiac_symptoms"], "Safety answer is a Tier 1 sign"),
+    ("I feel off", 3, "adult", MIDNIGHT,
+     {"main_symptom": "throwing up since dinner", "fluids_kept_down": "I can keep water down"},
+     "RECOMMENDATION", [T], 3, ["main_symptom", "fluids_kept_down"], "Midnight vomiting, fluids down"),
+    ("headache", 3, "adult", TUE_DAY,
+     {"headache_onset": "it came on slowly after work"},
+     "RECOMMENDATION", [S, T], 3, ["headache_onset"], "Gradual headache"),
+    ("headache", 6, "adult", TUE_DAY,
+     {"headache_onset": "worst of my life, came on suddenly"},
+     E, [], 1, ["headache_onset"], "Sudden worst headache"),
+    ("stomach pain", 5, "adult", TUE_DAY,
+     {"abdominal_location_and_trend": "lower right, getting worse, and I have a fever"},
+     E, [], 1, ["abdominal_location_and_trend"], "Lower right, worsening, fever"),
+    ("stomach pain", 3, "adult", TUE_DAY,
+     {"abdominal_location_and_trend": "upper, burning, after spicy food"},
+     "RECOMMENDATION", [T, P], 3, ["abdominal_location_and_trend"], "Upper burning pain"),
+    ("short of breath", 4, "adult", TUE_DAY,
+     {"breathing_at_rest": "only after stairs, fine at rest"},
+     "RECOMMENDATION", [P], 3, ["breathing_at_rest"], "Exertional breathlessness"),
+    ("short of breath", 5, "adult", TUE_DAY,
+     {"breathing_at_rest": "yes, even sitting still"},
+     E, [], 1, ["breathing_at_rest"], "Breathless at rest"),
+    ("my kid has a fever", 4, "child", TUE_DAY,
+     {"child_age": "8 months old, 101, drinking well"},
+     "RECOMMENDATION", [U, T], 3, ["child_age"], "Child over 3 months with fever"),
+    ("crushing chest pain", 7, "adult", TUE_DAY,
+     {}, E, [], 0, [], "Tier 1: no questions"),
+]
+CONVERSATIONS = [
+    {"id": f"CV-{i:03d}", "text": t, "severity": sev, "age_group": age, "zip": "00101", "plan": "PLAN_SILVER_HMO",
+     "request_time": when, "answers": answers, "default_answer": "I'm not sure", "expected_outcome": outcome,
+     "acceptable_levels": acc, "max_questions": maxq, "must_ask": must, "note": note}
+    for i, (t, sev, age, when, answers, outcome, acc, maxq, must, note) in enumerate(_cv, start=1)
+]
+
 EVAL_SETS = {
     "red_flags": RED_FLAGS,
     "routing_cases": ROUTING_CASES,
     "vague": VAGUE,
     "adversarial": ADVERSARIAL,
     "retrieval_queries": RETRIEVAL_QUERIES,
+    "near_misses": NEAR_MISSES,
+    "conversations": CONVERSATIONS,
 }

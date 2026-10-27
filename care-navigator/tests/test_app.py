@@ -65,6 +65,21 @@ def test_follow_up_question_then_answer():
     assert "Urgent care" in all_text(at)
 
 
+def test_safety_check_quick_replies_history_and_skip():
+    at = submit("my arm hurts", severity=3)
+    assert not at.exception
+    assert any("chest pain or pressure" in i.value for i in at.info)    # question from the bank
+    assert [b.label for b in at.button if b.key and b.key.startswith("reply_")] == ["No", "Yes"]
+    at.button(key="reply_0").click()                                     # answer "No"
+    at.run()
+    assert not at.exception
+    assert "You: No" in all_text(at)                                     # conversation history
+    at.button(key="skip").click()                                        # "Skip, just tell me where to go"
+    at.run()
+    text = all_text(at)
+    assert "Recommended level of care" in text and "moved up one level" in text
+
+
 def test_midnight_override():
     at = submit("Vomiting and stomach cramps since dinner, can keep water down", severity=5,
                 when="Midnight 00:15 (Wed 4 Nov 2026)")

@@ -1,0 +1,501 @@
+[
+  {
+    "slot": "main_symptom",
+    "kind": "detail",
+    "categories": [
+      "any"
+    ],
+    "question": "What is the main thing bothering you, and where on your body do you feel it?",
+    "options": [],
+    "danger_values": [],
+    "routine_value": null,
+    "synthetic": true
+  },
+  {
+    "slot": "duration",
+    "kind": "detail",
+    "categories": [
+      "any"
+    ],
+    "question": "How long has this been going on?",
+    "options": [
+      {
+        "value": "hours",
+        "label": "A few hours",
+        "match": [
+          "\\bhours?\\b",
+          "\\btoday\\b",
+          "\\btonight\\b"
+        ]
+      },
+      {
+        "value": "days",
+        "label": "A day or two",
+        "match": [
+          "\\b(a|one|two|1|2) days?\\b",
+          "\\byesterday\\b"
+        ]
+      },
+      {
+        "value": "week_plus",
+        "label": "A week or more",
+        "match": [
+          "\\bweeks?\\b",
+          "\\bmonths?\\b"
+        ]
+      }
+    ],
+    "danger_values": [],
+    "routine_value": "days",
+    "synthetic": true
+  },
+  {
+    "slot": "severity_now",
+    "kind": "detail",
+    "categories": [
+      "any"
+    ],
+    "question": "Right now, how bad is it on a scale of 1 to 10?",
+    "options": [
+      {
+        "value": "mild",
+        "label": "1 to 3, mild",
+        "match": [
+          "^[1-3]\\b",
+          "\\bmild\\b"
+        ]
+      },
+      {
+        "value": "moderate",
+        "label": "4 to 6, moderate",
+        "match": [
+          "^[4-6]\\b",
+          "\\bmoderate\\b"
+        ]
+      },
+      {
+        "value": "severe",
+        "label": "7 to 10, severe",
+        "match": [
+          "^([7-9]|10)\\b",
+          "\\bsevere\\b"
+        ]
+      }
+    ],
+    "danger_values": [],
+    "routine_value": "moderate",
+    "synthetic": true
+  },
+  {
+    "slot": "location_detail",
+    "kind": "detail",
+    "categories": [
+      "any"
+    ],
+    "question": "Where exactly do you feel it?",
+    "options": [],
+    "danger_values": [],
+    "routine_value": null,
+    "synthetic": true
+  },
+  {
+    "slot": "injury_mechanism",
+    "kind": "detail",
+    "categories": [
+      "musculoskeletal"
+    ],
+    "question": "Did this start after a fall, twist, lift, sport or other injury?",
+    "options": [
+      {
+        "value": "no",
+        "label": "No injury",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b",
+          "\\bno injury\\b",
+          "\\bout of nowhere\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes, after an injury",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "\\b(fell|fall|twisted|lifted|lifting|tripped|bumped|played|carrying|carried)\\b",
+          "\\b(volleyball|soccer|basketball|football|tennis|skating|skiing|hike|hiking|gym|workout)\\b"
+        ]
+      }
+    ],
+    "danger_values": [],
+    "routine_value": "yes",
+    "synthetic": true
+  },
+  {
+    "slot": "swelling_or_deformity",
+    "kind": "detail",
+    "categories": [
+      "musculoskeletal"
+    ],
+    "question": "Is the area swollen, bruised or out of its usual shape?",
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "\\bswollen\\b",
+          "\\bswelling\\b",
+          "\\bbruis\\w*",
+          "\\bout of shape\\b",
+          "\\bdeformed\\b",
+          "\\blooks bent\\b"
+        ]
+      }
+    ],
+    "danger_values": [],
+    "routine_value": "no",
+    "synthetic": true
+  },
+  {
+    "slot": "can_use_or_bear_weight",
+    "kind": "detail",
+    "categories": [
+      "musculoskeletal"
+    ],
+    "question": "Can you use it normally or put weight on it?",
+    "options": [
+      {
+        "value": "no",
+        "label": "No, I can't",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b",
+          "\\b(cant|cannot|can not|unable to) (use|move|walk|put weight|bear|grip|bend|stand)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes, mostly",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "\\bcan (use|move|walk|bend|grip|stand)\\b",
+          "\\bwalk (on it|a little)\\b",
+          "\\bmoving fine\\b"
+        ]
+      }
+    ],
+    "danger_values": [],
+    "routine_value": "yes",
+    "synthetic": true
+  },
+  {
+    "slot": "associated_cardiac_symptoms",
+    "kind": "safety",
+    "categories": [
+      "any"
+    ],
+    "question": "Along with this, do you have chest pain or pressure, shortness of breath, sweating or nausea?",
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "\\bchest\\b",
+          "\\bsweat\\w*",
+          "\\bclammy\\b",
+          "\\b(short|shortness) of breath\\b",
+          "\\bnause\\w*"
+        ]
+      }
+    ],
+    "danger_values": [
+      "yes"
+    ],
+    "routine_value": "no",
+    "synthetic": true
+  },
+  {
+    "slot": "headache_onset",
+    "kind": "safety",
+    "categories": [
+      "neuro"
+    ],
+    "question": "Did the headache start suddenly, within seconds to a minute, or build up gradually?",
+    "options": [
+      {
+        "value": "sudden",
+        "label": "Suddenly",
+        "match": [
+          "\\bsudden\\w*",
+          "\\ball at once\\b",
+          "\\bout of nowhere\\b",
+          "\\bthunderclap\\b",
+          "\\binstantly\\b"
+        ]
+      },
+      {
+        "value": "gradual",
+        "label": "Gradually",
+        "match": [
+          "\\bgradual\\w*",
+          "\\bslow\\w*",
+          "\\bbuil[dt] up\\b",
+          "\\bover (the day|hours|time)\\b",
+          "\\bafter (work|a long day|school)\\b",
+          "\\blong day\\b"
+        ]
+      }
+    ],
+    "danger_values": [
+      "sudden"
+    ],
+    "routine_value": "gradual",
+    "synthetic": true
+  },
+  {
+    "slot": "breathing_at_rest",
+    "kind": "safety",
+    "categories": [
+      "respiratory"
+    ],
+    "question": "Are you short of breath even while resting or sitting still?",
+    "options": [
+      {
+        "value": "no",
+        "label": "No, only with activity",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b",
+          "\\bonly (after|when|with|on|during)\\b",
+          "\\bfine (at|when) rest\\w*",
+          "\\bnormal again\\b",
+          "\\bgoes away\\b",
+          "\\bbetter (at|when) rest\\w*",
+          "\\bafter (running|stairs|climbing|exercise|exercising|a run|working out)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes, even at rest",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "\\beven (sitting|resting|lying|at rest)\\b",
+          "\\bat rest\\b",
+          "\\bsitting still\\b",
+          "\\ball the time\\b"
+        ]
+      }
+    ],
+    "danger_values": [
+      "yes"
+    ],
+    "routine_value": "no",
+    "synthetic": true
+  },
+  {
+    "slot": "fluids_kept_down",
+    "kind": "safety",
+    "categories": [
+      "gastrointestinal"
+    ],
+    "question": "Can you keep water or other fluids down?",
+    "options": [
+      {
+        "value": "no",
+        "label": "No, it comes back up",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b",
+          "\\b(cant|cannot|can not) keep\\b",
+          "\\bnothing (stays|is staying) down\\b",
+          "\\beverything comes back up\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "\\bcan keep\\b",
+          "\\bkeeping \\w+( \\w+)? down\\b",
+          "\\bstaying down\\b",
+          "\\bstill drinking\\b",
+          "\\bdrinking (fine|ok|okay|well|normally)\\b"
+        ]
+      }
+    ],
+    "danger_values": [
+      "no"
+    ],
+    "routine_value": "yes",
+    "synthetic": true
+  },
+  {
+    "slot": "urine_output",
+    "kind": "detail",
+    "categories": [
+      "gastrointestinal"
+    ],
+    "question": "Have you been peeing much less than usual today?",
+    "options": [
+      {
+        "value": "no",
+        "label": "No, about normal",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b",
+          "\\bpeeing (fine|normally|ok)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes, much less",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "\\bhavent peed\\b",
+          "\\bbarely peed\\b"
+        ]
+      }
+    ],
+    "danger_values": [],
+    "routine_value": "no",
+    "synthetic": true
+  },
+  {
+    "slot": "fever_value",
+    "kind": "detail",
+    "categories": [
+      "fever"
+    ],
+    "question": "If there is a fever, what was the highest temperature?",
+    "options": [
+      {
+        "value": "under_100_4",
+        "label": "Under 100.4",
+        "match": [
+          "\\b(9[5-9]|100)( [0-3])?\\b"
+        ]
+      },
+      {
+        "value": "100_4_to_102",
+        "label": "100.4 to 102",
+        "match": [
+          "\\b(10[01])( [4-9])?\\b",
+          "\\b102\\b"
+        ]
+      },
+      {
+        "value": "over_102",
+        "label": "Over 102",
+        "match": [
+          "\\b10[3-7]\\b"
+        ]
+      }
+    ],
+    "danger_values": [],
+    "routine_value": "100_4_to_102",
+    "synthetic": true
+  },
+  {
+    "slot": "child_age",
+    "kind": "safety",
+    "categories": [
+      "fever"
+    ],
+    "question": "How old is your child?",
+    "options": [
+      {
+        "value": "under_3_months",
+        "label": "Under 3 months",
+        "match": [
+          "\\bunder (3|three) months\\b",
+          "\\bnewborn\\b",
+          "\\b[0-2] months? old\\b",
+          "\\b\\d+ (days?|weeks?) old\\b",
+          "^[0-2] months?\\b",
+          "^\\d+ (days?|weeks?)\\b"
+        ]
+      },
+      {
+        "value": "3_to_12_months",
+        "label": "3 to 12 months",
+        "match": [
+          "\\b([3-9]|1[0-2]) months?( old)?\\b"
+        ]
+      },
+      {
+        "value": "1_to_5_years",
+        "label": "1 to 5 years",
+        "match": [
+          "\\b[1-5] (years?|yrs?)( old)?\\b",
+          "\\btoddler\\b"
+        ]
+      },
+      {
+        "value": "6_years_plus",
+        "label": "6 years or older",
+        "match": [
+          "\\b([6-9]|1[0-7]) (years?|yrs?)( old)?\\b"
+        ]
+      }
+    ],
+    "danger_values": [
+      "under_3_months"
+    ],
+    "routine_value": "1_to_5_years",
+    "synthetic": true
+  },
+  {
+    "slot": "abdominal_location_and_trend",
+    "kind": "safety",
+    "categories": [
+      "gastrointestinal"
+    ],
+    "question": "Where is the belly pain, and is it getting better or worse?",
+    "options": [
+      {
+        "value": "lower_right_worse",
+        "label": "Lower right, getting worse",
+        "match": [
+          "\\blower right\\b.{0,40}\\b(worse|worsening|fever)\\b",
+          "\\b(worse|worsening)\\b.{0,40}\\blower right\\b"
+        ]
+      },
+      {
+        "value": "upper",
+        "label": "Upper belly or burning",
+        "match": [
+          "\\bupper\\b",
+          "\\bburning\\b",
+          "\\bheartburn\\b",
+          "\\bafter (food|eating|a meal|spicy)\\b"
+        ]
+      },
+      {
+        "value": "mild_or_better",
+        "label": "All over, mild or getting better",
+        "match": [
+          "\\ball over\\b",
+          "\\bmild\\b",
+          "\\bgetting better\\b",
+          "\\bcomes and goes\\b"
+        ]
+      }
+    ],
+    "danger_values": [
+      "lower_right_worse"
+    ],
+    "routine_value": "mild_or_better",
+    "synthetic": true
+  }
+]

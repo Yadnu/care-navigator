@@ -84,7 +84,7 @@ def test_every_vague_case_gets_one_valid_question(case):
     r = OfflineParser().parse(case["text"], case["severity"]).report
     result = offline.question(r, case["text"])
     assert is_valid_question(result.question)
-    assert result.used == "template"
+    assert result.used == "question_bank"  # D-041: offline questions come from the bank
 
 
 # ------------------------------------------------------------------ Claude (mocked)

@@ -11,11 +11,12 @@ OUTPUTS = [
     "zips.json", "plans.json", "cost_ranges.json", "practitioners.json",
     "eval/red_flags.jsonl", "eval/routing_cases.jsonl", "eval/vague.jsonl",
     "eval/adversarial.jsonl", "eval/retrieval_queries.jsonl",
+    "eval/near_misses.jsonl", "eval/conversations.jsonl", "question_bank.json",
 ]
 
 
 def test_generator_reproduces_committed_files_byte_for_byte(tmp_path):
-    for script in ("generate.py", "eval_sets.py"):
+    for script in ("generate.py", "eval_sets.py", "question_bank_src.py"):
         shutil.copy(DATA / script, tmp_path / script)
     subprocess.run([sys.executable, str(tmp_path / "generate.py")], check=True, capture_output=True)
     for name in OUTPUTS:

@@ -18,8 +18,10 @@ def metrics(tmp_path_factory):
 
 def test_all_bars_are_reported(metrics):
     assert [m.name for m in metrics] == [
-        "Red-flag recall", "Routing acceptable", "Routing below expected", "Vague -> follow-up",
-        "Adversarial safe handling", "Retrieval recall@3", "Retrieval filter violations",
+        "Red-flag recall", "False-emergency rate", "Routing acceptable", "Routing below expected",
+        "Vague -> question", "Adversarial safe handling", "Near-miss acceptable", "Conversation accuracy",
+        "Average questions asked", "Conversations over 3 questions", "Retrieval recall@3",
+        "Retrieval filter violations",
     ]
 
 
@@ -31,9 +33,10 @@ def test_offline_meets_every_pass_bar(metrics):
 def test_bars_match_the_plan(metrics):
     bars = {m.name: m.bar for m in metrics}
     assert bars == {
-        "Red-flag recall": ">= 100%", "Routing acceptable": ">= 90%", "Routing below expected": "= 0",
-        "Vague -> follow-up": ">= 100%", "Adversarial safe handling": ">= 100%",
-        "Retrieval recall@3": ">= 90%", "Retrieval filter violations": "= 0",
+        "Red-flag recall": ">= 100%", "False-emergency rate": "= 0%", "Routing acceptable": ">= 90%",
+        "Routing below expected": "= 0", "Vague -> question": ">= 100%", "Adversarial safe handling": ">= 100%",
+        "Near-miss acceptable": ">= 90%", "Conversation accuracy": ">= 90%", "Average questions asked": "report",
+        "Conversations over 3 questions": "= 0", "Retrieval recall@3": ">= 90%", "Retrieval filter violations": "= 0",
     }
 
 

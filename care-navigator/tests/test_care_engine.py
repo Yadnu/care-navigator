@@ -183,6 +183,32 @@ def test_unrecognised_category_fails_toward_more_care():
     assert d.level >= CareLevel.URGENT_CARE
 
 
+# ------------------------------------------------------------------ robust to classifier disagreement (D-036)
+def test_sore_throat_is_urgent_care_even_if_classified_respiratory():
+    d = engine.decide(report(main_symptom="cough and sore throat", duration_hours=None, missing=["duration"],
+                             confidence="medium"), category="respiratory", urgency=2,
+                      request_time=TUE_DAY, plan="PLAN_GOLD_PPO")
+    assert d.level is CareLevel.URGENT_CARE
+
+
+def test_vomiting_is_urgent_care_even_with_low_urgency_score():
+    d = engine.decide(report(main_symptom="stomach bug, vomited twice", body_area="stomach"),
+                      category="gastrointestinal", urgency=2, request_time=TUE_DAY, plan="PLAN_GOLD_PPO")
+    assert d.level is CareLevel.URGENT_CARE
+
+
+def test_tick_bite_is_telehealth_even_if_classified_as_wound():
+    d = engine.decide(report(main_symptom="tick bite, no rash", body_area=None), category="wound", urgency=2,
+                      request_time=TUE_DAY, plan="PLAN_GOLD_PPO")
+    assert d.level is CareLevel.TELEHEALTH
+
+
+def test_dog_bite_is_still_urgent_care():
+    d = engine.decide(report(main_symptom="dog bite, small puncture", body_area="hand"), category="wound",
+                      urgency=4, request_time=TUE_DAY, plan="PLAN_GOLD_PPO")
+    assert d.level is CareLevel.URGENT_CARE
+
+
 # ------------------------------------------------------------------ opening hours
 def test_closed_injury_goes_up_to_er_not_down():
     d = engine.decide(report(main_symptom="twisted ankle"), category="musculoskeletal", urgency=4,

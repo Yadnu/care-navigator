@@ -164,12 +164,25 @@ def test_claude_explainer_sees_only_decision_options_and_costs():
     ClaudeExplainer(client=client).explain(decision, options)
     kwargs = client.messages.create.call_args.kwargs
     payload = json.loads(kwargs["messages"][-1]["content"])
-    assert set(payload) == {"decision", "options"}
+    assert set(payload) == {"decision", "options", "alternatives"}  # D-036: alternatives are retrieved records too
     assert payload["decision"]["level"] == "URGENT_CARE"
     assert payload["options"][0]["facility_name"] == options[0].match.practitioner.facility_name
     assert "Sore throat" not in kwargs["messages"][-1]["content"]  # no raw symptom text
     assert "temperature" not in kwargs
     assert "not medical advice" in kwargs["system"].lower()
+    assert "only the notes" in kwargs["system"].lower()  # no invented warning signs
+
+
+def test_alternatives_are_explained_and_allowed_by_the_guard():
+    decision = CareDecision(level="URGENT_CARE", rule_id="R-18", escalated=False, rules_version="1.1")
+    _, telehealth = scenario(by_id("RT-040"))  # evening: telehealth options
+    text = template.explain(decision, [], telehealth).text
+    assert telehealth[0].match.practitioner.facility_name in text
+    assert check(text, decision, [], jev, telehealth).ok
+    client = fake_client(text_response("x"))
+    ClaudeExplainer(client=client).explain(decision, [], telehealth)
+    payload = json.loads(client.messages.create.call_args.kwargs["messages"][-1]["content"])
+    assert payload["alternatives"][0]["facility_name"] == telehealth[0].match.practitioner.facility_name
 
 
 def test_claude_explainer_falls_back_on_api_error():

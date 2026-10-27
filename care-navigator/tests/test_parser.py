@@ -150,6 +150,20 @@ def test_claude_parser_valid_output():
     assert result.tokens == 150
 
 
+def test_claude_parser_fills_a_missing_duration_from_the_offline_parser():
+    no_duration = {**GOOD_INPUT, "main_symptom": "acne getting worse", "body_area": "skin",
+                   "duration_hours": None, "missing": ["duration"], "confidence": "medium"}
+    result = ClaudeParser(client=fake_client(response(no_duration))).parse("Acne getting worse for months", 1)
+    assert result.report.duration_hours == 2160
+    assert "duration" not in result.report.missing
+    assert result.fallback is False and result.used == config.CLAUDE_MODEL
+
+
+def test_claude_duration_wins_when_both_exist():
+    result = ClaudeParser(client=fake_client(response(GOOD_INPUT))).parse("sore throat for 3 days", 4)
+    assert result.report.duration_hours == 48  # the model's value is kept
+
+
 def test_claude_parser_request_shape():
     client = fake_client(response(GOOD_INPUT))
     ClaudeParser(client=client).parse("Sore throat", severity=4)

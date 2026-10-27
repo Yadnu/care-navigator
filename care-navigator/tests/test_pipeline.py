@@ -17,7 +17,7 @@ from navigator.clarifier import is_valid_question
 from navigator.explainer import DISCLAIMER, ClaudeExplainer, ExplainResult, Explainer, split_sentences
 from navigator.jev_client import JevClient, JevError, OfflineJev
 from navigator.models import CareLevel, Outcome, Request
-from navigator.parser import ClaudeParser
+from navigator.parser import ClaudeParser, OfflineParser
 from navigator.pipeline import Navigator
 from navigator.retrieval.embeddings import EmbeddingError, LocalTfidfEmbedder
 
@@ -232,6 +232,23 @@ class DocsFail(LocalTfidfEmbedder):
 def test_embedding_failure_falls_back_to_offline_search(tmp_path, embedder):
     result = Navigator(embedder=embedder, trace_dir=tmp_path).run(req("Sore throat and fever for two days"))
     assert result.recommendation.options and result.simplified is True
+    retrieve = next(s for s in result.trace if s.name == "retrieve")
+    assert "fallback" in retrieve.used  # the trace says which index answered (D-036)
+
+
+class UnsureParser(OfflineParser):
+    """Like the live parser on "refill check": names a symptom but reports low confidence."""
+
+    def parse(self, text, severity):
+        result = super().parse(text, severity)
+        return result.model_copy(update={"report": result.report.model_copy(update={"confidence": "low"})})
+
+
+def test_low_confidence_with_a_named_symptom_does_not_ask(tmp_path):
+    result = Navigator(parser=UnsureParser(), trace_dir=tmp_path).run(
+        req("Need a refill check for my blood pressure, feeling fine", 1, plan="PLAN_GOLD_PPO"))
+    assert result.outcome is Outcome.RECOMMENDATION
+    assert result.recommendation.decision.level is CareLevel.PRIMARY_CARE
 
 
 # ------------------------------------------------------------------ guard in the pipeline

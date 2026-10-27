@@ -291,9 +291,14 @@ def test_http_jev_rerank_empty_docs_makes_no_call():
     session.post.assert_not_called()
 
 
-def test_http_jev_guard():
-    session = fake_session(reply(guard={"type": "noul", "noul": 0.95}))
+def test_http_jev_guard_asks_two_narrow_questions_and_takes_the_max():
+    session = fake_session(reply(diagnosis={"type": "noul", "noul": 0.2},
+                                 medication={"type": "noul", "noul": 0.95}))
     assert http(session).mentions_diagnosis_or_medication("Take this pill") == 0.95
+    questions = session.post.call_args.kwargs["json"]["questions"]
+    assert set(questions) == {"diagnosis", "medication"}
+    assert all(q["type"] == "noul" for q in questions.values())
+    assert "treatment" not in json.dumps(questions).lower()  # D-036: "treatment" made care advice look unsafe
 
 
 @pytest.mark.parametrize("status", [400, 401, 422, 500, 503])

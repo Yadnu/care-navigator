@@ -43,6 +43,8 @@ offline = OfflineParser()
     ("chest pian since an hour", 1),
     ("Runny nose and mild cough for 3 days", 72),
     ("Sinus pressure and stuffy nose for 10 days", 240),
+    ("Tick bite yesterday, no rash, feel fine", 24),
+    ("Back strain from lifting a box yesterday, can move fine", 24),
 ])
 def test_duration_extraction(text, hours):
     assert offline.parse(text, severity=4).report.duration_hours == hours

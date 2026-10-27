@@ -203,7 +203,7 @@ Template:
   - `rerank`: one request with a 3-level `score` question per document; score / 2 gives 0-1.
   A missing answer, non-200 (including 400/422 validation errors), network error or bad JSON raises `JevError`. Still tested with mocked HTTP only.
 - Alternatives considered: Keeping our own shape behind an adapter (rejected: it would never work against the real API); separate requests per method in one batch (rejected: the interface calls one method at a time).
-- Consequences: The client now matches the documented contract but has not been run against the live service. Auth failure status codes aren't documented; any non-200 is treated as an error and the pipeline falls back to `OfflineJev`.
+- Consequences: The client matches the documented contract. Live smoke test on 2026-10-27: `is_emergency("chest pain and sweating")` returned HTTP 200 from `jev-1.14.0` with `noul` 0.95 (confidence 0.9), 279 input tokens; only the `noul` path has been exercised live, the `choice` and `score` paths are covered by mocked tests only. Auth failure status codes aren't documented; any non-200 is treated as an error and the pipeline falls back to `OfflineJev`.
 
 ## D-024: Loading .env
 - Date: 2026-10-27

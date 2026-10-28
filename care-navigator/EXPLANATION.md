@@ -99,14 +99,14 @@ turns out to require partnerships (a telehealth or insurer backend) I can't real
 **Care Navigator**: a person describes symptoms in plain words with a severity (1-10), zip
 code, insurance plan and the time of the request. The system returns one of: an emergency
 instruction (call 911 / go to the nearest ER), one clarifying question, or a recommendation
-— a care level, the nearest open in-network practitioners, a cost estimate, up to two
-hedged possible causes, and a plain-English explanation. The one-sentence core workflow:
+— a care level, the nearest open in-network practitioners, a cost estimate, and a
+plain-English explanation. The one-sentence core workflow:
 **realistic symptom description in → safe, costed, in-network care recommendation out**, and
 the core problem-solving logic (red-flag detection, the care-level rules, retrieval, cost
 calculation) genuinely runs — none of it is mocked.
 
 - **Representative use case**: "Sore throat and fever for two days" → after a couple of
-  interviewer questions, **Urgent care**, two nearby in-network practitioners, $75 copay,
+  follow-up questions, **Urgent care**, two nearby in-network practitioners, $75 copay,
   typical cost $150-$300, and a disclaimer.
 - **Difficult / invalid case**: "Mild chest tightness, probably nothing" (severity 2 — an
   understated description of a possible cardiac symptom) → the red-flag rules override the low
@@ -121,11 +121,9 @@ above plus four more; see [`README.md`](care-navigator/README.md) for full setup
 sample data and the eval results (`make eval`, 12 pass bars, all met).
 
 **Synthetic data and mocked integrations, clearly labeled**: every practitioner, plan, zip code
-and phone number is fictional (`"synthetic": true` on every record); the symptom-to-cause
-"possible causes" shown to the person come only from a small curated guide, never invented by a
-model; Claude, the classifier ("Jev") and the embedding model are each optional and the system
-runs fully offline by default with no API keys, falling back automatically if a live provider
-fails.
+and phone number is fictional (`"synthetic": true` on every record); Claude, the classifier
+("Jev") and the embedding model are each optional and the system runs fully offline by default
+with no API keys, falling back automatically if a live provider fails.
 
 ## How AI was used
 
@@ -141,23 +139,30 @@ routing decisions, and a fuzzy-text-matching false positive — by running the a
 before and after, not by inspecting the diff. Full details, including the specific decisions
 logged along the way, are in [`README.md`](care-navigator/README.md#how-ai-was-used-and-how-the-output-was-checked).
 
-**Implemented**: the full pipeline above, red-flag safety screening, the interviewer
+**Implemented**: the full pipeline above, red-flag safety screening, the follow-up
 conversation, in-network retrieval with hard filters, cost estimates for ten insurance plans,
 a Streamlit app, a CLI demo and an eval runner, 1,198 tests.
 
 **Mocked or simplified**: all data is synthetic; offline fallbacks exist for every model
 (keyword heuristics, a regex parser, TF-IDF search, template text) so the system never requires
-an API key; care-level rules are simplified and explicitly not clinically validated.
+an API key; care-level rules are simplified and explicitly not clinically validated; retrieval
+runs over an in-memory index sized for this prototype's ~70 practitioner records.
 
 **Deferred**: a chat-style UI redesign and an updated architecture doc for the most recent
 change (both out of scope for the time box); real provider directories and live hours; booking;
-a running deductible tracker; non-English input beyond a generic follow-up question.
+a running deductible tracker; non-English input beyond a generic follow-up question. Looking
+further ahead, scaling this past a prototype would mean swapping the synthetic, in-memory data
+for a real-time provider directory (live hours, live acceptance of new patients) and a proper
+vector database (e.g. pgvector or a managed service) in place of the in-memory TF-IDF/embedding
+index, so retrieval stays fast and current as the practitioner directory grows far beyond ~70
+records.
 
 ## Time spent and what's next
 
 About 5 hours total — over the suggested 2-4 hour budget. Most of it built the base prototype
 and its two extensions; the overrun came from a self-initiated conversational-triage
-improvement (replacing a fixed Q&A flow with a guided interviewer), started late and needing
-far more follow-through than planned. Full breakdown and what I'd investigate next
-(re-verifying against live APIs, finishing the deferred UI/doc work, auditing the rule table
-for other ordering bugs) are in [`README.md`](care-navigator/README.md#time-spent).
+improvement (replacing a fixed Q&A flow with a more flexible follow-up conversation), started
+late and needing far more follow-through than planned. Full breakdown and what I'd investigate
+next (re-verifying against live APIs, finishing the deferred UI/doc work, auditing the rule
+table for other ordering bugs, and the real-time/vector-database scaling above) are in
+[`README.md`](care-navigator/README.md#time-spent).

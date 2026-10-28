@@ -3,8 +3,8 @@
 A person describes their symptoms in plain words, with a severity (1 to 10), a zip code, an insurance plan and the time of the request. Care Navigator returns one of three outcomes:
 
 1. **CALL_911 / GO_TO_ER**: an unmistakable emergency, or a confirmed danger sign from the symptom guide (988 first for crisis wording). The request stops here.
-2. **A short conversation**: an interviewer (Claude, or question-bank templates offline) asks one question at a time — danger signs for the matched symptom cluster first, then the most useful details, then one possible-cause question — with quick-reply buttons, at most 6 questions (typically 3 to 5), and a "Skip, just tell me where to go" button.
-3. **Recommendation**: a level of care (ER, urgent care, primary care, telehealth, or self-care with the plan's nurse line), the top in-network practitioners that are open and nearby, a cost estimate, up to two hedged possible causes from the matched cluster, and a short plain-English explanation.
+2. **A short conversation**: one follow-up question at a time (Claude, or question-bank templates offline), with quick-reply buttons, at most 6 questions (typically 3 to 5), and a "Skip, just tell me where to go" button.
+3. **Recommendation**: a level of care (ER, urgent care, primary care, telehealth, or self-care with the plan's nurse line), the top in-network practitioners that are open and nearby, a cost estimate, and a short plain-English explanation.
 
 **Core principle: rules decide, Jev classifies, Claude reads and writes, RAG finds practitioners, and every step is traced.**
 
@@ -174,12 +174,12 @@ Live, with Claude, Jev and Voyage, was verified earlier in the project's history
 - Part 5 of the change request: a chat-style Streamlit layout (`st.chat_message`) with cards for the final answer's sections and danger banners. The app was kept working against the new API (topics, `CALL_911`/`GO_TO_ER`) but not redesigned, to stay inside the time box.
 - Part 6: updating `docs/context-graph.md` and `docs/decisions.md` for the new interviewer/guide/final-answer architecture (they still describe the pre-rewrite pipeline).
 - Part 4's dedicated FakeInterviewer/FakeExplainer guard unit tests; the guards are exercised indirectly through `test_pipeline.py` and `test_explainer_guard.py` instead.
-- Real provider directories and live opening hours.
+- Real-time provider directories and live opening hours (today's data is a static synthetic snapshot).
 - Out-of-pocket estimates (deductible progress, coinsurance).
 - Booking and wait times.
 - Other languages (non-English input gets the follow-up question offline).
 - The Claude Sonnet 5.5 evaluation judge for explanation quality.
-- ChromaDB or another persistent vector store (in-memory is enough for 73 records).
+- A real vector database (e.g. pgvector or a managed service) in place of the in-memory TF-IDF/embedding index, so retrieval stays fast as the practitioner directory scales well past 73 records.
 
 Known limitations: the Voyage key used in development is rate-limited after about one query in quick succession, so live runs usually fall back to offline search (marked simplified). A live Jev rerank asks one question per candidate (up to 10). The live Claude/Jev/Voyage verification above predates the conversational-triage rewrite and has not been repeated against it.
 

@@ -16,6 +16,31 @@ A person describes their symptoms in plain words, with a severity (1 to 10), a z
 
 ---
 
+## Choose your problem
+
+Three problems considered; this prototype builds **A**.
+
+**A. People don't know where to go for care, or what it will cost (the pick).** Your roommate
+had food poisoning at midnight, money was tight, and you couldn't tell whether he needed the
+ER, which places were open, or which ones your insurance would cover. Care Navigator
+recommends the right level of care plus nearby in-network options and what they'll cost.
+
+**B. Freelancers with irregular income don't know how much to set aside for taxes.** Based on
+your sister's freelance work. US freelancers have no employer withholding and must pay
+estimated taxes every quarter. When it goes unsolved, the result is large tax bills,
+underpayment penalties and missed deductions.
+
+**C. Corporate apparel orders arrive incomplete.** Based on AEVIQ, your sister's custom apparel
+business. HR collects sizes, styles and names from every employee, and the manufacturer plans
+production from that. Wrong sizes, misspelled names and lost special requests show up after
+printing, which means reprints, wasted fabric and missed deadlines.
+
+**Why A was the pick**: it happens to almost everyone at a stressful moment, and it combines
+health with cost. B serves people who can plan ahead, and C is mostly solved by a good order
+form without AI.
+
+---
+
 ## Setup and run
 
 Python 3.11+ (developed on 3.14). Runs with **zero API keys**.

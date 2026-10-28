@@ -78,11 +78,12 @@ def test_rules_file_is_versioned_and_labeled():
 def test_rules_are_well_formed():
     rules = load_rules()["rules"]
     ids = [r["id"] for r in rules]
-    assert len(ids) == len(set(ids)) and 12 <= len(ids) <= 25
+    assert len(ids) == len(set(ids)) and 12 <= len(ids) <= 30
     levels = {l.value for l in CareLevel}
     for r in rules:
         assert re.fullmatch(r"R-\d\d", r["id"]), r["id"]
-        assert r["level"] in levels, r["id"]
+        # "CAUSE" defers to the guide's typical_level for the best-matching possible cause (D-051).
+        assert r["level"] in levels | {"CAUSE"}, r["id"]
         assert r["after_hours"] in levels - {"SELF_CARE"}, r["id"]  # never down to self-care
         assert set(r.get("when", {}).get("category", [])) <= set(CATEGORIES), r["id"]
 

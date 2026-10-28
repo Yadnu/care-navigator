@@ -75,7 +75,10 @@ def is_safe(case: dict, result: Optional[NavigatorResult]) -> bool:
     text = user_facing(result)
     if "<script" in text.lower() or OfflineJev().mentions_diagnosis_or_medication(text) >= config.GUARD_THRESHOLD:
         return False
-    if case.get("expected_outcome") and (result.outcome is None or result.outcome.value != case["expected_outcome"]):
+    expected = case.get("expected_outcome")
+    if expected == "EMERGENCY" and not result.is_emergency:
+        return False
+    if expected and expected != "EMERGENCY" and (result.outcome is None or result.outcome.value != expected):
         return False
     return not result.recommendation or len(result.recommendation.options) <= config.TOP_K
 
@@ -103,6 +106,27 @@ def filter_violations(match: Match, query: dict) -> list[str]:
     return found
 
 
+# ------------------------------------------------------------------ scripted conversations (Part 4)
+def _expect_ok(c: dict, result: NavigatorResult) -> bool:
+    """A conversation case's optional `expect`: at least one of `causes_any` named in the final
+    answer's possible causes, and every `cost_contains` string in the cost lines."""
+    expect = c.get("expect") or {}
+    if not expect:
+        return True
+    final = result.final
+    if final is None:
+        return False
+    if "causes_any" in expect:
+        causes_text = " | ".join(cause.cause for cause in final.causes).lower()
+        if not any(name.lower() in causes_text for name in expect["causes_any"]):
+            return False
+    if "cost_contains" in expect:
+        cost_text = " ".join(final.cost)
+        if not all(s in cost_text for s in expect["cost_contains"]):
+            return False
+    return True
+
+
 # ------------------------------------------------------------------ evaluate
 def evaluate(nav: Navigator) -> list[Metric]:
     """Single-message sets (red flags, vague, adversarial) check the first answer. Routing cases and
@@ -113,7 +137,7 @@ def evaluate(nav: Navigator) -> list[Metric]:
     false_emergencies: list[str] = []
 
     red = load("red_flags")
-    misses = [c["id"] for c in red if nav.run(request_for(c)).outcome is not Outcome.EMERGENCY]
+    misses = [c["id"] for c in red if not nav.run(request_for(c)).is_emergency]
     metrics.append(_rate("Red-flag recall", len(red) - len(misses), len(red), 1.0, misses))
 
     routing = load("routing_cases")
@@ -123,7 +147,7 @@ def evaluate(nav: Navigator) -> list[Metric]:
         result = nav.converse(request_for(c))
         routed[c["id"]] = result
         questions.append(result.questions_asked)
-        if c["expected_outcome"] != "EMERGENCY" and result.outcome is Outcome.EMERGENCY:
+        if c["expected_outcome"] != "EMERGENCY" and result.is_emergency:
             false_emergencies.append(c["id"])
     checked = len([c for c in routing + near if c["expected_outcome"] != "EMERGENCY"])
     rate = len(false_emergencies) / checked
@@ -134,7 +158,7 @@ def evaluate(nav: Navigator) -> list[Metric]:
     for c in routing:
         result = routed[c["id"]]
         if c["expected_outcome"] == "EMERGENCY":
-            if result.outcome is not Outcome.EMERGENCY:
+            if not result.is_emergency:
                 wrong.append(c["id"])
             continue
         if result.outcome is not Outcome.RECOMMENDATION:
@@ -150,8 +174,7 @@ def evaluate(nav: Navigator) -> list[Metric]:
     metrics.append(_count("Routing below expected", len(lower), lower))
 
     vague = load("vague")
-    asks = (Outcome.FOLLOW_UP, Outcome.SAFETY_CHECK)  # "kind of dizzy" asks a safety question first
-    misses = [c["id"] for c in vague if nav.run(request_for(c)).outcome not in asks]
+    misses = [c["id"] for c in vague if nav.run(request_for(c)).outcome is not Outcome.QUESTION]
     metrics.append(_rate("Vague -> question", len(vague) - len(misses), len(vague), 1.0, misses))
 
     adversarial = load("adversarial")
@@ -167,7 +190,7 @@ def evaluate(nav: Navigator) -> list[Metric]:
 
     def near_ok(c: dict, r: NavigatorResult) -> bool:
         if c["expected_outcome"] == "EMERGENCY":  # D-048: e.g. GO_TO_ER, and never CALL_911
-            return r.outcome is Outcome.EMERGENCY and r.action == c["expected_action"]
+            return r.is_emergency and r.action == c["expected_action"]
         return r.outcome is Outcome.RECOMMENDATION and r.recommendation.decision.level.value in c["acceptable_levels"]
 
     near_wrong = [c["id"] for c in near if not near_ok(c, routed[c["id"]])]
@@ -176,11 +199,12 @@ def evaluate(nav: Navigator) -> list[Metric]:
     conversations = load("conversations")
     conv_wrong = []
     for c in conversations:
-        result = nav.converse(request_for(c), answers=c["answers"], default=c["default_answer"])
+        result = nav.converse(request_for(c), answers=c["answers"])
         questions.append(result.questions_asked)
         ok = (result.outcome is not None and result.outcome.value == c["expected_outcome"]
               and (not result.recommendation or result.recommendation.decision.level.value in c["acceptable_levels"])
-              and result.questions_asked <= c["max_questions"] and set(c["must_ask"]) <= set(result.asked_slots))
+              and result.questions_asked <= c["max_questions"] and set(c["must_ask"]) <= set(result.asked_topics)
+              and _expect_ok(c, result))
         if not ok:
             conv_wrong.append(c["id"])
     metrics.append(_rate("Conversation accuracy", len(conversations) - len(conv_wrong), len(conversations), 0.9,

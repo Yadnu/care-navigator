@@ -22,6 +22,7 @@ from navigator.explainer import (
     split_sentences,
 )
 from navigator.guard import check
+from navigator.guide import clusters
 from navigator.jev_client import JevError, OfflineJev
 from navigator.models import CareDecision, Option
 from navigator.parser import OfflineParser
@@ -32,6 +33,10 @@ ROUTING = [json.loads(l) for l in (EVAL / "routing_cases.jsonl").read_text(encod
            if l.strip() and json.loads(l)["expected_outcome"] == "RECOMMENDATION"]
 engine, retriever, jev, parser = CareEngine(), Retriever(), OfflineJev(), OfflineParser()
 template = TemplateExplainer()
+# This file tests the template/Claude explainer against the rules engine, not the guide's
+# conversational causes feature (D-051/D-053, tested separately), so every guide cause is
+# allowed here: a rule's own trusted wording (e.g. "a minor strain") must never be blocked.
+ALL_CAUSES = [c["cause"] for cluster in clusters().values() for c in cluster["possible_causes"]]
 
 
 def scenario(case):
@@ -62,7 +67,7 @@ def test_template_explanations_are_3_to_5_sentences_and_pass_the_guard(case):
     text = template.explain(decision, options).text
     assert 3 <= len(split_sentences(text)) <= 5, text
     assert text.endswith(DISCLAIMER)
-    result = check(text, decision, options, jev)
+    result = check(text, decision, options, jev, allowed_causes=ALL_CAUSES)
     assert result.ok, (result.reasons, text)
 
 

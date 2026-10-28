@@ -16,7 +16,7 @@ OUTPUTS = [
 
 
 def test_generator_reproduces_committed_files_byte_for_byte(tmp_path):
-    for script in ("generate.py", "eval_sets.py", "question_bank_src.py", "expansion.py"):
+    for script in ("generate.py", "eval_sets.py", "question_bank_src.py", "expansion.py", "build_symptom_guide.py"):
         shutil.copy(DATA / script, tmp_path / script)
     subprocess.run([sys.executable, str(tmp_path / "generate.py")], check=True, capture_output=True)
     for name in OUTPUTS:

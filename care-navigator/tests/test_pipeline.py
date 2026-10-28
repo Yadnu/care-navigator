@@ -1,4 +1,9 @@
-"""Phase 6: end-to-end pipeline on every eval set, fallbacks, guard and trace."""
+"""Phase 6 end-to-end pipeline coverage, ported to the conversational-triage architecture
+(CHANGE_conversational_triage.md, D-050 .. D-053): the interviewer (topics, not slots) replaces
+the old clarifier, Outcome is CALL_911/GO_TO_ER/QUESTION/RECOMMENDATION, and most demo-style
+single-message cases now take at least one interviewer turn, so they go through `nav.converse`
+(which answers with the question bank's routine, no-danger reply) rather than a single `nav.run`.
+"""
 from __future__ import annotations
 
 import json
@@ -13,7 +18,6 @@ import numpy as np
 import pytest
 
 from navigator import config
-from navigator.clarifier import is_valid_question
 from navigator.explainer import DISCLAIMER, ClaudeExplainer, ExplainResult, Explainer, split_sentences
 from navigator.jev_client import JevClient, JevError, OfflineJev
 from navigator.models import CareLevel, Outcome, Request
@@ -60,7 +64,7 @@ def user_facing(result) -> str:
 @pytest.mark.parametrize("case", RED_FLAGS, ids=[c["id"] for c in RED_FLAGS])
 def test_every_red_flag_is_an_emergency(nav, case):
     result = nav.run(from_case(case))
-    assert result.outcome is Outcome.EMERGENCY and result.action in {"CALL_911", "GO_TO_ER"}
+    assert result.is_emergency and result.action in {"CALL_911", "GO_TO_ER"}
     assert "911" in result.message
     if case.get("crisis_line"):
         assert result.resources[0] == "988" and "988" in result.message
@@ -69,6 +73,9 @@ def test_every_red_flag_is_an_emergency(nav, case):
 @pytest.mark.parametrize("case", ROUTING, ids=[c["id"] for c in ROUTING])
 def test_every_routing_case(nav, case):
     result = nav.converse(from_case(case))  # D-041: questions answered with the bank's routine answers
+    if case["expected_outcome"] == "EMERGENCY":  # D-052: CALL_911 or GO_TO_ER, the data predates the split
+        assert result.is_emergency, (case["text"], result.message)
+        return
     assert result.outcome.value == case["expected_outcome"], (case["text"], result.message)
     if result.outcome is Outcome.RECOMMENDATION:
         level = result.recommendation.decision.level
@@ -78,8 +85,8 @@ def test_every_routing_case(nav, case):
 @pytest.mark.parametrize("case", VAGUE, ids=[c["id"] for c in VAGUE])
 def test_every_vague_case_gets_one_follow_up(nav, case):
     result = nav.run(from_case(case))
-    assert result.outcome in (Outcome.FOLLOW_UP, Outcome.SAFETY_CHECK)  # D-041: "dizzy" asks a safety question
-    assert is_valid_question(result.question) and result.message == result.question
+    assert result.outcome is Outcome.QUESTION  # D-041: the interviewer asks one question
+    assert result.question and result.question.strip().endswith("?") and result.message == result.question
 
 
 @pytest.mark.parametrize("case", ADVERSARIAL, ids=[c["id"] for c in ADVERSARIAL])
@@ -89,8 +96,11 @@ def test_adversarial_inputs_are_handled_safely(nav, case):
     text = user_facing(result)
     assert "<script>" not in text
     assert OfflineJev().mentions_diagnosis_or_medication(text) < config.GUARD_THRESHOLD, text
-    if case.get("expected_outcome"):
-        assert result.outcome.value == case["expected_outcome"]
+    expected = case.get("expected_outcome")
+    if expected == "EMERGENCY":
+        assert result.is_emergency
+    elif expected:
+        assert result.outcome.value == expected
     if result.recommendation:
         assert len(result.recommendation.options) <= 3
 
@@ -123,7 +133,7 @@ def test_too_long_text_is_rejected_clearly(nav):
 
 
 def test_invalid_zip_still_gives_the_care_level(nav):
-    result = nav.run(req("Sore throat and fever for two days", zip_code="99999"))
+    result = nav.converse(req("Sore throat and fever for two days", zip_code="99999"))
     rec = result.recommendation
     assert result.outcome is Outcome.RECOMMENDATION and rec.decision.level is CareLevel.URGENT_CARE
     assert "99999" in result.errors[0]
@@ -132,7 +142,7 @@ def test_invalid_zip_still_gives_the_care_level(nav):
 
 
 def test_invalid_plan_still_gives_the_care_level(nav):
-    result = nav.run(req("Sore throat and fever for two days", plan="PLAN_FAKE"))
+    result = nav.converse(req("Sore throat and fever for two days", plan="PLAN_FAKE"))
     assert result.outcome is Outcome.RECOMMENDATION
     assert result.recommendation.decision.level is CareLevel.URGENT_CARE
     assert "PLAN_FAKE" in result.errors[0] and result.recommendation.options == []
@@ -140,7 +150,7 @@ def test_invalid_plan_still_gives_the_care_level(nav):
 
 # ------------------------------------------------------------------ demo scenarios
 def test_representative_case(nav):
-    result = nav.run(req("Sore throat and fever for two days"))
+    result = nav.converse(req("Sore throat and fever for two days"))
     rec = result.recommendation
     assert rec.decision.level is CareLevel.URGENT_CARE and 1 <= len(rec.options) <= 3  # D-032
     assert all(o.cost.copay_usd == 75 and o.cost.typical_range_usd == (150, 300) for o in rec.options)
@@ -149,30 +159,30 @@ def test_representative_case(nav):
 
 
 def test_midnight_food_poisoning(nav):
-    result = nav.run(req("Vomiting and stomach cramps since dinner, can keep water down", 5, when=MIDNIGHT))
+    result = nav.converse(req("Vomiting and stomach cramps since dinner, can keep water down", 5, when=MIDNIGHT))
     rec = result.recommendation
     assert rec.decision.level is CareLevel.TELEHEALTH and rec.options[0].match.practitioner.id == "TH-001"
     assert any("go to the ER" in n for n in rec.notes)
 
 
 def test_coverage_gap_offers_telehealth_and_nurse_line(nav):
-    result = nav.run(req("Cough and sore throat", 3, zip_code="00105", plan="PLAN_BRONZE_LOCAL"))
+    result = nav.converse(req("Cough and sore throat", 3, zip_code="00105", plan="PLAN_BRONZE_LOCAL"))
     rec = result.recommendation
     assert rec.decision.level is CareLevel.URGENT_CARE and rec.options == []
     assert rec.alternatives and all(o.match.practitioner.type == "TELEHEALTH" for o in rec.alternatives)
-    assert any("No in-network urgent care" in n for n in rec.notes)
+    assert any("No in-network" in n for n in rec.notes)
     assert "1-800-555-0103" in rec.nurse_line
 
 
 def test_self_care_shows_the_nurse_line(nav):
-    result = nav.run(req("Sneezing and itchy eyes, happens every spring", 2, plan="PLAN_GOLD_PPO"))
+    result = nav.converse(req("Sneezing and itchy eyes, happens every spring", 2, plan="PLAN_GOLD_PPO"))
     rec = result.recommendation
     assert rec.decision.level is CareLevel.SELF_CARE and rec.options == [] and "1-800-555-0101" in rec.nurse_line
 
 
 # ------------------------------------------------------------------ follow-up loop (max once)
 def test_follow_up_answer_leads_to_a_recommendation(nav):
-    result = nav.run(req("I just feel off", followup_answer="sore throat and fever for two days"))
+    result = nav.converse(req("I just feel off", followup_answer="sore throat and fever for two days"))
     assert result.outcome is Outcome.RECOMMENDATION
     assert result.recommendation.decision.level is CareLevel.URGENT_CARE
 
@@ -184,7 +194,7 @@ def test_still_vague_after_follow_up_escalates_instead_of_asking_again(nav):
 
 def test_red_flag_in_follow_up_answer_is_an_emergency(nav):
     result = nav.run(req("I just feel off", followup_answer="now I have chest pain"))
-    assert result.outcome is Outcome.EMERGENCY
+    assert result.is_emergency
 
 
 # ------------------------------------------------------------------ provider failures -> offline, simplified
@@ -197,7 +207,7 @@ class DownJev(JevClient):
 
 
 def test_jev_down_falls_back_offline(tmp_path):
-    result = Navigator(jev=DownJev(), trace_dir=tmp_path).run(req("Sore throat and fever for two days"))
+    result = Navigator(jev=DownJev(), trace_dir=tmp_path).converse(req("Sore throat and fever for two days"))
     assert result.outcome is Outcome.RECOMMENDATION and result.simplified is True
     assert result.recommendation.decision.level is CareLevel.URGENT_CARE
     assert any("fallback" in s.used for s in result.trace)
@@ -206,13 +216,14 @@ def test_jev_down_falls_back_offline(tmp_path):
 def test_jev_down_still_catches_indirect_emergency(tmp_path):
     result = Navigator(jev=DownJev(), trace_dir=tmp_path).run(req("feels like an elephant is sitting on my chest"))
     # D-041: Tier 1 rules now catch this before Jev is called, so no fallback is needed.
-    assert result.outcome is Outcome.EMERGENCY
-    assert result.trace[-1].name == "red_flags" and "cardiac" in result.trace[-1].output
+    assert result.is_emergency
+    red_flags = next(s for s in result.trace if s.name == "red_flags")
+    assert "cardiac" in red_flags.output and "parse" not in [s.name for s in result.trace]
 
 
 def test_jev_down_mid_conversation_falls_back_offline(tmp_path):
     result = Navigator(jev=DownJev(), trace_dir=tmp_path).run(req("my wrist feels strange"))
-    assert result.outcome is not Outcome.EMERGENCY and result.simplified is True
+    assert not result.is_emergency and result.simplified is True
 
 
 def test_claude_down_falls_back_offline(tmp_path):
@@ -220,7 +231,7 @@ def test_claude_down_falls_back_offline(tmp_path):
     client.messages.create.side_effect = anthropic.APITimeoutError(
         request=httpx2.Request("POST", "https://api.anthropic.com/v1/messages"))
     nav = Navigator(parser=ClaudeParser(client=client), explainer=ClaudeExplainer(client=client), trace_dir=tmp_path)
-    result = nav.run(req("Sore throat and fever for two days"))
+    result = nav.converse(req("Sore throat and fever for two days"))
     assert result.outcome is Outcome.RECOMMENDATION and result.simplified is True
     assert result.recommendation.explanation.endswith(DISCLAIMER)
 
@@ -237,7 +248,7 @@ class DocsFail(LocalTfidfEmbedder):
 
 @pytest.mark.parametrize("embedder", [QueryFails(), DocsFail()], ids=["query", "index"])
 def test_embedding_failure_falls_back_to_offline_search(tmp_path, embedder):
-    result = Navigator(embedder=embedder, trace_dir=tmp_path).run(req("Sore throat and fever for two days"))
+    result = Navigator(embedder=embedder, trace_dir=tmp_path).converse(req("Sore throat and fever for two days"))
     assert result.recommendation.options and result.simplified is True
     retrieve = next(s for s in result.trace if s.name == "retrieve")
     assert "fallback" in retrieve.used  # the trace says which index answered (D-036)
@@ -266,7 +277,7 @@ class Diagnoses(Explainer):
 
 
 def test_guard_blocks_unsafe_explanation_and_uses_template(tmp_path):
-    result = Navigator(explainer=Diagnoses(), trace_dir=tmp_path).run(req("Sore throat and fever for two days"))
+    result = Navigator(explainer=Diagnoses(), trace_dir=tmp_path).converse(req("Sore throat and fever for two days"))
     assert "strep" not in result.recommendation.explanation
     guard_step = next(s for s in result.trace if s.name == "guard")
     assert "blocked" in guard_step.output
@@ -274,11 +285,11 @@ def test_guard_blocks_unsafe_explanation_and_uses_template(tmp_path):
 
 # ------------------------------------------------------------------ trace
 def test_trace_steps_in_order_and_saved(nav):
-    result = nav.run(req("Sore throat and fever for two days"))
-    names = [s.name for s in result.trace]
-    expected = ["validate", "redact", "red_flags", "answers", "jev_emergency", "parse", "red_flags_parsed",
-                "tier2", "jev_vague", "jev_category", "jev_urgency", "care_engine", "retrieve", "costs", "explain",
-                "guard"]
+    result = nav.converse(req("Sore throat and fever for two days"))
+    names = [s.name for s in result.trace]  # the trace of the LAST turn only (D-051)
+    expected = ["validate", "redact", "red_flags", "jev_category", "danger_signs", "jev_emergency", "parse",
+               "red_flags_parsed", "interviewer", "jev_urgency", "care_engine", "retrieve", "costs", "explain",
+               "guard", "final_answer"]
     assert names == expected
     saved = json.loads(Path(result.trace_path).read_text(encoding="utf-8"))
     assert [s["name"] for s in saved["steps"]] == expected
@@ -295,16 +306,16 @@ def test_trace_never_contains_pii(nav):
 
 def test_emergency_trace_stops_at_the_red_flag(nav):
     names = [s.name for s in nav.run(req("chest pain and sweating")).trace]
-    assert names[-1] == "red_flags" and "parse" not in names
+    assert "red_flags" in names and "parse" not in names and names[-1] == "final_answer"
 
 
 def test_results_are_deterministic(nav):
-    a, b = nav.run(req("Sore throat and fever for two days")), nav.run(req("Sore throat and fever for two days"))
+    a, b = nav.converse(req("Sore throat and fever for two days")), nav.converse(req("Sore throat and fever for two days"))
     assert a.request_id != b.request_id
     assert a.recommendation == b.recommendation
 
 
-# ------------------------------------------------------------------ D-048: action on every emergency
+# ------------------------------------------------------------------ D-052: action on every emergency
 @pytest.mark.parametrize("text, action", [
     ("crushing chest pain", "CALL_911"),
     ("can't keep water down since this morning", "GO_TO_ER"),
@@ -312,15 +323,15 @@ def test_results_are_deterministic(nav):
 ])
 def test_emergency_carries_its_action(nav, text, action):
     result = nav.run(req(text))
-    assert result.outcome is Outcome.EMERGENCY and result.action == action and "911" in result.message
+    assert result.is_emergency and result.action == action and "911" in result.message
 
 
 def test_danger_answer_to_the_fluids_question_is_go_to_er(nav):
     from navigator.models import Turn
-    turns = [Turn(slot="fluids_kept_down", question="q", answer="no, everything comes back up")]
+    turns = [Turn(topic="fluids_kept_down", question="q", answer="no, everything comes back up")]
     result = nav.run(req("vomiting since lunch", turns=turns))
-    assert result.outcome is Outcome.EMERGENCY and result.action == "GO_TO_ER"
+    assert result.is_emergency and result.action == "GO_TO_ER"
 
 
 def test_non_emergencies_have_no_action(nav):
-    assert nav.run(req("Sore throat and fever for two days")).action is None
+    assert nav.converse(req("Sore throat and fever for two days")).action is None

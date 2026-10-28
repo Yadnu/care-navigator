@@ -7,15 +7,15 @@
 #   min_severity / max_severity     self-reported severity 1-10
 #   min_duration_hours  needs a stated duration; unknown duration never matches (D-025)
 #   symptom_any         any of these words in the parsed main symptom
-#   slots_any           {slot: [values]}: any listed slot answer (question bank) holds (D-041)
-# needs        slots this rule must know before it decides; the pipeline asks for a missing one
-#              (question budget permitting), otherwise the decision escalates one level (D-041)
+#   slots_any           {topic: [values]}: any listed topic answer (question bank) holds (D-041, D-050)
+#   cause_level         true: a guide cluster matched; the level is the best-matching possible
+#                       cause's `typical_level` from symptom_guide.json (level: CAUSE) (D-051)
 # level        care level when something at that level is open
 # after_hours  where to go when nothing at `level` is open now (never SELF_CARE);
 #              time of day is handled here and by the opening-hours check (D-026)
 # reason       plain-English "because ..." used by the explanation (no diagnosis, no level names)
 # note         shown with the decision
-version: "2.0"
+version: "3.0"
 label: "Simplified, not clinically validated"
 
 rules:
@@ -55,6 +55,13 @@ rules:
     level: PRIMARY_CARE
     after_hours: TELEHEALTH
     reason: "a problem lasting two weeks or more is best checked by a regular clinician"
+
+  - id: R-24
+    description: Injury with swelling or a limb that can't be used (D-041)
+    when: {slots_any: {swelling_or_deformity: ["yes"], can_use: ["no"], can_bear_weight: ["no"]}}
+    level: URGENT_CARE
+    after_hours: ER
+    reason: "swelling or not being able to use it may need an in-person exam or X-ray"
 
   - id: R-06
     description: Mild seasonal allergy symptoms
@@ -103,17 +110,9 @@ rules:
     after_hours: ER
     reason: "an injury like this may need an in-person exam or X-ray"
 
-  - id: R-24
-    description: Injury with swelling or a limb that can't be used (D-041)
-    when: {category: [musculoskeletal], slots_any: {swelling_or_deformity: ["yes"], can_use_or_bear_weight: ["no"]}}
-    level: URGENT_CARE
-    after_hours: ER
-    reason: "swelling or not being able to use it may need an in-person exam or X-ray"
-
   - id: R-11
     description: Minor strain or ache
     when: {category: [musculoskeletal]}
-    needs: [injury_mechanism, swelling_or_deformity, can_use_or_bear_weight]
     level: PRIMARY_CARE
     after_hours: TELEHEALTH
     reason: "a minor strain is best checked at a regular appointment"
@@ -199,6 +198,14 @@ rules:
     level: TELEHEALTH
     after_hours: TELEHEALTH
     reason: "cold and nose symptoms can usually be assessed by video"
+
+  - id: R-30
+    description: A guide cluster matched but no more specific rule above did; the best-matching
+      possible cause's typical level (D-051)
+    when: {cause_level: true}
+    level: CAUSE
+    after_hours: TELEHEALTH
+    reason: "this is how the most likely common cause is usually handled"
 
   - id: R-20
     description: Anything not matched above (fail toward more care)

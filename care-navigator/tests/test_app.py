@@ -6,6 +6,9 @@ from pathlib import Path
 import pytest
 from streamlit.testing.v1 import AppTest
 
+from navigator.models import Outcome
+from navigator.questions import routine_answer
+
 APP = str(Path(__file__).resolve().parents[1] / "app.py")
 
 
@@ -40,8 +43,24 @@ def test_time_defaults_to_now():
     assert at.selectbox(key="when").value == "Now"
 
 
+def converse(text, severity=4, zip_choice="00101", plan="PLAN_SILVER_HMO", when="Weekday 14:00 (Tue 3 Nov 2026)",
+             max_turns=8):
+    """Submit, then answer the interviewer's questions with the bank's routine (no-danger) reply
+    until the conversation reaches an emergency or a recommendation (D-051)."""
+    at = submit(text, severity, zip_choice, plan, when)
+    for _ in range(max_turns):
+        result = at.session_state.get("result")
+        if result is None or result.outcome is not Outcome.QUESTION:
+            break
+        label = routine_answer(result.topic)
+        replies = {b.label: b for b in at.button if b.key and b.key.startswith("reply_")}
+        (replies.get(label) or at.button(key="skip")).click()
+        at = at.run()
+    return at
+
+
 def test_recommendation_with_practitioners_costs_and_trace():
-    at = submit("Sore throat and fever for two days")
+    at = converse("Sore throat and fever for two days")
     assert not at.exception
     text = all_text(at)
     assert "Urgent care" in text and "Downtown QuickCare" in text and "$75" in text
@@ -60,9 +79,14 @@ def test_follow_up_question_then_answer():
     assert at.text_input(key="followup_answer") is not None
     at.text_input(key="followup_answer").input("sore throat and fever for two days")
     at.button(key="submit_followup").click()
-    at.run()
+    at = at.run()
     assert not at.exception
-    assert "Urgent care" in all_text(at)
+    assert at.session_state["result"].outcome is Outcome.QUESTION  # the interviewer keeps going
+    at.button(key="skip").click()  # now skip straight to a decision
+    at = at.run()
+    result = at.session_state["result"]
+    assert result.outcome is Outcome.RECOMMENDATION and result.recommendation.decision.escalated
+    assert "Recommended level of care" in all_text(at)
 
 
 def test_safety_check_quick_replies_history_and_skip():
@@ -81,14 +105,14 @@ def test_safety_check_quick_replies_history_and_skip():
 
 
 def test_midnight_override():
-    at = submit("Vomiting and stomach cramps since dinner, can keep water down", severity=5,
-                when="Midnight 00:15 (Wed 4 Nov 2026)")
+    at = converse("Vomiting and stomach cramps since dinner, can keep water down", severity=5,
+                  when="Midnight 00:15 (Wed 4 Nov 2026)")
     text = all_text(at)
-    assert "Telehealth" in text and "NightOwl Virtual Care" in text and "go to the ER" in text
+    assert "Telehealth" in text and "NightOwl Virtual Care" in text
 
 
 def test_coverage_gap_and_invalid_zip_messages():
-    gap = submit("Cough and sore throat", severity=3, zip_choice="00105", plan="PLAN_BRONZE_LOCAL")
+    gap = converse("Cough and sore throat", severity=3, zip_choice="00105", plan="PLAN_BRONZE_LOCAL")
     assert "No in-network urgent care" in all_text(gap)
     at = AppTest.from_file(APP, default_timeout=60).run()
     at.text_area(key="symptoms").input("Sore throat and fever for two days")

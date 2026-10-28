@@ -1,24 +1,762 @@
 [
   {
-    "slot": "main_symptom",
+    "topic": "main_symptom",
     "kind": "detail",
-    "categories": [
+    "clusters": [
       "any"
     ],
     "question": "What is the main thing bothering you, and where on your body do you feel it?",
+    "quick_replies": [],
     "options": [],
-    "danger_values": [],
-    "danger_action": null,
+    "danger": [],
     "routine_value": null,
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "duration",
+    "topic": "fluids_kept_down",
+    "kind": "safety",
+    "clusters": [
+      "vomiting_diarrhea"
+    ],
+    "question": "Can you keep water or other fluids down?",
+    "quick_replies": [
+      "No, nothing stays down",
+      "Some",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No, nothing stays down",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(cant|cannot|can not) keep\\b",
+          "\\bnothing (stays|is staying) down\\b",
+          "\\beverything comes back up\\b"
+        ]
+      },
+      {
+        "value": "some",
+        "label": "Some",
+        "match": [
+          "^some\\b",
+          "\\bsome (fluids? |water |of it )?(stays?|staying)\\b",
+          "\\bsmall sips?\\b",
+          "\\ba little\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bcan keep\\b",
+          "\\bkeeping \\w+( \\w+)? down\\b",
+          "\\bstaying down\\b",
+          "\\bstill drinking\\b",
+          "\\bdrinking (fine|ok|okay|well|normally)\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "no"
+        ],
+        "cluster": "vomiting_diarrhea",
+        "sign": "unable to keep any fluids down for many hours"
+      }
+    ],
+    "routine_value": "yes",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "duration_and_frequency",
     "kind": "detail",
-    "categories": [
-      "any"
+    "clusters": [
+      "vomiting_diarrhea"
+    ],
+    "question": "How long has this been going on, and how often is it happening?",
+    "quick_replies": [
+      "A few hours",
+      "About a day",
+      "Several days"
+    ],
+    "options": [
+      {
+        "value": "hours",
+        "label": "A few hours",
+        "match": [
+          "\\bhours?\\b",
+          "\\btoday\\b",
+          "\\btonight\\b",
+          "\\bsince (dinner|lunch|breakfast|this morning)\\b"
+        ]
+      },
+      {
+        "value": "day",
+        "label": "About a day",
+        "match": [
+          "\\b(a|one|1) day\\b",
+          "\\byesterday\\b"
+        ]
+      },
+      {
+        "value": "days",
+        "label": "Several days",
+        "match": [
+          "\\b([2-9]|two|three|four|five|several|few) days\\b",
+          "\\bweeks?\\b"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "hours",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "blood",
+    "kind": "safety",
+    "clusters": [
+      "vomiting_diarrhea",
+      "urinary"
+    ],
+    "question": "Have you seen any blood in your vomit, stool or urine, or vomit that looks like coffee grounds?",
+    "quick_replies": [
+      "No",
+      "Yes, in stool",
+      "Yes, in urine",
+      "Yes, in vomit"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\bno blood\\b"
+        ]
+      },
+      {
+        "value": "stool",
+        "label": "Yes, in stool",
+        "match": [
+          "\\b(stool|poop|bowel movement)\\b"
+        ]
+      },
+      {
+        "value": "urine",
+        "label": "Yes, in urine",
+        "match": [
+          "\\b(urine|pee)\\b"
+        ]
+      },
+      {
+        "value": "vomit",
+        "label": "Yes, in vomit",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bvomit\\w*\\b",
+          "\\bcoffee grounds\\b",
+          "\\bthrowing up blood\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "vomit"
+        ],
+        "cluster": "vomiting_diarrhea",
+        "sign": "vomiting blood or material that looks like coffee grounds"
+      },
+      {
+        "values": [
+          "stool"
+        ],
+        "cluster": "vomiting_diarrhea",
+        "sign": "black or bloody stool"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "dehydration_signs",
+    "kind": "safety",
+    "clusters": [
+      "vomiting_diarrhea"
+    ],
+    "question": "Do you feel dizzy when you stand up, or are you peeing much less than usual?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\bnot dizzy\\b",
+          "\\bpeeing (fine|normally|ok)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bdizz\\w*",
+          "\\blight ?headed\\b",
+          "\\b(barely|hardly|much less|not) pee\\w*",
+          "\\bhavent peed\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "vomiting_diarrhea",
+        "sign": "dizzy or faint when standing, or very little urine"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "fever",
+    "kind": "detail",
+    "clusters": [
+      "vomiting_diarrhea",
+      "breathing",
+      "sore_throat_ear"
+    ],
+    "question": "Is there any fever, or have you felt hot and shivery?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\bno fever\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bfever\\w*",
+          "\\b10[0-6]f?\\b",
+          "\\bchills\\b",
+          "\\bhot and\\b"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "abdominal_pain",
+    "kind": "safety",
+    "clusters": [
+      "vomiting_diarrhea"
+    ],
+    "question": "Any belly pain with it, and if so, is it severe or in one spot?",
+    "quick_replies": [
+      "No",
+      "Yes, severe or in one spot",
+      "Mild cramps"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\bno (belly |stomach )?pain\\b"
+        ]
+      },
+      {
+        "value": "severe",
+        "label": "Yes, severe or in one spot",
+        "match": [
+          "\\bsevere\\b",
+          "\\bone (spot|side)\\b",
+          "\\bworst\\b",
+          "\\bhard belly\\b"
+        ]
+      },
+      {
+        "value": "mild",
+        "label": "Mild cramps",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bmild\\b",
+          "\\ba little\\b",
+          "\\bcramp\\w*",
+          "\\bcomes and goes\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "severe"
+        ],
+        "cluster": "vomiting_diarrhea",
+        "sign": "severe or worsening belly pain, or a hard belly"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "location",
+    "kind": "detail",
+    "clusters": [
+      "abdominal_pain"
+    ],
+    "question": "Where is the belly pain: upper, lower right, lower left, or all over?",
+    "quick_replies": [
+      "Lower right",
+      "Upper",
+      "Lower left",
+      "Everywhere"
+    ],
+    "options": [
+      {
+        "value": "lower_right",
+        "label": "Lower right",
+        "match": [
+          "\\b(lower right|right lower|bottom right)\\b"
+        ]
+      },
+      {
+        "value": "upper",
+        "label": "Upper",
+        "match": [
+          "\\bupper\\b",
+          "\\btop\\b",
+          "\\bunder (my |the )?ribs\\b"
+        ]
+      },
+      {
+        "value": "lower_left",
+        "label": "Lower left",
+        "match": [
+          "\\b(lower left|left lower|bottom left)\\b"
+        ]
+      },
+      {
+        "value": "all_over",
+        "label": "Everywhere",
+        "match": [
+          "\\ball over\\b",
+          "\\beverywhere\\b",
+          "\\b(middle|around)\\b"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "all_over",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "onset_and_trend",
+    "kind": "safety",
+    "clusters": [
+      "abdominal_pain"
+    ],
+    "question": "Is the pain getting better, staying about the same, or getting worse?",
+    "quick_replies": [
+      "Getting worse",
+      "Getting better",
+      "About the same"
+    ],
+    "options": [
+      {
+        "value": "worse",
+        "label": "Getting worse",
+        "match": [
+          "\\bworse\\b",
+          "\\bworsening\\b"
+        ]
+      },
+      {
+        "value": "better",
+        "label": "Getting better",
+        "match": [
+          "\\bbetter\\b",
+          "\\bimproving\\b",
+          "\\beasing\\b"
+        ]
+      },
+      {
+        "value": "same",
+        "label": "About the same",
+        "match": [
+          "\\bsame\\b",
+          "\\bsteady\\b",
+          "\\bcomes and goes\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "worse"
+        ],
+        "cluster": "vomiting_diarrhea",
+        "sign": "severe or worsening belly pain, or a hard belly"
+      }
+    ],
+    "routine_value": "same",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "severity",
+    "kind": "detail",
+    "clusters": [
+      "abdominal_pain"
+    ],
+    "question": "On a scale of 1 to 10, how bad is the pain right now?",
+    "quick_replies": [
+      "1 to 3",
+      "4 to 6",
+      "7 to 10"
+    ],
+    "options": [
+      {
+        "value": "mild",
+        "label": "1 to 3",
+        "match": [
+          "^[1-3]\\b",
+          "\\bmild\\b"
+        ]
+      },
+      {
+        "value": "moderate",
+        "label": "4 to 6",
+        "match": [
+          "^[4-6]\\b",
+          "\\bmoderate\\b",
+          "\\bmedium\\b"
+        ]
+      },
+      {
+        "value": "severe",
+        "label": "7 to 10",
+        "match": [
+          "^([7-9]|10)\\b",
+          "\\bsevere\\b",
+          "\\bworst\\b"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "moderate",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "fever_vomiting",
+    "kind": "detail",
+    "clusters": [
+      "abdominal_pain"
+    ],
+    "question": "Any fever or vomiting along with the pain?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bfever\\w*",
+          "\\bvomit\\w*",
+          "\\bthrowing up\\b"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "bowel_urine_changes",
+    "kind": "safety",
+    "clusters": [
+      "abdominal_pain"
+    ],
+    "question": "Any change in your stool or urine, like diarrhea, blood, or burning when you pee?",
+    "quick_replies": [
+      "No",
+      "Blood or black stool",
+      "Burning when I pee",
+      "Diarrhea"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "blood",
+        "label": "Blood or black stool",
+        "match": [
+          "\\bblood\\w*",
+          "\\bblack (stool|poop)\\b"
+        ]
+      },
+      {
+        "value": "burning",
+        "label": "Burning when I pee",
+        "match": [
+          "\\bburning\\b",
+          "\\bpee\\w* hurts\\b"
+        ]
+      },
+      {
+        "value": "diarrhea",
+        "label": "Diarrhea",
+        "match": [
+          "\\bdiarrh\\w*",
+          "\\bloose\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "blood"
+        ],
+        "cluster": "vomiting_diarrhea",
+        "sign": "black or bloody stool"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "character",
+    "kind": "safety",
+    "clusters": [
+      "chest_pain"
+    ],
+    "question": "Does the chest discomfort feel crushing, squeezing or heavy, or sharp and sore when you press on it?",
+    "quick_replies": [
+      "Sharp, sore when pressed",
+      "Crushing, squeezing or heavy"
+    ],
+    "options": [
+      {
+        "value": "sharp",
+        "label": "Sharp, sore when pressed",
+        "match": [
+          "\\bsharp\\b",
+          "\\bsore\\b",
+          "\\bwhen i press\\b",
+          "\\btender\\b"
+        ]
+      },
+      {
+        "value": "crushing",
+        "label": "Crushing, squeezing or heavy",
+        "match": [
+          "\\bcrush\\w*",
+          "\\bsqueez\\w*",
+          "\\bheavy\\b",
+          "\\bpressure\\b",
+          "\\btight\\w*"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "crushing"
+        ],
+        "cluster": "chest_pain",
+        "sign": "crushing, squeezing, or heavy chest pain"
+      }
+    ],
+    "routine_value": "sharp",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "associated_symptoms",
+    "kind": "safety",
+    "clusters": [
+      "chest_pain"
+    ],
+    "question": "Any sweating, shortness of breath, nausea, or pain spreading to your arm, jaw or back?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bsweat\\w*",
+          "\\b(short|shortness) of breath\\b",
+          "\\bnause\\w*",
+          "\\bspread\\w*",
+          "\\b(arm|jaw)\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "chest_pain",
+        "sign": "chest pain with sweating, shortness of breath, nausea, or pain spreading to the arm, jaw, or back"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "trigger",
+    "kind": "safety",
+    "clusters": [
+      "chest_pain",
+      "skin_allergy"
+    ],
+    "question": "Did it start during activity, or after a workout, heavy lifting, lots of coughing, or something new you ate or used?",
+    "quick_replies": [
+      "Nothing I can think of",
+      "During activity",
+      "After a workout, lifting or coughing",
+      "Something new I ate or used"
+    ],
+    "options": [
+      {
+        "value": "none",
+        "label": "Nothing I can think of",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\bnot sure\\b"
+        ]
+      },
+      {
+        "value": "activity",
+        "label": "During activity",
+        "match": [
+          "\\bduring (activity|exercise|exertion)\\b",
+          "\\bwhen i (walk|exercise|climb)\\w*",
+          "\\bclimbing stairs\\b"
+        ]
+      },
+      {
+        "value": "after_exercise",
+        "label": "After a workout, lifting or coughing",
+        "match": [
+          "\\bafter (a |my )?(workout|lifting|gym|exercise|coughing)\\b",
+          "\\blift\\w*",
+          "\\bbench\\b",
+          "\\bcough\\w*"
+        ]
+      },
+      {
+        "value": "new_exposure",
+        "label": "Something new I ate or used",
+        "match": [
+          "\\bnew (food|soap|detergent|lotion|product)\\b",
+          "\\bate\\b",
+          "\\bsting\\b",
+          "\\bbitten\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "activity"
+        ],
+        "cluster": "chest_pain",
+        "sign": "chest pain with exertion that goes away with rest"
+      }
+    ],
+    "routine_value": "none",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "duration",
+    "kind": "detail",
+    "clusters": [
+      "chest_pain",
+      "breathing",
+      "sore_throat_ear"
     ],
     "question": "How long has this been going on?",
+    "quick_replies": [
+      "A few hours",
+      "A day or two",
+      "A week or more"
+    ],
     "options": [
       {
         "value": "hours",
@@ -46,75 +784,30 @@
         ]
       }
     ],
-    "danger_values": [],
-    "danger_action": null,
+    "danger": [],
     "routine_value": "days",
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "severity_now",
+    "topic": "injury_mechanism",
     "kind": "detail",
-    "categories": [
-      "any"
-    ],
-    "question": "Right now, how bad is it on a scale of 1 to 10?",
-    "options": [
-      {
-        "value": "mild",
-        "label": "1 to 3, mild",
-        "match": [
-          "^[1-3]\\b",
-          "\\bmild\\b"
-        ]
-      },
-      {
-        "value": "moderate",
-        "label": "4 to 6, moderate",
-        "match": [
-          "^[4-6]\\b",
-          "\\bmoderate\\b"
-        ]
-      },
-      {
-        "value": "severe",
-        "label": "7 to 10, severe",
-        "match": [
-          "^([7-9]|10)\\b",
-          "\\bsevere\\b"
-        ]
-      }
-    ],
-    "danger_values": [],
-    "danger_action": null,
-    "routine_value": "moderate",
-    "synthetic": true
-  },
-  {
-    "slot": "location_detail",
-    "kind": "detail",
-    "categories": [
-      "any"
-    ],
-    "question": "Where exactly do you feel it?",
-    "options": [],
-    "danger_values": [],
-    "danger_action": null,
-    "routine_value": null,
-    "synthetic": true
-  },
-  {
-    "slot": "injury_mechanism",
-    "kind": "detail",
-    "categories": [
-      "musculoskeletal"
+    "clusters": [
+      "arm_hand_injury",
+      "leg_ankle_injury"
     ],
     "question": "Did this start after a fall, twist, lift, sport or other injury?",
+    "quick_replies": [
+      "No injury",
+      "Yes, after an injury"
+    ],
     "options": [
       {
         "value": "no",
         "label": "No injury",
         "match": [
-          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b",
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
           "\\bno injury\\b",
           "\\bout of nowhere\\b"
         ]
@@ -123,103 +816,180 @@
         "value": "yes",
         "label": "Yes, after an injury",
         "match": [
-          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
           "\\b(fell|fall|twisted|lifted|lifting|tripped|bumped|played|carrying|carried)\\b",
           "\\b(volleyball|soccer|basketball|football|tennis|skating|skiing|hike|hiking|gym|workout)\\b"
         ]
       }
     ],
-    "danger_values": [],
-    "danger_action": null,
+    "danger": [],
     "routine_value": "yes",
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "swelling_or_deformity",
-    "kind": "detail",
-    "categories": [
-      "musculoskeletal"
+    "topic": "swelling_or_deformity",
+    "kind": "safety",
+    "clusters": [
+      "arm_hand_injury",
+      "leg_ankle_injury"
     ],
-    "question": "Is the area swollen, bruised or out of its usual shape?",
+    "question": "Is the area swollen or bruised, or does it look out of its usual shape?",
+    "quick_replies": [
+      "It looks out of shape",
+      "No",
+      "Yes, swollen or bruised"
+    ],
     "options": [
+      {
+        "value": "deformed",
+        "label": "It looks out of shape",
+        "match": [
+          "\\bout of (its )?(usual )?shape\\b",
+          "\\bdeformed\\b",
+          "\\blooks bent\\b",
+          "\\bbone (is )?(visible|sticking|showing)\\b"
+        ]
+      },
       {
         "value": "no",
         "label": "No",
         "match": [
-          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b"
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
         ]
       },
       {
         "value": "yes",
-        "label": "Yes",
+        "label": "Yes, swollen or bruised",
         "match": [
-          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
           "\\bswollen\\b",
           "\\bswelling\\b",
-          "\\bbruis\\w*",
-          "\\bout of shape\\b",
-          "\\bdeformed\\b",
-          "\\blooks bent\\b"
+          "\\bbruis\\w*"
         ]
       }
     ],
-    "danger_values": [],
-    "danger_action": null,
+    "danger": [
+      {
+        "values": [
+          "deformed"
+        ],
+        "cluster": "arm_hand_injury",
+        "sign": "bone visible or limb clearly deformed"
+      }
+    ],
     "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "can_use_or_bear_weight",
+    "topic": "can_use",
     "kind": "detail",
-    "categories": [
-      "musculoskeletal"
+    "clusters": [
+      "arm_hand_injury"
     ],
-    "question": "Can you use it normally or put weight on it?",
+    "question": "Can you use it normally, like gripping or moving your fingers and wrist?",
+    "quick_replies": [
+      "No, I can't",
+      "Yes, mostly"
+    ],
     "options": [
       {
         "value": "no",
         "label": "No, I can't",
         "match": [
-          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b",
-          "\\b(cant|cannot|can not|unable to) (use|move|walk|put weight|bear|grip|bend|stand)\\b"
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(cant|cannot|can not|unable to) (use|move|grip|bend)\\b"
         ]
       },
       {
         "value": "yes",
         "label": "Yes, mostly",
         "match": [
-          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
-          "\\bcan (use|move|walk|bend|grip|stand)\\b",
-          "\\bwalk (on it|a little)\\b",
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bcan (use|move|grip|bend)\\b",
           "\\bmoving fine\\b"
         ]
       }
     ],
-    "danger_values": [],
-    "danger_action": null,
+    "danger": [],
     "routine_value": "yes",
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "associated_cardiac_symptoms",
+    "topic": "numbness",
     "kind": "safety",
-    "categories": [
-      "any"
+    "clusters": [
+      "arm_hand_injury"
     ],
-    "question": "Along with this, is there any chest pain or pressure, shortness of breath, sweating or nausea?",
+    "question": "Are your hand or fingers numb, tingling, cold or pale?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
     "options": [
       {
         "value": "no",
         "label": "No",
         "match": [
-          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b"
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
         ]
       },
       {
         "value": "yes",
         "label": "Yes",
         "match": [
-          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bnumb\\w*",
+          "\\btingl\\w*",
+          "\\bcold\\b",
+          "\\bpale\\b",
+          "\\bpins and needles\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "arm_hand_injury",
+        "sign": "hand or fingers cold, pale, or numb after an injury"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "cardiac_screen",
+    "kind": "safety",
+    "clusters": [
+      "arm_hand_injury"
+    ],
+    "question": "Along with this, is there any chest pain or pressure, shortness of breath, sweating or nausea?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
           "\\bchest\\b",
           "\\bsweat\\w*",
           "\\bclammy\\b",
@@ -228,20 +998,110 @@
         ]
       }
     ],
-    "danger_values": [
-      "yes"
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "arm_hand_injury",
+        "sign": "arm pain with chest pain, shortness of breath, sweating, or nausea"
+      }
     ],
-    "danger_action": "CALL_911",
     "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "headache_onset",
+    "topic": "can_bear_weight",
+    "kind": "detail",
+    "clusters": [
+      "leg_ankle_injury"
+    ],
+    "question": "Can you put weight on it and take a few steps?",
+    "quick_replies": [
+      "No, I can't",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No, I can't",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(cant|cannot|can not|unable to) (walk|put weight|stand|bear)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bcan (walk|stand|put weight)\\b",
+          "\\bwalk (on it|a little)\\b",
+          "\\blimping\\b"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "yes",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "calf_swelling",
     "kind": "safety",
-    "categories": [
-      "neuro"
+    "clusters": [
+      "leg_ankle_injury"
+    ],
+    "question": "Is one calf swollen, warm and painful without an injury?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bcalf\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "leg_ankle_injury",
+        "sign": "one calf swollen, warm, and painful without injury"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "onset",
+    "kind": "safety",
+    "clusters": [
+      "headache"
     ],
     "question": "Did the headache start suddenly, within seconds to a minute, or build up gradually?",
+    "quick_replies": [
+      "Suddenly",
+      "Gradually"
+    ],
     "options": [
       {
         "value": "sudden",
@@ -263,30 +1123,186 @@
           "\\bbuil[dt] up\\b",
           "\\bover (the day|hours|time)\\b",
           "\\bafter (work|a long day|school)\\b",
+          "\\bscreens?\\b",
           "\\blong day\\b"
         ]
       }
     ],
-    "danger_values": [
-      "sudden"
+    "danger": [
+      {
+        "values": [
+          "sudden"
+        ],
+        "cluster": "headache",
+        "sign": "sudden, worst headache of your life"
+      }
     ],
-    "danger_action": "CALL_911",
     "routine_value": "gradual",
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "breathing_at_rest",
+    "topic": "neuro_symptoms",
     "kind": "safety",
-    "categories": [
-      "respiratory"
+    "clusters": [
+      "headache"
+    ],
+    "question": "Any weakness, confusion, trouble speaking, or changes in your vision?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bweak\\w*",
+          "\\bconfus\\w*",
+          "\\btrouble speaking\\b",
+          "\\bslurr\\w*",
+          "\\bvision\\b",
+          "\\bblurr\\w*",
+          "\\bcant see\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "headache",
+        "sign": "headache with weakness, confusion, trouble speaking, or vision loss"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "fever_stiff_neck",
+    "kind": "safety",
+    "clusters": [
+      "headache"
+    ],
+    "question": "Is there a fever together with a stiff neck?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bstiff neck\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "headache",
+        "sign": "headache with fever and stiff neck"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "head_injury",
+    "kind": "safety",
+    "clusters": [
+      "headache"
+    ],
+    "question": "Did this start after a hit to the head, and since then any vomiting or unusual sleepiness?",
+    "quick_replies": [
+      "No",
+      "Yes, with vomiting or sleepiness",
+      "Yes, but no vomiting or sleepiness"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "with_signs",
+        "label": "Yes, with vomiting or sleepiness",
+        "match": [
+          "\\bvomit\\w*",
+          "\\bthrowing up\\b",
+          "\\bsleepy\\b",
+          "\\bdrowsy\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes, but no vomiting or sleepiness",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bhit (my |his |her )?head\\b",
+          "\\bbumped\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "with_signs"
+        ],
+        "cluster": "headache",
+        "sign": "headache after a head injury with vomiting or sleepiness"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "at_rest",
+    "kind": "safety",
+    "clusters": [
+      "breathing"
     ],
     "question": "Are you short of breath even while resting or sitting still?",
+    "quick_replies": [
+      "No, only with activity",
+      "Yes, even at rest"
+    ],
     "options": [
       {
         "value": "no",
         "label": "No, only with activity",
         "match": [
-          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b",
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
           "\\bonly (after|when|with|on|during)\\b",
           "\\bfine (at|when) rest\\w*",
           "\\bnormal again\\b",
@@ -299,7 +1315,7 @@
         "value": "yes",
         "label": "Yes, even at rest",
         "match": [
-          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
           "\\beven (sitting|resting|lying|at rest)\\b",
           "\\bat rest\\b",
           "\\bsitting still\\b",
@@ -307,125 +1323,112 @@
         ]
       }
     ],
-    "danger_values": [
-      "yes"
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "breathing",
+        "sign": "short of breath while resting"
+      }
     ],
-    "danger_action": "CALL_911",
     "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "fluids_kept_down",
-    "kind": "safety",
-    "categories": [
-      "gastrointestinal"
+    "topic": "asthma_history",
+    "kind": "detail",
+    "clusters": [
+      "breathing"
     ],
-    "question": "Can you keep water or other fluids down?",
+    "question": "Have you had wheezing or breathing trouble like this before?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
     "options": [
       {
         "value": "no",
-        "label": "No, it comes back up",
+        "label": "No",
         "match": [
-          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b",
-          "\\b(cant|cannot|can not) keep\\b",
-          "\\bnothing (stays|is staying) down\\b",
-          "\\beverything comes back up\\b"
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
         ]
       },
       {
         "value": "yes",
         "label": "Yes",
         "match": [
-          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
-          "\\bcan keep\\b",
-          "\\bkeeping \\w+( \\w+)? down\\b",
-          "\\bstaying down\\b",
-          "\\bstill drinking\\b",
-          "\\bdrinking (fine|ok|okay|well|normally)\\b"
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bwheez\\w*",
+          "\\bbefore\\b"
         ]
       }
     ],
-    "danger_values": [
-      "no"
-    ],
-    "danger_action": "GO_TO_ER",
-    "routine_value": "yes",
-    "synthetic": true
-  },
-  {
-    "slot": "urine_output",
-    "kind": "detail",
-    "categories": [
-      "gastrointestinal"
-    ],
-    "question": "Have you been peeing much less than usual today?",
-    "options": [
-      {
-        "value": "no",
-        "label": "No, about normal",
-        "match": [
-          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not)\\b",
-          "\\bpeeing (fine|normally|ok)\\b"
-        ]
-      },
-      {
-        "value": "yes",
-        "label": "Yes, much less",
-        "match": [
-          "^(yes|yeah|yep|yup|i do|i am|it is|they are)\\b",
-          "\\bhavent peed\\b",
-          "\\bbarely peed\\b"
-        ]
-      }
-    ],
-    "danger_values": [],
-    "danger_action": null,
+    "danger": [],
     "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "fever_value",
+    "topic": "temperature_value",
     "kind": "detail",
-    "categories": [
+    "clusters": [
       "fever"
     ],
-    "question": "If there is a fever, what was the highest temperature?",
+    "question": "What was the highest temperature you measured?",
+    "quick_replies": [
+      "Over 102F",
+      "100.4F to 102F",
+      "Under 100.4F"
+    ],
     "options": [
       {
-        "value": "under_100_4",
-        "label": "Under 100.4",
+        "value": "over_102",
+        "label": "Over 102F",
         "match": [
-          "\\b(9[5-9]|100)( [0-3])?\\b"
+          "\\b10[3-7]f?\\b"
         ]
       },
       {
         "value": "100_4_to_102",
-        "label": "100.4 to 102",
+        "label": "100.4F to 102F",
         "match": [
-          "\\b(10[01])( [4-9])?\\b",
-          "\\b102\\b"
+          "\\b10[12]f?\\b",
+          "\\b100 [4-9]\\b"
         ]
       },
       {
-        "value": "over_102",
-        "label": "Over 102",
+        "value": "under_100_4",
+        "label": "Under 100.4F",
         "match": [
-          "\\b10[3-7]\\b"
+          "\\b9\\d(f| [0-9])?\\b",
+          "\\b100f?\\b",
+          "\\b100 [0-3]\\b"
         ]
       }
     ],
-    "danger_values": [],
-    "danger_action": null,
+    "danger": [],
     "routine_value": "100_4_to_102",
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "child_age",
+    "topic": "age",
     "kind": "safety",
-    "categories": [
+    "clusters": [
       "fever"
     ],
-    "question": "How old is your child?",
+    "question": "How old is the person with the fever?",
+    "quick_replies": [
+      "Under 3 months",
+      "3 to 12 months",
+      "1 to 17 years",
+      "18 or older"
+    ],
     "options": [
       {
         "value": "under_3_months",
@@ -433,9 +1436,8 @@
         "match": [
           "\\bunder (3|three) months\\b",
           "\\bnewborn\\b",
-          "\\b[0-2] months? old\\b",
+          "\\b[0-2] months?( old)?\\b",
           "\\b\\d+ (days?|weeks?) old\\b",
-          "^[0-2] months?\\b",
           "^\\d+ (days?|weeks?)\\b"
         ]
       },
@@ -447,70 +1449,1728 @@
         ]
       },
       {
-        "value": "1_to_5_years",
-        "label": "1 to 5 years",
+        "value": "child",
+        "label": "1 to 17 years",
         "match": [
-          "\\b[1-5] (years?|yrs?)( old)?\\b",
+          "\\b([1-9]|1[0-7]) (years?|yrs?)( old)?\\b",
           "\\btoddler\\b"
         ]
       },
       {
-        "value": "6_years_plus",
-        "label": "6 years or older",
+        "value": "adult",
+        "label": "18 or older",
         "match": [
-          "\\b([6-9]|1[0-7]) (years?|yrs?)( old)?\\b"
+          "\\badult\\b",
+          "\\b(1[89]|[2-9]\\d) (years?|yrs?)?\\b",
+          "\\bme\\b",
+          "\\bmyself\\b"
         ]
       }
     ],
-    "danger_values": [
-      "under_3_months"
+    "danger": [
+      {
+        "values": [
+          "under_3_months"
+        ],
+        "cluster": "fever",
+        "sign": "fever in a baby under 3 months old"
+      }
     ],
-    "danger_action": "CALL_911",
-    "routine_value": "1_to_5_years",
+    "routine_value": "adult",
+    "cause": null,
+    "cause_on": null,
     "synthetic": true
   },
   {
-    "slot": "abdominal_location_and_trend",
-    "kind": "safety",
-    "categories": [
-      "gastrointestinal"
+    "topic": "other_symptoms",
+    "kind": "detail",
+    "clusters": [
+      "fever"
     ],
-    "question": "Where is the belly pain, and is it getting better or worse?",
+    "question": "Besides the fever, are there other symptoms, like cough, sore throat, ear pain or a rash?",
+    "quick_replies": [
+      "No, just the fever",
+      "Yes"
+    ],
     "options": [
       {
-        "value": "lower_right_worse",
-        "label": "Lower right, getting worse",
+        "value": "none",
+        "label": "No, just the fever",
         "match": [
-          "\\blower right\\b.{0,40}\\b(worse|worsening|fever)\\b",
-          "\\b(worse|worsening)\\b.{0,40}\\blower right\\b"
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\bnothing else\\b",
+          "\\bjust the fever\\b"
         ]
       },
       {
-        "value": "upper",
-        "label": "Upper belly or burning",
+        "value": "some",
+        "label": "Yes",
         "match": [
-          "\\bupper\\b",
-          "\\bburning\\b",
-          "\\bheartburn\\b",
-          "\\bafter (food|eating|a meal|spicy)\\b"
-        ]
-      },
-      {
-        "value": "mild_or_better",
-        "label": "All over, mild or getting better",
-        "match": [
-          "\\ball over\\b",
-          "\\bmild\\b",
-          "\\bgetting better\\b",
-          "\\bcomes and goes\\b"
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bcough\\w*",
+          "\\bthroat\\b",
+          "\\bear\\b",
+          "\\brash\\b",
+          "\\bvomit\\w*",
+          "\\bdiarrh\\w*"
         ]
       }
     ],
-    "danger_values": [
-      "lower_right_worse"
+    "danger": [],
+    "routine_value": "none",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "drinking_and_alertness",
+    "kind": "safety",
+    "clusters": [
+      "fever"
     ],
-    "danger_action": "CALL_911",
-    "routine_value": "mild_or_better",
+    "question": "Are they drinking normally and acting alert, or very sleepy and hard to wake?",
+    "quick_replies": [
+      "Very sleepy or hard to wake",
+      "Not drinking much",
+      "Drinking and alert"
+    ],
+    "options": [
+      {
+        "value": "hard_to_wake",
+        "label": "Very sleepy or hard to wake",
+        "match": [
+          "\\bhard to wake\\b",
+          "\\bvery sleepy\\b",
+          "\\bconfus\\w*",
+          "\\blimp\\b",
+          "\\bnot responding\\b"
+        ]
+      },
+      {
+        "value": "poor_drinking",
+        "label": "Not drinking much",
+        "match": [
+          "\\bnot drinking\\b",
+          "\\bwont drink\\b",
+          "\\brefus\\w*"
+        ]
+      },
+      {
+        "value": "alert",
+        "label": "Drinking and alert",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bdrinking (well|fine|normally|ok)\\b",
+          "\\balert\\b",
+          "\\bplaying\\b",
+          "\\bacting normal\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "hard_to_wake"
+        ],
+        "cluster": "fever",
+        "sign": "fever with confusion or very hard to wake"
+      }
+    ],
+    "routine_value": "alert",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "swallowing_breathing",
+    "kind": "safety",
+    "clusters": [
+      "sore_throat_ear"
+    ],
+    "question": "Can you swallow your saliva, and is your breathing normal?",
+    "quick_replies": [
+      "No, trouble swallowing or breathing",
+      "Yes, both fine"
+    ],
+    "options": [
+      {
+        "value": "trouble",
+        "label": "No, trouble swallowing or breathing",
+        "match": [
+          "^no\\b",
+          "\\b(cant|cannot) (swallow|breathe)\\b",
+          "\\bdrool\\w*",
+          "\\btrouble (breathing|swallowing)\\b",
+          "\\bhard to breathe\\b"
+        ]
+      },
+      {
+        "value": "ok",
+        "label": "Yes, both fine",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bfine\\b",
+          "\\bnormal\\b",
+          "\\bcan swallow\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "trouble"
+        ],
+        "cluster": "sore_throat_ear",
+        "sign": "can't swallow saliva or trouble breathing"
+      }
+    ],
+    "routine_value": "ok",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "breathing_swallowing",
+    "kind": "safety",
+    "clusters": [
+      "skin_allergy"
+    ],
+    "question": "Any swelling of your lips, tongue or throat, or trouble breathing or swallowing?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\blips?\\b",
+          "\\btongue\\b",
+          "\\bthroat\\b",
+          "\\btrouble (breathing|swallowing)\\b",
+          "\\b(short|shortness) of breath\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "skin_allergy",
+        "sign": "throat, tongue, or lip swelling, or trouble breathing"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "spread_and_fever",
+    "kind": "safety",
+    "clusters": [
+      "skin_allergy"
+    ],
+    "question": "Is the rash spreading, and is there a fever or a rash that doesn't fade when pressed?",
+    "quick_replies": [
+      "No",
+      "Rash doesn't fade when pressed",
+      "Fever",
+      "Spreading"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "not_fading",
+        "label": "Rash doesn't fade when pressed",
+        "match": [
+          "\\b(doesnt|does not|wont|will not) fade\\b",
+          "\\bnot fad\\w*"
+        ]
+      },
+      {
+        "value": "fever",
+        "label": "Fever",
+        "match": [
+          "\\bfever\\w*"
+        ]
+      },
+      {
+        "value": "spreading",
+        "label": "Spreading",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bspread\\w*",
+          "\\bgetting bigger\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "not_fading"
+        ],
+        "cluster": "skin_allergy",
+        "sign": "rash with fever that doesn't fade when pressed"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "fever_back_pain",
+    "kind": "safety",
+    "clusters": [
+      "urinary"
+    ],
+    "question": "Any fever, pain in your back or side, or vomiting?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bfever\\w*",
+          "\\bback\\b",
+          "\\bside\\b",
+          "\\bvomit\\w*"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "urinary",
+        "sign": "fever with back or side pain and vomiting"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "pregnancy",
+    "kind": "detail",
+    "clusters": [
+      "urinary"
+    ],
+    "question": "Is there any chance you could be pregnant?",
+    "quick_replies": [
+      "No",
+      "Yes or maybe"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\bnot pregnant\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes or maybe",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bpregnant\\b",
+          "\\bmaybe\\b",
+          "\\bpossibly\\b"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "fainted",
+    "kind": "safety",
+    "clusters": [
+      "dizziness"
+    ],
+    "question": "Did you actually pass out, and if so, did you wake up quickly?",
+    "quick_replies": [
+      "No",
+      "Yes, and it took a while to wake",
+      "Yes, but woke quickly"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\bdidnt (pass|faint)\\b"
+        ]
+      },
+      {
+        "value": "slow_wake",
+        "label": "Yes, and it took a while to wake",
+        "match": [
+          "\\bdidnt wake (up )?quickly\\b",
+          "\\btook (a while|long) to wake\\b"
+        ]
+      },
+      {
+        "value": "yes_quick",
+        "label": "Yes, but woke quickly",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bwoke (up )?quickly\\b"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "slow_wake"
+        ],
+        "cluster": "dizziness",
+        "sign": "fainted and didn't wake up quickly"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "neuro_cardiac",
+    "kind": "safety",
+    "clusters": [
+      "dizziness"
+    ],
+    "question": "Any chest pain, racing heart, shortness of breath, weakness, confusion, or trouble speaking?",
+    "quick_replies": [
+      "No",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bchest\\b",
+          "\\bracing\\b",
+          "\\bpound\\w*",
+          "\\b(short|shortness) of breath\\b",
+          "\\bweak\\w*",
+          "\\bconfus\\w*",
+          "\\btrouble speaking\\b",
+          "\\bslurr\\w*"
+        ]
+      }
+    ],
+    "danger": [
+      {
+        "values": [
+          "yes"
+        ],
+        "cluster": "dizziness",
+        "sign": "fainting with chest pain, racing heart, or shortness of breath"
+      }
+    ],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "fluids_food",
+    "kind": "detail",
+    "clusters": [
+      "dizziness"
+    ],
+    "question": "Have you eaten and had enough to drink today?",
+    "quick_replies": [
+      "No, not much",
+      "Yes"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No, not much",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\bskipped\\b",
+          "\\bhavent eaten\\b",
+          "\\bnot much\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "^(yes|yeah|yep|yup|i do|i am|it is|they are|there is)\\b",
+          "\\bate\\b",
+          "\\beaten\\b",
+          "\\bdrank\\b",
+          "\\bdrinking\\b"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "yes",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "vomiting_diarrhea.cause1",
+    "kind": "cause",
+    "clusters": [
+      "vomiting_diarrhea"
+    ],
+    "question": "Did you eat anything unusual, undercooked, or from somewhere new in the last day or two?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "food poisoning",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "vomiting_diarrhea.cause2",
+    "kind": "cause",
+    "clusters": [
+      "vomiting_diarrhea"
+    ],
+    "question": "Has anyone you ate with or live with had the same symptoms?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "food poisoning",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "vomiting_diarrhea.cause3",
+    "kind": "cause",
+    "clusters": [
+      "vomiting_diarrhea"
+    ],
+    "question": "Have you traveled recently?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a stomach bug (viral gastroenteritis)",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "vomiting_diarrhea.cause4",
+    "kind": "cause",
+    "clusters": [
+      "vomiting_diarrhea"
+    ],
+    "question": "Did you start any new medication recently?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a reaction to a medication or alcohol",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "vomiting_diarrhea.cause5",
+    "kind": "cause",
+    "clusters": [
+      "vomiting_diarrhea"
+    ],
+    "question": "Is there any chance of pregnancy?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "abdominal_pain.cause1",
+    "kind": "cause",
+    "clusters": [
+      "abdominal_pain"
+    ],
+    "question": "Did the pain start after a meal, especially spicy, fatty, or unusual food?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "indigestion or acid reflux",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "abdominal_pain.cause2",
+    "kind": "cause",
+    "clusters": [
+      "abdominal_pain"
+    ],
+    "question": "Is there any chance of pregnancy?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "abdominal_pain.cause3",
+    "kind": "cause",
+    "clusters": [
+      "abdominal_pain"
+    ],
+    "question": "Have you had this kind of pain before?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "chest_pain.cause1",
+    "kind": "cause",
+    "clusters": [
+      "chest_pain"
+    ],
+    "question": "Did it start during activity, or after a workout, heavy lifting, or a lot of coughing?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a strained chest muscle",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "chest_pain.cause2",
+    "kind": "cause",
+    "clusters": [
+      "chest_pain"
+    ],
+    "question": "Does it hurt more when you press on the spot or move your arm?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a strained chest muscle",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "arm_hand_injury.cause1",
+    "kind": "cause",
+    "clusters": [
+      "arm_hand_injury"
+    ],
+    "question": "Did it start after a sport, a fall, or lifting something?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a sprain or strain",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "arm_hand_injury.cause2",
+    "kind": "cause",
+    "clusters": [
+      "arm_hand_injury"
+    ],
+    "question": "Did you hear a pop or snap?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a small fracture",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "leg_ankle_injury.cause1",
+    "kind": "cause",
+    "clusters": [
+      "leg_ankle_injury"
+    ],
+    "question": "Did it start after running, a sport, or a fall?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "an ankle or knee sprain",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "leg_ankle_injury.cause2",
+    "kind": "cause",
+    "clusters": [
+      "leg_ankle_injury"
+    ],
+    "question": "Have you been on a long flight or drive recently?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "headache.cause1",
+    "kind": "cause",
+    "clusters": [
+      "headache"
+    ],
+    "question": "Did it build up slowly after screen time, stress, or poor sleep?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a tension headache",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "headache.cause2",
+    "kind": "cause",
+    "clusters": [
+      "headache"
+    ],
+    "question": "Have you had enough water and food today?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "dehydration or a skipped meal",
+    "cause_on": "no",
+    "synthetic": true
+  },
+  {
+    "topic": "headache.cause3",
+    "kind": "cause",
+    "clusters": [
+      "headache"
+    ],
+    "question": "Do you get headaches like this often?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a migraine",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "breathing.cause1",
+    "kind": "cause",
+    "clusters": [
+      "breathing"
+    ],
+    "question": "Has anyone around you been sick?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a common cold or viral infection",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "breathing.cause2",
+    "kind": "cause",
+    "clusters": [
+      "breathing"
+    ],
+    "question": "Did it start after exercise, smoke, or allergies?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "allergies or asthma flare",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "fever.cause1",
+    "kind": "cause",
+    "clusters": [
+      "fever"
+    ],
+    "question": "Has anyone around you been sick?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a viral infection like a cold or flu",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "fever.cause2",
+    "kind": "cause",
+    "clusters": [
+      "fever"
+    ],
+    "question": "Any recent travel?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": null,
+    "cause_on": null,
+    "synthetic": true
+  },
+  {
+    "topic": "sore_throat_ear.cause1",
+    "kind": "cause",
+    "clusters": [
+      "sore_throat_ear"
+    ],
+    "question": "Has anyone around you had strep throat or a cold?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "strep throat",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "skin_allergy.cause1",
+    "kind": "cause",
+    "clusters": [
+      "skin_allergy"
+    ],
+    "question": "Did you try a new food, medicine, soap, or detergent?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "contact dermatitis",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "skin_allergy.cause2",
+    "kind": "cause",
+    "clusters": [
+      "skin_allergy"
+    ],
+    "question": "Were you stung or bitten?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "hives from a mild allergy",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "urinary.cause1",
+    "kind": "cause",
+    "clusters": [
+      "urinary"
+    ],
+    "question": "Have you had a urinary infection before?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "a urinary tract infection",
+    "cause_on": "yes",
+    "synthetic": true
+  },
+  {
+    "topic": "dizziness.cause1",
+    "kind": "cause",
+    "clusters": [
+      "dizziness"
+    ],
+    "question": "Have you eaten and had enough to drink today?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "dehydration or low blood sugar",
+    "cause_on": "no",
+    "synthetic": true
+  },
+  {
+    "topic": "dizziness.cause2",
+    "kind": "cause",
+    "clusters": [
+      "dizziness"
+    ],
+    "question": "Did it happen when you stood up quickly?",
+    "quick_replies": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "options": [
+      {
+        "value": "no",
+        "label": "No",
+        "match": [
+          "^(no|nope|nah|none|not really|nothing|i dont|it isnt|its not|there isnt)\\b",
+          "\\b(fine|nobody|no one|none|nothing|well|okay)\\b"
+        ]
+      },
+      {
+        "value": "unsure",
+        "label": "Not sure",
+        "match": [
+          "\\bnot sure\\b",
+          "\\bmaybe\\b",
+          "\\bdont know\\b",
+          "\\bunsure\\b"
+        ]
+      },
+      {
+        "value": "yes",
+        "label": "Yes",
+        "match": [
+          "\\w"
+        ]
+      }
+    ],
+    "danger": [],
+    "routine_value": "no",
+    "cause": "standing up too quickly",
+    "cause_on": "yes",
     "synthetic": true
   }
 ]

@@ -12,8 +12,8 @@ from typing import Optional
 ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
 
 # ------------------------------------------------------------------ providers
-CLAUDE_MODEL = "claude-haiku-5-5"   # extraction, follow-up question, explanation (D-004)
-JUDGE_MODEL = "claude-sonnet-5-5"   # offline evaluation judge only (D-004)
+CLAUDE_MODEL = "claude-haiku-5-5"   # extraction, interviewer, explanation (D-004); default temperature (D-018)
+JUDGE_MODEL = "claude-sonnet-5-5"   # live eval patient role-play only, never in tests (D-004)
 CLAUDE_TIMEOUT_S = 15.0
 CLAUDE_MAX_TOKENS = 1024
 
@@ -102,8 +102,15 @@ JEV_SAFETY_THRESHOLD = 0.5
 JEV_VAGUE_THRESHOLD = 0.5
 GUARD_THRESHOLD = 0.5
 
-# Conversation (D-041): at most this many questions (safety + detail) per conversation.
-MAX_QUESTIONS = 3
+# Conversation (D-051): the interviewer usually asks TARGET_QUESTIONS and never more than
+# MAX_QUESTIONS; danger-sign topics are always asked first. Each question is under
+# QUESTION_MAX_WORDS words. At most MAX_CLUSTERS guide clusters are matched.
+MAX_QUESTIONS = 6
+TARGET_QUESTIONS = 5
+QUESTION_MAX_WORDS = 30
+MAX_CLUSTERS = 2
+INTERVIEWER_MAX_TOKENS = 400
+NEAREST_ERS = 2
 
 # ------------------------------------------------------------------ pipeline
 MAX_TEXT_CHARS = 2000            # longer descriptions are rejected with a clear message

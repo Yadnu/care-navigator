@@ -233,52 +233,66 @@ NEAR_MISSES = [
 ]
 
 # ---------------------------------------------------------------- conversations
-# Scripted multi-turn conversations. answers are keyed by question-bank slot;
-# any other question gets default_answer. must_ask: slots that must be asked.
-E = "EMERGENCY"
+# CHANGE_conversational_triage.md Part 4 (D-054). A fake patient answers the interviewer: `answers`
+# are keyed by question-bank topic; any other topic gets the bank's routine (no-danger) answer.
+# must_ask: topics that must be asked. expect: facts the final answer must show
+# (causes_any: at least one of these possible causes; no_causes: no causes section; cost_contains:
+# text in the cost section; options_contain: names in the closest options, in this order first).
+VD_ROUTINE = {"fluids_kept_down": "some fluids stay down", "blood": "no", "dehydration_signs": "no, not dizzy",
+              "vomiting_diarrhea.cause1": "I ate leftover takeout", "vomiting_diarrhea.cause2": "my roommate is fine",
+              "duration_and_frequency": "about 8 hours"}
+HSA = "PLAN_HSA_BRONZE_HMO"
+NEAREST_00103 = ["Corvalle General Hospital", "Northside Regional Medical Center"]
 _cv = [
-    ("I have pain in my left hand ever since I played volleyball", 4, "adult", TUE_DAY,
-     {"swelling_or_deformity": "yes, it's swollen", "can_use_or_bear_weight": "I can move my fingers but gripping hurts"},
-     "RECOMMENDATION", [U], 3, ["swelling_or_deformity"], "Injury: swelling -> urgent care"),
-    ("my arm hurts", 3, "adult", TUE_DAY,
-     {"associated_cardiac_symptoms": "no chest pain, I lifted boxes yesterday", "swelling_or_deformity": "no",
-      "can_use_or_bear_weight": "yes, I can use it fine"},
-     "RECOMMENDATION", [P, U], 3, ["associated_cardiac_symptoms"], "Safety check clears, then injury"),
-    ("my arm hurts", 3, "adult", TUE_DAY,
-     {"associated_cardiac_symptoms": "my chest feels tight and I'm sweating"},
-     E, [], 1, ["associated_cardiac_symptoms"], "Safety answer is a Tier 1 sign"),
-    ("I feel off", 3, "adult", MIDNIGHT,
-     {"main_symptom": "throwing up since dinner", "fluids_kept_down": "I can keep water down"},
-     "RECOMMENDATION", [T], 3, ["main_symptom", "fluids_kept_down"], "Midnight vomiting, fluids down"),
-    ("headache", 3, "adult", TUE_DAY,
-     {"headache_onset": "it came on slowly after work"},
-     "RECOMMENDATION", [S, T], 3, ["headache_onset"], "Gradual headache"),
-    ("headache", 6, "adult", TUE_DAY,
-     {"headache_onset": "worst of my life, came on suddenly"},
-     E, [], 1, ["headache_onset"], "Sudden worst headache"),
-    ("stomach pain", 5, "adult", TUE_DAY,
-     {"abdominal_location_and_trend": "lower right, getting worse, and I have a fever"},
-     E, [], 1, ["abdominal_location_and_trend"], "Lower right, worsening, fever"),
-    ("stomach pain", 3, "adult", TUE_DAY,
-     {"abdominal_location_and_trend": "upper, burning, after spicy food"},
-     "RECOMMENDATION", [T, P], 3, ["abdominal_location_and_trend"], "Upper burning pain"),
-    ("short of breath", 4, "adult", TUE_DAY,
-     {"breathing_at_rest": "only after stairs, fine at rest"},
-     "RECOMMENDATION", [P], 3, ["breathing_at_rest"], "Exertional breathlessness"),
-    ("short of breath", 5, "adult", TUE_DAY,
-     {"breathing_at_rest": "yes, even sitting still"},
-     E, [], 1, ["breathing_at_rest"], "Breathless at rest"),
-    ("my kid has a fever", 4, "child", TUE_DAY,
-     {"child_age": "8 months old, 101, drinking well"},
-     "RECOMMENDATION", [U, T], 3, ["child_age"], "Child over 3 months with fever"),
-    ("crushing chest pain", 7, "adult", TUE_DAY,
-     {}, E, [], 0, [], "Tier 1: no questions"),
+    ("I am vomiting continuously", 4, "adult", "00103", HSA, TUE_DAY, VD_ROUTINE,
+     "RECOMMENDATION", [U, T], 6, ["fluids_kept_down", "blood", "dehydration_signs"],
+     {"causes_any": ["food poisoning", "a stomach bug (viral gastroenteritis)"],
+      "cost_contains": ["you pay the full allowed cost until your deductible is met", "$4,000"]},
+     "Vomiting, fluids partly down, no danger signs"),
+    ("I am vomiting continuously", 4, "adult", "00103", HSA, TUE_DAY,
+     {**VD_ROUTINE, "fluids_kept_down": "nothing stays down", "dehydration_signs": "I'm dizzy when I stand"},
+     "GO_TO_ER", [], 6, ["fluids_kept_down"],
+     {"options_contain": NEAREST_00103, "cost_contains": ["you pay the full allowed cost until your deductible is met",
+                                                          "emergency rule"]},
+     "Nothing stays down: ER, someone else drives"),
+    ("I am vomiting continuously", 4, "adult", "00103", HSA, TUE_DAY, {**VD_ROUTINE, "blood": "yes"},
+     "CALL_911", [], 6, ["blood"], {"no_causes": True}, "Blood in vomit"),
+    ("vomiting blood", 6, "adult", "00103", HSA, TUE_DAY, {}, "CALL_911", [], 0, [], {"no_causes": True},
+     "Tier 1: no questions"),
+    ("pain in my left hand since I played volleyball", 4, "adult", "00101", "PLAN_SILVER_HMO", TUE_DAY,
+     {"swelling_or_deformity": "yes, it's swollen", "can_use": "I can move my fingers but gripping hurts",
+      "numbness": "no", "cardiac_screen": "no", "arm_hand_injury.cause1": "yes, volleyball"},
+     "RECOMMENDATION", [U], 6, ["swelling_or_deformity", "can_use", "numbness", "cardiac_screen"],
+     {"causes_any": ["a sprain or strain", "a small fracture"]}, "Sports injury with swelling"),
+    ("my arm hurts", 3, "adult", "00101", "PLAN_SILVER_HMO", TUE_DAY,
+     {"cardiac_screen": "my chest feels tight and I'm sweating"}, "CALL_911", [], 6, ["cardiac_screen"],
+     {"no_causes": True}, "Cardiac screen answer is a Tier 1 sign"),
+    ("headache", 3, "adult", "00101", "PLAN_SILVER_HMO", TUE_DAY,
+     {"onset": "it came on slowly after a long day on screens", "headache.cause1": "yes"},
+     "RECOMMENDATION", [S, T], 6, ["onset", "neuro_symptoms"], {"causes_any": ["a tension headache"]},
+     "Gradual headache after screens"),
+    ("headache", 6, "adult", "00101", "PLAN_SILVER_HMO", TUE_DAY, {"onset": "suddenly, the worst of my life"},
+     "CALL_911", [], 6, ["onset"], {"no_causes": True}, "Sudden worst headache"),
+    ("stomach pain", 5, "adult", "00101", "PLAN_SILVER_HMO", TUE_DAY,
+     {"location": "lower right", "onset_and_trend": "getting worse", "fever_vomiting": "yes, a fever"},
+     "GO_TO_ER", [], 6, ["onset_and_trend"], {}, "Lower right, worsening, fever"),
+    ("my kid has a fever", 4, "child", "00101", "PLAN_SILVER_HMO", TUE_DAY,
+     {"age": "8 months", "temperature_value": "101F", "drinking_and_alertness": "drinking well and alert"},
+     "RECOMMENDATION", [U, T], 6, ["age", "drinking_and_alertness"],
+     {"pediatric_first": True, "causes_any": ["a viral infection like a cold or flu"]}, "Baby over 3 months"),
+    ("food poisoning, been throwing up since dinner", 4, "adult", "00101", "PLAN_SILVER_HMO", MIDNIGHT,
+     {"fluids_kept_down": "yes, water stays down"}, "RECOMMENDATION", [T], 6, ["fluids_kept_down"],
+     {"options_contain": ["NightOwl Virtual Care"], "options_exclude": ["Summit Care"]},
+     "Midnight: NightOwl open, Summit telehealth closed"),
+    ("throwing up since dinner and money is tight", 4, "adult", "00101", "SELF_PAY", MIDNIGHT,
+     {"fluids_kept_down": "yes, water stays down"}, "RECOMMENDATION", [T], 6, ["fluids_kept_down"],
+     {"cost_contains": ["cash price $59"]}, "Self-pay, midnight vomiting"),
 ]
 CONVERSATIONS = [
-    {"id": f"CV-{i:03d}", "text": t, "severity": sev, "age_group": age, "zip": "00101", "plan": "PLAN_SILVER_HMO",
-     "request_time": when, "answers": answers, "default_answer": "I'm not sure", "expected_outcome": outcome,
-     "acceptable_levels": acc, "max_questions": maxq, "must_ask": must, "note": note}
-    for i, (t, sev, age, when, answers, outcome, acc, maxq, must, note) in enumerate(_cv, start=1)
+    {"id": f"CV-{i:03d}", "text": t, "severity": sev, "age_group": age, "zip": z, "plan": plan,
+     "request_time": when, "answers": answers, "expected_outcome": outcome, "acceptable_levels": acc,
+     "max_questions": maxq, "must_ask": must, "expect": expect, "note": note}
+    for i, (t, sev, age, z, plan, when, answers, outcome, acc, maxq, must, expect, note) in enumerate(_cv, start=1)
 ]
 
 EVAL_SETS = {

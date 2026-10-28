@@ -248,10 +248,11 @@ def write_jsonl(path: Path, rows: list[dict]) -> None:
 
 def main() -> None:
     from eval_sets import EVAL_SETS  # local module next to this file
-    from question_bank_src import QUESTION_BANK  # local module next to this file
+    from build_symptom_guide import GUIDE  # local modules next to this file
+    from question_bank_src import build_bank
 
     rng = random.Random(SEED)
-    write_json(DATA_DIR / "question_bank.json", [{**q, "synthetic": True} for q in QUESTION_BANK])
+    write_json(DATA_DIR / "question_bank.json", [{**q, "synthetic": True} for q in build_bank(GUIDE)])
     EVAL_DIR.mkdir(parents=True, exist_ok=True)
     write_json(DATA_DIR / "zips.json", [{**z, "synthetic": True} for z in ZIPS])
     write_json(DATA_DIR / "plans.json", [{**p, "synthetic": True} for p in PLANS])

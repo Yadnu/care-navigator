@@ -53,7 +53,7 @@ def test_request_age_group_is_adult_or_child():
 
 
 def test_outcome_values():
-    assert {o.value for o in Outcome} == {"EMERGENCY", "SAFETY_CHECK", "FOLLOW_UP", "RECOMMENDATION"}
+    assert {o.value for o in Outcome} == {"CALL_911", "GO_TO_ER", "QUESTION", "RECOMMENDATION"}
 
 
 def test_care_levels_are_ordered_low_to_high():

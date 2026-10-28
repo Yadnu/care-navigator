@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from navigator.questions import load_bank
+from navigator.questions import danger_action, load_bank
 from navigator.redflags import load_rules, screen_text
 
 DATA = Path(__file__).resolve().parents[1] / "data"
@@ -74,7 +74,7 @@ def test_go_to_er_message_says_go_now_and_call_911_if_worse():
 
 
 def test_question_bank_fluids_danger_answer_is_go_to_er():
-    assert load_bank()["fluids_kept_down"]["danger_action"] == "GO_TO_ER"
-    for slot, entry in load_bank().items():
-        if entry["danger_values"]:
-            assert entry["danger_action"] in ACTIONS, slot
+    assert danger_action("fluids_kept_down") == "GO_TO_ER"
+    for topic, entry in load_bank().items():
+        if entry["danger"]:
+            assert danger_action(topic) in ACTIONS, topic

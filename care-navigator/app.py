@@ -59,12 +59,11 @@ def show_result(result: NavigatorResult) -> None:
         st.warning(error)
     if result.outcome is None:
         return
-    if result.outcome is Outcome.EMERGENCY:
+    if result.is_emergency:
         st.error(f"**{result.message}**")
         st.markdown(f"Emergency numbers: {', '.join(result.resources)}. This request stops here.")
-    elif result.outcome in (Outcome.SAFETY_CHECK, Outcome.FOLLOW_UP):
-        kind = "Safety check" if result.outcome is Outcome.SAFETY_CHECK else "One more detail"
-        st.caption(f"{kind}: question {result.questions_asked} of up to {config.MAX_QUESTIONS}")
+    elif result.outcome is Outcome.QUESTION:
+        st.caption(f"Question {result.questions_asked} of up to {config.MAX_QUESTIONS}")
         st.info(result.question)
         if result.quick_replies:
             columns = st.columns(len(result.quick_replies))
@@ -145,14 +144,14 @@ def main() -> None:
         )
         state["turns"] = []
         state["result"] = nav.run(Request(**state["last_request"]))
-    elif state.get("last_request") and state.get("result") and state["result"].slot:
-        # An answer to the current question: a quick reply, typed text, or "skip" (D-041).
+    elif state.get("last_request") and state.get("result") and state["result"].topic:
+        # An answer to the current question: a quick reply, typed text, or "skip" (D-041, D-050).
         last = state["result"]
         answer = next((reply for i, reply in enumerate(last.quick_replies) if state.get(f"reply_{i}")), None)
         if answer is None and state.get("submit_followup"):
             answer = (state.get("followup_answer") or "").strip()
         if answer:
-            state["turns"] = [*state.get("turns", []), Turn(slot=last.slot, question=last.question, answer=answer)]
+            state["turns"] = [*state.get("turns", []), Turn(topic=last.topic, question=last.question, answer=answer)]
             state["result"] = nav.run(Request(**state["last_request"], turns=state["turns"]))
         elif state.get("skip"):
             state["result"] = nav.run(Request(**state["last_request"], turns=state.get("turns", []), skip=True))

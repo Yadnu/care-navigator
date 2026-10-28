@@ -27,6 +27,7 @@ class DemoCase:
     request: Request
     expect: str
     check: Callable[[NavigatorResult], bool]
+    multi_turn: bool = True   # run the whole conversation (routine answers); False shows one question
 
 
 def _level(result: NavigatorResult) -> Optional[CareLevel]:
@@ -45,17 +46,18 @@ DEMO_CASES = [
              lambda r: _level(r) is CareLevel.URGENT_CARE and bool(r.recommendation.options)),
     DemoCase("midnight", "2. Midnight food poisoning, 00:15",
              _req("Vomiting and stomach cramps since dinner, can keep water down", 5, when=MIDNIGHT),
-             "Telehealth (urgent care closed), with 'go to the ER if you can't keep fluids down'",
+             "Telehealth (urgent care closed), with a 'go sooner' warning about fluids",
              lambda r: _level(r) is CareLevel.TELEHEALTH
-             and any("go to the ER" in n for n in r.recommendation.notes)),
+             and r.final is not None and any("fluids" in g or "water" in g for g in r.final.go_sooner)),
     DemoCase("chest", "3. Difficult: understated chest tightness",
              _req("Mild chest tightness, probably nothing", 2),
              "EMERGENCY",
-             lambda r: r.outcome is Outcome.EMERGENCY),
+             lambda r: r.is_emergency),
     DemoCase("vague", "4. Difficult: too vague",
              _req("I just feel off", 3),
              "One follow-up question",
-             lambda r: r.outcome is Outcome.FOLLOW_UP and bool(r.question)),
+             lambda r: r.outcome is Outcome.QUESTION and bool(r.question),
+             multi_turn=False),
     DemoCase("gap", "5. Difficult: Bronze plan in 00105 needs urgent care (coverage gap)",
              _req("Cough and sore throat", 3, zip_code="00105", plan="PLAN_BRONZE_LOCAL"),
              "'No in-network option nearby' plus telehealth and the nurse line",
@@ -69,7 +71,8 @@ DEMO_CASES = [
 
 
 def run_demo(nav: Navigator) -> list[tuple[DemoCase, NavigatorResult]]:
-    return [(case, nav.run(case.request)) for case in DEMO_CASES]
+    return [(case, nav.converse(case.request) if case.multi_turn else nav.run(case.request))
+            for case in DEMO_CASES]
 
 
 def _option_lines(label: str, options) -> list[str]:
@@ -91,7 +94,7 @@ def format_result(case: DemoCase, result: NavigatorResult) -> str:
              f"  expected: {case.expect}",
              f"  outcome: {result.outcome.value if result.outcome else 'INVALID'} - {result.message}"]
     lines += [f"  error: {e}" for e in result.errors]
-    if result.outcome is Outcome.EMERGENCY:
+    if result.is_emergency:
         lines.append(f"  resources: {', '.join(result.resources)}")
     rec = result.recommendation
     if rec:

@@ -40,7 +40,9 @@ def load_rules() -> dict:
 
 
 def _matches(when: dict, report: SymptomReport, category: str, urgency: int,
-             slots: Optional[dict[str, str]] = None) -> bool:
+             slots: Optional[dict[str, str]] = None, cause_level: Optional[CareLevel] = None) -> bool:
+    if when.get("cause_level") and cause_level is None:
+        return False
     if "slots_any" in when:
         slots = slots or {}
         if not any(slots.get(slot) in values for slot, values in when["slots_any"].items()):
@@ -76,17 +78,11 @@ class CareEngine:
         self.practitioners = tuple(load_practitioners() if practitioners is None else practitioners)
 
     def _rule(self, report: SymptomReport, category: str, urgency: int,
-              slots: Optional[dict[str, str]] = None) -> dict:
+              slots: Optional[dict[str, str]] = None, cause_level: Optional[CareLevel] = None) -> dict:
         for rule in self.rules["rules"]:
-            if _matches(rule.get("when") or {}, report, category, urgency, slots):
+            if _matches(rule.get("when") or {}, report, category, urgency, slots, cause_level):
                 return rule
         raise LookupError("care_rules.yaml has no catch-all rule")
-
-    def missing_needs(self, report: SymptomReport, category: str, urgency: int,
-                      slots: Optional[dict[str, str]] = None) -> list[str]:
-        """Slots the matching rule needs but doesn't have yet, in the order to ask them (D-041)."""
-        rule = self._rule(report, category, urgency, slots)
-        return [s for s in rule.get("needs", []) if s not in (slots or {})]
 
     def _available(self, level: CareLevel, when: datetime, plan: Optional[str], age_group: str) -> bool:
         if level is CareLevel.SELF_CARE:
@@ -103,10 +99,13 @@ class CareEngine:
 
     def decide(self, report: SymptomReport, category: str, urgency: int, request_time: datetime,
                plan: Optional[str] = None, age_group: str = "adult", after_followup: bool = False,
-               slots: Optional[dict[str, str]] = None, uncertain: bool = False) -> CareDecision:
-        """`uncertain`: questions are used up or skipped with something still unknown; one level more care."""
-        rule = self._rule(report, category, urgency, slots)
-        level = CareLevel(rule["level"])
+               slots: Optional[dict[str, str]] = None, uncertain: bool = False,
+               cause_level: Optional[CareLevel] = None) -> CareDecision:
+        """`uncertain`: questions are used up or skipped with something still unknown; one level more care.
+        `cause_level`: the guide's typical level for the best-matching possible cause (D-051)."""
+        rule = self._rule(report, category, urgency, slots, cause_level)
+        level = cause_level if rule["level"] == "CAUSE" else CareLevel(rule["level"])
+        base = level
         notes = [rule["note"]] if rule.get("note") else []
 
         escalated = uncertain or should_escalate(report, after_followup)
@@ -115,7 +114,8 @@ class CareEngine:
 
         if not self._available(level, request_time, plan, age_group):
             closed = level
-            level = CareLevel(rule["after_hours"]) if level.value == rule["level"] else level.escalate()
+            after_hours = CareLevel(rule["after_hours"])
+            level = after_hours if level is base else level.escalate()
             while level is not CareLevel.ER and not self._available(level, request_time, plan, age_group):
                 level = level.escalate()
             notes.insert(0, f"{_sentence_case(LABELS[closed])} is closed now ({request_time:%H:%M}), "

@@ -26,8 +26,8 @@ def test_expected_outcomes(results):
     outcomes = {case.key: result for case, result in results}
     assert outcomes["representative"].recommendation.decision.level is CareLevel.URGENT_CARE
     assert outcomes["midnight"].recommendation.decision.level is CareLevel.TELEHEALTH
-    assert outcomes["chest"].outcome is Outcome.EMERGENCY
-    assert outcomes["vague"].outcome is Outcome.FOLLOW_UP
+    assert outcomes["chest"].is_emergency
+    assert outcomes["vague"].outcome is Outcome.QUESTION
     assert outcomes["gap"].recommendation.alternatives and not outcomes["gap"].recommendation.options
     assert outcomes["bad_zip"].errors and outcomes["bad_zip"].recommendation.decision.level is CareLevel.URGENT_CARE
 

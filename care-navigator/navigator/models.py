@@ -12,10 +12,14 @@ Probability = Annotated[float, Field(ge=0.0, le=1.0)]
 
 
 class Outcome(str, Enum):
-    EMERGENCY = "EMERGENCY"
-    SAFETY_CHECK = "SAFETY_CHECK"      # a Tier 2 safety question (D-041)
-    FOLLOW_UP = "FOLLOW_UP"            # a missing-detail question
+    CALL_911 = "CALL_911"              # emergency: call 911 now (D-052)
+    GO_TO_ER = "GO_TO_ER"              # emergency: go to the ER now, someone else drives (D-052)
+    QUESTION = "QUESTION"              # the interviewer asks one question (D-051)
     RECOMMENDATION = "RECOMMENDATION"
+
+    @property
+    def is_emergency(self) -> bool:
+        return self in (Outcome.CALL_911, Outcome.GO_TO_ER)
 
 
 class CareLevel(str, Enum):
@@ -52,7 +56,7 @@ class CareLevel(str, Enum):
 class Turn(BaseModel):
     """One question asked by the system and the person's answer."""
 
-    slot: str
+    topic: str                             # question-bank topic (D-050)
     question: str = ""
     answer: str
 
@@ -69,7 +73,7 @@ class Request(BaseModel):
     followup_answer: Optional[str] = None  # shorthand for one answer to the main-symptom question
 
     def all_turns(self) -> list[Turn]:
-        extra = [Turn(slot="main_symptom", answer=self.followup_answer)] if self.followup_answer else []
+        extra = [Turn(topic="main_symptom", answer=self.followup_answer)] if self.followup_answer else []
         return [*self.turns, *extra]
 
 
@@ -189,3 +193,67 @@ class TraceStep(BaseModel):
     latency_ms: float
     tokens: Optional[int] = None
     cost_usd: Optional[float] = None
+
+
+# ------------------------------------------------------------------ conversation (D-051)
+class TopicAnswer(BaseModel):
+    value: Optional[str]                   # the bank option, None when the answer was unclear
+    evidence: str                          # the person's own (redacted) words
+
+
+class ConversationState(BaseModel):
+    """What the interviewer and the rules know so far. Built by code from the conversation."""
+
+    clusters: list[str] = []               # matched guide clusters, best first
+    category: str = "general"              # Jev category
+    answers: dict[str, TopicAnswer] = {}   # detail and danger topics
+    danger_asked: dict[str, Optional[str]] = {}   # danger topics asked -> value
+    cause_answers: dict[str, Optional[str]] = {}  # possible-cause questions asked -> value
+    questions_asked: int = 0
+    first_message: str = ""                # redacted
+
+    def answered(self, topic: str) -> bool:
+        return topic in self.answers or topic in self.cause_answers
+
+
+class InterviewerStep(BaseModel):
+    """The interviewer's JSON output: one question, or done."""
+
+    done: bool
+    topic: Optional[str] = None
+    question: Optional[str] = None
+    quick_replies: list[str] = []
+    reason: str = ""
+
+
+# ------------------------------------------------------------------ final answer (D-053)
+class ToldBullet(BaseModel):
+    text: str
+    evidence: str                          # a quote from the conversation
+
+
+class PossibleCause(BaseModel):
+    cause: str
+    description: str
+
+
+class ErOption(BaseModel):
+    """A nearby ER from the records; the distance is computed by code."""
+
+    name: str
+    address: Optional[str]
+    phone: str
+    distance_km: float
+    hours: str                             # "Open 24/7" or today's hours
+    pediatric: bool = False
+
+
+class FinalAnswer(BaseModel):
+    told: list[ToldBullet] = []
+    causes: list[PossibleCause] = []       # empty for CALL_911 and mental health
+    where: str = ""                        # the level and why
+    options: list[str] = []                # closest options, one line each
+    cost: list[str] = []                   # labelled as an estimate
+    go_sooner: list[str] = []
+    safety: list[str] = []
+    fallbacks: list[str] = []              # sections the guard replaced with the template

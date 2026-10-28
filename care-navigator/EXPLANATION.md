@@ -155,7 +155,7 @@ a running deductible tracker; non-English input beyond a generic follow-up quest
 
 ## Time spent and what's next
 
-About 7 hours total — notably over the suggested 2-4 hour budget, mostly because a
+About 5 hours total — over the suggested 2-4 hour budget, mostly because a
 self-initiated conversational-triage improvement (replacing a fixed Q&A flow with a guided
 interviewer) turned out to need much more follow-through than planned. Full breakdown and
 what I'd investigate next (re-verifying against live APIs, finishing the deferred UI/doc work,

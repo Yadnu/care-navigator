@@ -20,17 +20,17 @@ A person describes their symptoms in plain words, with a severity (1 to 10), a z
 
 Three problems considered; this prototype builds **A**.
 
-**A. People don't know where to go for care, or what it will cost (the pick).** Your roommate
-had food poisoning at midnight, money was tight, and you couldn't tell whether he needed the
-ER, which places were open, or which ones your insurance would cover. Care Navigator
+**A. People don't know where to go for care, or what it will cost (the pick).** My roommate
+had food poisoning at midnight, money was tight, and I couldn't tell whether he needed the
+ER, which places were open, or which ones our insurance would cover. Care Navigator
 recommends the right level of care plus nearby in-network options and what they'll cost.
 
 **B. Freelancers with irregular income don't know how much to set aside for taxes.** Based on
-your sister's freelance work. US freelancers have no employer withholding and must pay
+my sister's freelance work. US freelancers have no employer withholding and must pay
 estimated taxes every quarter. When it goes unsolved, the result is large tax bills,
 underpayment penalties and missed deductions.
 
-**C. Corporate apparel orders arrive incomplete.** Based on AEVIQ, your sister's custom apparel
+**C. Corporate apparel orders arrive incomplete.** Based on AEVIQ, my sister's custom apparel
 business. HR collects sizes, styles and names from every employee, and the manufacturer plans
 production from that. Wrong sizes, misspelled names and lost special requests show up after
 printing, which means reprints, wasted fabric and missed deadlines.
